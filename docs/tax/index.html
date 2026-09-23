@@ -1,0 +1,1578 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="還付申告、副業の申告、事業所得。何を集めて、いつまでに出すか。期限は自動で数えます。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="確定申告ノート">
+<meta property="og:type" content="website">
+<meta property="og:title" content="確定申告ノート">
+<meta property="og:description" content="還付申告、副業の申告、事業所得。何を集めて、いつまでに出すか。期限は自動で数えます。">
+<title>確定申告ノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+</head>
+<body>
+<style>
+html{color-scheme:light dark}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+:root{
+  --ground:#F3F3F0;
+  --surface:#FFFFFF;
+  --surface-2:#FAFAF8;
+  --ink:#242826;
+  --ink-2:#4D5451;
+  --muted:#7E8683;
+  --line:#E3E5E1;
+  --line-2:#EEEFEC;
+  --p1:#4A6A88;
+  --p2:#43806B;
+  --p3:#96703A;
+  --p4:#6E6386;
+  --p1-bg:#E7EDF3;
+  --p2-bg:#E3EEE9;
+  --p3-bg:#F3EBDC;
+  --p4-bg:#EBE8F0;
+  --alert:#A9503F;
+  --alert-bg:#F6E8E4;
+  --ok:#3D7C5B;
+  --share:#4A6A88;
+  --share-bg:#E8EEF4;
+  --shadow:0 1px 2px rgba(36,40,38,.05), 0 8px 24px -16px rgba(36,40,38,.25);
+  --display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho","Yu Gothic UI",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#161917; --surface:#1F2321; --surface-2:#262B29;
+    --ink:#E8EAE6; --ink-2:#BBC2BE; --muted:#8C9490;
+    --line:#343A37; --line-2:#2B302E;
+    --p1:#93B4D0; --p2:#71BB9F; --p3:#CFA463; --p4:#A99DC2;
+    --p1-bg:#22303C; --p2-bg:#1F3730; --p3-bg:#352D1C; --p4-bg:#2C2739;
+    --alert:#DE8371; --alert-bg:#3A2622; --ok:#79C79C;
+    --share:#93B4D0; --share-bg:#22303C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#161917; --surface:#1F2321; --surface-2:#262B29;
+  --ink:#E8EAE6; --ink-2:#BBC2BE; --muted:#8C9490;
+  --line:#343A37; --line-2:#2B302E;
+  --p1:#93B4D0; --p2:#71BB9F; --p3:#CFA463; --p4:#A99DC2;
+  --p1-bg:#22303C; --p2-bg:#1F3730; --p3-bg:#352D1C; --p4-bg:#2C2739;
+  --alert:#DE8371; --alert-bg:#3A2622; --ok:#79C79C;
+  --share:#93B4D0; --share-bg:#22303C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--body);font-size:15px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;font-weight:700}
+a{color:inherit}
+
+/* ---------- header ---------- */
+.bar{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:30;
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+}
+.bar-in{max-width:560px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.mark{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.mark svg{display:block;flex:none}
+.bar .spacer{flex:1}
+.ghost{
+  font:inherit;font-size:12.5px;font-family:var(--body);
+  background:var(--surface);color:var(--ink-2);
+  border:1px solid var(--line);border-radius:999px;
+  padding:5px 12px;cursor:pointer;white-space:nowrap;
+}
+.ghost:hover{border-color:var(--muted)}
+
+/* ---------- 冒頭 ---------- */
+.lede{margin-top:18px;font-size:14px;color:var(--ink-2);line-height:1.85}
+.lede strong{font-weight:700;color:var(--ink)}
+
+/* ---------- 今日 ---------- */
+.today{
+  margin-top:16px;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:16px;box-shadow:var(--shadow);
+}
+.eyebrow{font-size:11.5px;letter-spacing:.14em;color:var(--muted);font-weight:500}
+.today-main{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:2px}
+.today-day{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+.today-sub{font-size:13px;color:var(--ink-2)}
+.setup{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+input[type="date"]{
+  font:inherit;font-size:14px;font-family:var(--body);
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0;max-width:100%;
+}
+.solid{
+  font:inherit;font-size:13px;font-family:var(--body);font-weight:500;
+  background:var(--ink);color:var(--ground);
+  border:0;border-radius:999px;padding:7px 14px;cursor:pointer;
+}
+.solid:hover{opacity:.88}
+.hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+
+/* 次の期限 */
+.nextup{margin-top:14px;border-top:1px solid var(--line-2);padding-top:12px;display:none}
+.nextup.on{display:block}
+.nextup h4{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:500;font-family:var(--body)}
+.nx{display:flex;gap:10px;align-items:flex-start;margin-top:8px}
+.nx-when{
+  flex:none;min-width:64px;text-align:center;border-radius:10px;padding:5px 6px;
+  font-size:11px;line-height:1.35;font-weight:700;font-variant-numeric:tabular-nums;
+}
+.nx-when b{display:block;font-size:17px;font-family:var(--display)}
+.nx-what{font-size:13.5px;line-height:1.6}
+.nx-what span{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.nx.over .nx-when{background:var(--alert-bg);color:var(--alert)}
+.nx.soon .nx-when{background:var(--p1-bg);color:var(--p1)}
+.nx.far .nx-when{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+
+/* ---------- 時間の帯 ---------- */
+.track{margin-top:16px}
+.track-bar{position:relative;height:10px;border-radius:999px;background:var(--line-2);display:flex;overflow:hidden}
+.track-seg{flex:1;border-right:1px solid var(--ground)}
+.track-seg:last-child{border-right:0}
+.track-pin{position:absolute;top:-4px;width:2px;height:18px;background:var(--alert);border-radius:2px;transition:left .3s}
+.track-scale{display:flex;font-size:10px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+.track-scale span{flex:1;text-align:center}
+
+/* ---------- レール ---------- */
+.rail-wrap{margin-top:24px}
+.rail-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.rail-head h2{font-size:17px}
+.rail-head .eyebrow{margin-left:auto}
+.rail{
+  display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-bottom:8px;margin-inline:-16px;padding-inline:16px;
+  scrollbar-width:none;
+}
+.rail::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;scroll-snap-align:center;cursor:pointer;font:inherit;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:9px 13px;min-width:106px;text-align:center;font-size:12px;color:var(--ink-2);
+}
+.chip b{display:block;font-family:var(--display);font-size:14.5px;color:var(--ink);font-weight:700}
+.chip[aria-current="true"]{box-shadow:var(--shadow)}
+.chip.p1[aria-current="true"]{border-color:var(--p1);background:var(--p1-bg)}
+.chip.p2[aria-current="true"]{border-color:var(--p2);background:var(--p2-bg)}
+.chip.p3[aria-current="true"]{border-color:var(--p3);background:var(--p3-bg)}
+.chip.p4[aria-current="true"]{border-color:var(--p4);background:var(--p4-bg)}
+.chip .here{display:none;font-size:10px;color:var(--alert);font-weight:700;margin-top:2px}
+.chip.now .here{display:block}
+
+/* ---------- ステージ本体 ---------- */
+.stage{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:18px 16px;box-shadow:var(--shadow);
+}
+.stage-tag{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;
+  border-radius:999px;padding:3px 10px;
+}
+.stage.p1 .stage-tag{background:var(--p1-bg);color:var(--p1)}
+.stage.p2 .stage-tag{background:var(--p2-bg);color:var(--p2)}
+.stage.p3 .stage-tag{background:var(--p3-bg);color:var(--p3)}
+.stage.p4 .stage-tag{background:var(--p4-bg);color:var(--p4)}
+.stage h3{font-size:20px;margin-top:8px;line-height:1.45}
+.stage .lead{font-size:13.5px;color:var(--ink-2);margin-top:8px;line-height:1.85}
+
+/* 手続きカード */
+.task{border-top:1px solid var(--line-2);padding-top:13px;margin-top:13px}
+.task-head{display:flex;gap:10px;align-items:flex-start}
+.chk{
+  flex:none;width:22px;height:22px;margin-top:3px;border-radius:7px;
+  border:1.5px solid var(--line);background:var(--surface-2);cursor:pointer;
+  display:grid;place-items:center;padding:0;
+}
+.chk svg{width:13px;height:13px;opacity:0;stroke:var(--ok);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.chk[aria-pressed="true"]{border-color:var(--ok);background:transparent}
+.chk[aria-pressed="true"] svg{opacity:1}
+.task-title{flex:1;font-size:15px;font-weight:700;line-height:1.55;font-family:var(--display)}
+.task.done .task-title{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.due{
+  display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;
+  padding:1px 8px;white-space:nowrap;vertical-align:1.5px;margin-left:2px;
+  background:var(--alert-bg);color:var(--alert);font-family:var(--body);
+}
+.due.soft{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.task-body{margin-left:32px;font-size:13.5px;color:var(--ink-2);line-height:1.85;margin-top:5px}
+.task-body p{margin:0 0 7px}
+.task-body p:last-child{margin-bottom:0}
+.task-body ul{margin:4px 0 7px;padding-left:1.15em}
+.task-body li{margin-bottom:3px}
+.where{
+  display:block;margin-top:7px;font-size:12.5px;color:var(--ink-2);
+  background:var(--surface-2);border:1px solid var(--line-2);border-radius:9px;padding:7px 10px;
+}
+.where b{font-family:var(--body);font-weight:700;color:var(--ink)}
+
+/* 出典 */
+.src{display:block;margin-top:7px;font-size:11.5px;color:var(--muted);line-height:1.65}
+.src a{color:var(--p1);text-underline-offset:2px}
+.src::before{content:"出典 ";letter-spacing:.06em}
+
+/* 分担カード */
+.share{
+  margin:10px 0 0 32px;background:var(--share-bg);border-radius:11px;padding:9px 12px;
+  font-size:12.5px;color:var(--ink-2);line-height:1.8;
+}
+.share b{display:block;font-size:11px;letter-spacing:.08em;color:var(--share);font-weight:700;margin-bottom:2px}
+
+/* たたむ */
+details.more{margin-left:32px;margin-top:6px}
+details.more>summary{
+  list-style:none;cursor:pointer;font-size:12.5px;color:var(--p1);
+  display:inline-flex;align-items:center;gap:4px;
+}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"くわしく"}
+details.more[open]>summary::before{content:"閉じる"}
+details.more>summary::after{content:"\25BE";font-size:10px;transition:transform .2s}
+details.more[open]>summary::after{transform:rotate(180deg)}
+
+/* ---------- 注意帯 ---------- */
+.warn{
+  margin-top:16px;background:var(--alert-bg);border-radius:14px;padding:14px 15px;
+  font-size:13px;line-height:1.85;color:var(--ink-2);
+}
+.warn b{color:var(--alert);font-family:var(--display);font-size:14px;display:block;margin-bottom:3px}
+
+/* ---------- セクション ---------- */
+.sec{margin-top:32px}
+.sec>h2{font-size:17px}
+.sec>p.note{font-size:13px;color:var(--ink-2);margin:6px 0 0;line-height:1.85}
+.table{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;box-shadow:var(--shadow);
+}
+.row{display:flex;gap:10px;padding:11px 14px;border-top:1px solid var(--line-2);align-items:flex-start}
+.row:first-child{border-top:0}
+.row .w{flex:none;width:78px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.5}
+.row .t{flex:1;font-size:13.5px;line-height:1.6}
+.row .t span{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.row.g1 .w{color:var(--p1)} .row.g2 .w{color:var(--p2)}
+.row.g3 .w{color:var(--p3)} .row.g4 .w{color:var(--p4)}
+
+/* 進捗 */
+.prog{margin-top:14px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:10px}
+.prog-bar{flex:1;height:6px;border-radius:999px;background:var(--line-2);overflow:hidden}
+.prog-bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+
+/* ---------- 相談先 ---------- */
+.help{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:16px;box-shadow:var(--shadow);font-size:13.5px;line-height:1.85;
+}
+.help dl{margin:0}
+.help dt{font-weight:700;font-family:var(--display);margin-top:12px}
+.help dt:first-child{margin-top:0}
+.help dd{margin:2px 0 0;color:var(--ink-2);font-size:13px}
+
+/* ---------- 出典一覧 ---------- */
+.sources{margin-top:32px;font-size:12.5px;color:var(--ink-2);line-height:1.9}
+.sources h2{font-size:15px;margin-bottom:8px}
+.sources ul{margin:0;padding-left:1.1em}
+.sources li{margin-bottom:5px}
+.sources a{color:var(--p1)}
+
+footer{
+  margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted);line-height:1.9;
+}
+footer a{color:var(--p1)}
+
+/* ---------- このノート固有 ---------- */
+
+/* 年分のえらび直し */
+select{
+  font:inherit;font-size:14px;font-family:var(--body);
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--line);border-radius:10px;padding:7px 10px;max-width:100%;
+}
+
+/* 入口（A/B/C）のえらびボタン */
+.pick{display:grid;grid-template-columns:1fr;gap:8px;margin-top:12px}
+.pick button{
+  font:inherit;text-align:left;cursor:pointer;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:11px 13px;color:var(--ink-2);font-size:13px;line-height:1.7;
+}
+.pick button b{
+  display:block;font-family:var(--display);font-size:15px;color:var(--ink);font-weight:700;
+}
+.pick button .kb{
+  display:inline-block;font-family:var(--display);font-weight:700;font-size:11px;
+  border-radius:999px;padding:1px 9px;margin-right:6px;vertical-align:1.5px;
+}
+.pick button.a .kb{background:var(--p1-bg);color:var(--p1)}
+.pick button.b .kb{background:var(--p2-bg);color:var(--p2)}
+.pick button.c .kb{background:var(--p3-bg);color:var(--p3)}
+.pick button[aria-pressed="true"]{box-shadow:var(--shadow)}
+.pick button.a[aria-pressed="true"]{border-color:var(--p1);background:var(--p1-bg)}
+.pick button.b[aria-pressed="true"]{border-color:var(--p2);background:var(--p2-bg)}
+.pick button.c[aria-pressed="true"]{border-color:var(--p3);background:var(--p3-bg)}
+
+/* 系統ごとのカード */
+.rt{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:16px;box-shadow:var(--shadow);
+}
+.rt>summary{
+  list-style:none;cursor:pointer;display:flex;gap:9px;align-items:baseline;
+}
+.rt>summary::-webkit-details-marker{display:none}
+.rt>summary::after{
+  content:"\25BE";margin-left:auto;font-size:11px;color:var(--muted);transition:transform .2s;
+}
+.rt[open]>summary::after{transform:rotate(180deg)}
+.rt>summary h3{font-size:18px;line-height:1.45;flex:1}
+.rt-k{
+  flex:none;font-family:var(--display);font-weight:700;font-size:11px;
+  border-radius:999px;padding:2px 10px;
+}
+.rt.a .rt-k{background:var(--p1-bg);color:var(--p1)}
+.rt.b .rt-k{background:var(--p2-bg);color:var(--p2)}
+.rt.c .rt-k{background:var(--p3-bg);color:var(--p3)}
+.rt .lead{font-size:13.5px;color:var(--ink-2);margin-top:9px;line-height:1.85}
+
+/* つまずきやすいところ（.share と同じ形で、色だけ変える） */
+.pit{
+  margin:10px 0 0 32px;background:var(--alert-bg);border-radius:11px;padding:9px 12px;
+  font-size:12.5px;color:var(--ink-2);line-height:1.8;
+}
+.pit b{display:block;font-size:11px;letter-spacing:.08em;color:var(--alert);font-weight:700;margin-bottom:2px}
+
+/* 持ちものチェック */
+.kit .row .w{width:92px;color:var(--muted);font-weight:500}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M4.2 2.6h6.1l3.5 3.5v9.3H4.2z" fill="none" stroke="currentColor" stroke-width="1.3"
+              stroke-linejoin="round" opacity=".55"/>
+        <path d="M6.6 9.4h4.8M6.6 12h3.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      確定申告ノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="../" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">
+    確定申告を、<strong>いつまでに、どこへ、何を持っていくか</strong>の順に並べたノートです。
+    期限までの残り日数は、きょうの日付から自動で出ます。日付を入れる必要はありません。
+    広告も関連記事もありません。えらんだ系統とチェックは、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- 今日 -->
+  <section class="today">
+    <div class="eyebrow">きょうの位置</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">—</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <label for="yearSel" class="eyebrow">申告する年分</label>
+      <select id="yearSel" aria-label="申告する年分"></select>
+    </div>
+    <p class="hint" id="hint"></p>
+
+    <div class="nextup" id="nextup">
+      <h4>この年分の日付</h4>
+      <div id="nextList"></div>
+    </div>
+  </section>
+
+  <!-- 最初に読む -->
+  <div class="warn">
+    <b>このページの金額は、そのまま信じないでください</b>
+    税の決まりは<strong>ほぼ毎年変わります。</strong>
+    このページは<strong>期限・段取り・集めるもの</strong>を中心に書いていて、
+    金額はどうしても必要なところにしか書いていません。書いたところには年分と国税庁へのリンクを添えています。
+    <strong>実際に申告するときは、必ず国税庁のページでその年分の数字を確認してください。</strong>
+    個別の判断は、税務署か税理士に聞くのが確実です。
+  </div>
+
+  <!-- 入口 -->
+  <section class="sec">
+    <h2>まず、どれに当てはまりますか</h2>
+    <p class="note">
+      あてはまるものをえらぶと、その道筋が開きます。かけもちの人（会社員で副業もあり、医療費控除も使う）は、
+      ふたつ以上ひらいて読んでください。えらんだ内容はこの端末に保存されます。
+    </p>
+    <div class="pick" id="pick"></div>
+  </section>
+
+  <div id="routeHost"></div>
+
+  <!-- 共通の段取り -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>だれにも共通する段取り</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="段取り"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 持ちもの -->
+  <section class="sec">
+    <h2>集める書類のチェックリスト</h2>
+    <p class="note">
+      申告書を書き始める前に、ここにあるものを一か所に集めてしまうのが、いちばん早い進め方です。
+      どれが要るかは人によって違います。関係のない行は飛ばしてください。
+    </p>
+    <div class="table kit" id="kitTable"></div>
+  </section>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>迷ったときの相談先</h2>
+    <p class="note">「これは経費になりますか」を検索し続けるより、聞いたほうが早いことが多いです。</p>
+    <div class="help">
+      <dl>
+        <dt>税務署（所轄の税務署）</dt>
+        <dd>納税地を所轄する税務署が、申告書の提出先であり相談先です。
+          確定申告の時期は混みます。事前予約が要る署もあるので、行く前に電話で確かめてください。</dd>
+        <dt>国税局電話相談センター</dt>
+        <dd>税務署に電話して音声案内に従うと、一般的な相談はこちらにつながります。
+          「このケースは雑所得ですか事業所得ですか」のような一般論は、ここで聞けます。</dd>
+        <dt>確定申告書等作成コーナー・e-Tax</dt>
+        <dd>国税庁のサイト上で、画面の質問に答えていくと申告書ができます。
+          計算は自動なので、税率表を自分で引く必要はありません。そのまま送信も、印刷して郵送もできます。</dd>
+        <dt>市区町村の住民税（市民税・県民税）担当課</dt>
+        <dd>住民税の申告、住民税だけの手続き、ふるさと納税の控除が反映されているかの確認はここです。
+          税務署ではわかりません。</dd>
+        <dt>税理士</dt>
+        <dd>金額が大きい年、事業をたたむ年、不動産や株を売った年、相続がからむ年は、
+          一度でも見てもらう価値があります。確定申告の時期は手が埋まるので、早めに。</dd>
+        <dt>青色申告会・商工会・商工会議所</dt>
+        <dd>個人事業主向けに、記帳や申告の相談に乗っている団体です。地域によって内容は違います。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        税の制度は<strong>毎年の税制改正で変わります。</strong>
+        控除の額、適用期限、経過措置の期限は、来年には違っているかもしれません。
+        そのためこのページは、<strong>変わりにくいもの（期限の決まり方、段取り、集める書類）</strong>を中心に書いています。
+      </p>
+      <p style="margin:0 0 10px">
+        金額を書いたところには<strong>「令和◯年分」と年分を明示し、国税庁のページへのリンク</strong>を添えました。
+        リンク先がそのページの正解です。このページの数字が古いと思ったら、リンク先を信じてください。
+      </p>
+      <p style="margin:0">
+        出典は<strong>国税庁・e-Tax・総務省・市区町村</strong>など公的機関のものだけを使っています。
+        出典のない記述は、制度の断定ではなく、進め方の提案です。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/shinkoku/tokushu/index.htm" target="_blank" rel="noopener">確定申告特集</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/shinkoku/qa/02.htm" target="_blank" rel="noopener">所得税及び復興特別所得税の申告等 Q&amp;A</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/shinkoku/tebiki/2025/index.htm" target="_blank" rel="noopener">確定申告の手引き</a>」</li>
+      <li>国税庁「<a href="https://www.nta.go.jp/law/tsutatsu/kihon/tsusoku/01/03/10.htm" target="_blank" rel="noopener">国税通則法基本通達 第10条関係（期間の計算及び期限の特例）</a>」</li>
+      <li>国税庁タックスアンサー <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2030.htm" target="_blank" rel="noopener">No.2030 還付申告</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm" target="_blank" rel="noopener">No.1900 給与所得者で確定申告が必要な人</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2036.htm" target="_blank" rel="noopener">No.2036 確定申告書の税務署への送付</a></li>
+      <li>国税庁タックスアンサー <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1120.htm" target="_blank" rel="noopener">No.1120 医療費を支払ったとき（医療費控除）</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1129.htm" target="_blank" rel="noopener">No.1129 特定一般用医薬品等購入費を支払ったとき（セルフメディケーション税制）</a></li>
+      <li>国税庁タックスアンサー <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1155.htm" target="_blank" rel="noopener">No.1155 ふるさと納税（寄附金控除）</a>／総務省「<a href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/mechanism/procedure.html" target="_blank" rel="noopener">ふるさと納税のしくみ・ふるさと納税の流れ</a>」</li>
+      <li>国税庁タックスアンサー <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-1.htm" target="_blank" rel="noopener">No.1211-1 住宅の新築等をし、令和4年以降に居住の用に供した場合（住宅借入金等特別控除）</a></li>
+      <li>国税庁タックスアンサー <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1130.htm" target="_blank" rel="noopener">No.1130 社会保険料控除</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1135.htm" target="_blank" rel="noopener">No.1135 小規模企業共済等掛金控除</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm" target="_blank" rel="noopener">No.1140 生命保険料控除</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1145.htm" target="_blank" rel="noopener">No.1145 地震保険料控除</a></li>
+      <li>国税庁「<a href="https://www.nta.go.jp/law/tsutatsu/kihon/shotoku/04/09.htm" target="_blank" rel="noopener">所得税基本通達 法第35条《雑所得》関係</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/shinkoku/kojin_jigyo/index.htm" target="_blank" rel="noopener">個人で事業を行っている方の記帳・帳簿等の保存について</a>」／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1500.htm" target="_blank" rel="noopener">No.1500 雑所得</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2210.htm" target="_blank" rel="noopener">No.2210 やさしい必要経費の知識</a></li>
+      <li>国税庁「<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/shinkoku/annai/04.htm" target="_blank" rel="noopener">A1-5 個人事業の開業届出・廃業届出等手続</a>」／タックスアンサー <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2090.htm" target="_blank" rel="noopener">No.2090 新たに事業を始めたときの届出など</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2070.htm" target="_blank" rel="noopener">No.2070 青色申告制度</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2072.htm" target="_blank" rel="noopener">No.2072 青色申告特別控除</a></li>
+      <li>国税庁タックスアンサー <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6501.htm" target="_blank" rel="noopener">No.6501 納税義務の免除</a>／<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6498.htm" target="_blank" rel="noopener">No.6498 適格請求書等保存方式（インボイス制度）</a>／「<a href="https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/shohi/keigenzeiritsu/invoice_2tokurei.htm" target="_blank" rel="noopener">2割特例 特設ページ</a>」</li>
+      <li>国税庁タックスアンサー <a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2040.htm" target="_blank" rel="noopener">No.2040 予定納税</a>／「<a href="https://www.nta.go.jp/taxes/nozei/nofu/24200042/noufu_kigen.htm" target="_blank" rel="noopener">主な国税の納期限（法定納期限）及び振替日</a>」／「<a href="https://www.nta.go.jp/taxes/nozei/nofu/24100020.htm" target="_blank" rel="noopener">G-2-1 振替納税手続による納付</a>」</li>
+      <li><a href="https://www.e-tax.nta.go.jp/" target="_blank" rel="noopener">e-Tax 国税電子申告・納税システム</a></li>
+      <li>横浜市「<a href="https://www.city.yokohama.lg.jp/kurashi/koseki-zei-hoken/zeikin/faq/answer2.html" target="_blank" rel="noopener">給与以外に副収入がある場合の住民税の申告は…</a>」（住民税の申告は市区町村の扱いです。お住まいの市区町村のページも確認してください）</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    えらんだ系統・年分・チェックは、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    税額や控除額の最終的な判断は、国税庁のページ・税務署・税理士の案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 公的機関の一次情報で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「進め方の提案」であって、制度の断定ではない）
+   ============================================================ */
+
+var L = {
+  tokushu: '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/shinkoku/tokushu/index.htm" target="_blank" rel="noopener">確定申告特集</a>」',
+  qa:      '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/shinkoku/qa/02.htm" target="_blank" rel="noopener">所得税及び復興特別所得税の申告等 Q&amp;A</a>」',
+  kigen:   '国税庁「<a href="https://www.nta.go.jp/law/tsutatsu/kihon/tsusoku/01/03/10.htm" target="_blank" rel="noopener">国税通則法基本通達 第10条関係</a>」',
+  kanpu:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2030.htm" target="_blank" rel="noopener">No.2030 還付申告</a>',
+  a1900:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1900.htm" target="_blank" rel="noopener">No.1900 給与所得者で確定申告が必要な人</a>',
+  a1120:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1120.htm" target="_blank" rel="noopener">No.1120 医療費を支払ったとき</a>',
+  a1129:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1129.htm" target="_blank" rel="noopener">No.1129 特定一般用医薬品等購入費を支払ったとき（セルフメディケーション税制）</a>',
+  a1155:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1155.htm" target="_blank" rel="noopener">No.1155 ふるさと納税（寄附金控除）</a>',
+  soumu:   '総務省「<a href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/furusato/mechanism/procedure.html" target="_blank" rel="noopener">ふるさと納税の流れ</a>」',
+  a1211:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1211-1.htm" target="_blank" rel="noopener">No.1211-1 住宅借入金等特別控除</a>',
+  a1135:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1135.htm" target="_blank" rel="noopener">No.1135 小規模企業共済等掛金控除</a>',
+  a1140:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1140.htm" target="_blank" rel="noopener">No.1140 生命保険料控除</a>',
+  a1145:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1145.htm" target="_blank" rel="noopener">No.1145 地震保険料控除</a>',
+  a1130:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1130.htm" target="_blank" rel="noopener">No.1130 社会保険料控除</a>',
+  t35:     '国税庁「<a href="https://www.nta.go.jp/law/tsutatsu/kihon/shotoku/04/09.htm" target="_blank" rel="noopener">所得税基本通達 法第35条《雑所得》関係</a>」',
+  kicho:   '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/shinkoku/kojin_jigyo/index.htm" target="_blank" rel="noopener">個人で事業を行っている方の記帳・帳簿等の保存について</a>」',
+  a2210:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2210.htm" target="_blank" rel="noopener">No.2210 やさしい必要経費の知識</a>',
+  a15:     '国税庁「<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/shinkoku/annai/04.htm" target="_blank" rel="noopener">A1-5 個人事業の開業届出・廃業届出等手続</a>」',
+  a2090:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2090.htm" target="_blank" rel="noopener">No.2090 新たに事業を始めたときの届出など</a>',
+  a2070:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2070.htm" target="_blank" rel="noopener">No.2070 青色申告制度</a>',
+  a2072:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2072.htm" target="_blank" rel="noopener">No.2072 青色申告特別控除</a>',
+  a6501:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6501.htm" target="_blank" rel="noopener">No.6501 納税義務の免除</a>',
+  nitokurei:'国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/zeimokubetsu/shohi/keigenzeiritsu/invoice_2tokurei.htm" target="_blank" rel="noopener">2割特例 特設ページ</a>」',
+  a2040:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2040.htm" target="_blank" rel="noopener">No.2040 予定納税</a>',
+  noufu:   '国税庁「<a href="https://www.nta.go.jp/taxes/nozei/nofu/24200042/noufu_kigen.htm" target="_blank" rel="noopener">主な国税の納期限（法定納期限）及び振替日</a>」',
+  furikae: '国税庁「<a href="https://www.nta.go.jp/taxes/nozei/nofu/24100020.htm" target="_blank" rel="noopener">G-2-1 振替納税手続による納付</a>」',
+  a2036:   '国税庁<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2036.htm" target="_blank" rel="noopener">No.2036 確定申告書の税務署への送付</a>',
+  etax:    '<a href="https://www.e-tax.nta.go.jp/" target="_blank" rel="noopener">e-Tax 国税電子申告・納税システム</a>',
+  yokohama:'横浜市「<a href="https://www.city.yokohama.lg.jp/kurashi/koseki-zei-hoken/zeikin/faq/answer2.html" target="_blank" rel="noopener">給与以外に副収入がある場合の住民税の申告は…</a>」'
+};
+
+/* ---- 系統 A / B / C ---- */
+
+var ROUTES = [
+  {
+    key: "A", cls: "a", label: "A",
+    pick: "年末調整だけでは終わらない会社員",
+    pickSub: "医療費が多かった／ふるさと納税をした／家を買った／年の途中で辞めた",
+    title: "会社員の還付申告",
+    lead: "会社員でも、<strong>年末調整では処理できない控除</strong>があります。" +
+          "これは「しなければならない申告」ではなく、<strong>しないと戻ってこないお金</strong>の話です。" +
+          "急がなくてもよいかわりに、忘れると戻りません。",
+    tasks: [
+      {
+        id: "a-when", title: "還付申告は、2月16日を待たなくていい", due: "翌年1月1日から5年", hard: true,
+        body: "<p>還付を受けるための申告は、<strong>その年の翌年1月1日から5年間提出することができます</strong>。</p>" +
+              "<p>つまり、</p>" +
+              "<ul>" +
+              "<li><strong>2月16日の受付開始を待つ必要はありません。</strong>年が明けたら出せます。" +
+              "早く出すほど早く還付されます</li>" +
+              "<li><strong>5年前の分までさかのぼって出せます。</strong>" +
+              "「去年、医療費控除を出し忘れた」は、まだ間に合う可能性があります</li>" +
+              "</ul>" +
+              "<p>上の「きょうの位置」で<strong>過去の年分をえらぶと、その年分がいつまで出せるか</strong>が出ます。</p>" +
+              "<p>なお、納める税金がある人の確定申告（還付ではないほう）は、" +
+              "受付開始から期限までの間に出す必要があります。ここは別の話です。</p>",
+        src: L.kanpu + '／' + L.qa,
+        pit: "「確定申告は3月15日まで」と覚えていると、還付申告まで期限切れだと思い込みます。還付は5年間です。"
+      },
+      {
+        id: "a-iryo", title: "医療費控除", due: "1月1日〜12月31日に支払った分", soft: true,
+        body: "<p>その年の1月1日から12月31日までの間に、<strong>自己または自己と生計を一にする配偶者や" +
+              "その他の親族のために</strong>支払った医療費が対象です。" +
+              "同居していなくても、仕送りしている親などは「生計を一にする」に当たることがあります。" +
+              "<strong>家族分を合算できる</strong>のが、いちばん見落とされる点です。</p>" +
+              "<p>控除額は、実際に支払った医療費の合計額から、" +
+              "<strong>保険金などで補てんされる金額</strong>（入院給付金、高額療養費など）を差し引き、" +
+              "さらに一定額を差し引いて計算します。" +
+              "差し引く一定額は<strong>10万円</strong>、ただし" +
+              "<strong>その年の総所得金額等が200万円未満の人は総所得金額等の5パーセントの金額</strong>です。" +
+              "控除額の上限は<strong>200万円</strong>です（令和7年分。最新は国税庁で確認してください）。</p>" +
+              "<p><strong>10万円を超えていないから関係ない、とは限りません。</strong>" +
+              "所得が少ない年は5パーセント基準になるので、5万円の医療費でも対象になることがあります。</p>",
+        where: "<b>出すもの</b>　医療費控除の明細書（確定申告書に添付）。" +
+               "領収書の添付は不要ですが、<strong>確定申告期限等から5年を経過する日までの間、" +
+               "医療費の領収書の提示または提出を求められることがある</strong>ので、捨てずに保管します",
+        src: L.a1120,
+        pit: "健康保険組合から届く「医療費のお知らせ」を使うと明細書を書く手間が減ります。1年分そろっているか、" +
+             "届く時期がいつかは保険者によって違うので、確かめてから当てにしてください。"
+      },
+      {
+        id: "a-self", title: "セルフメディケーション税制は、医療費控除と「どちらか一方」", due: "選び直せない", hard: true,
+        body: "<p>健康の保持増進および疾病の予防への取組として<strong>一定の取組</strong>を行っている人が、" +
+              "特定一般用医薬品等（いわゆるスイッチOTC医薬品など）を買ったときの特例です。</p>" +
+              "<p><strong>一定の取組</strong>とは、保険者が実施する健康診査、市区町村が健康増進事業として行う健康診査、" +
+              "予防接種、勤務先で実施する定期健康診断、特定健康診査・特定保健指導、" +
+              "市区町村が健康増進事業として実施するがん検診などです。" +
+              "<strong>これを受けていない年は使えません。</strong></p>" +
+              "<p>控除額は、実際に支払った特定一般用医薬品等購入費の合計額から" +
+              "<strong>12,000円</strong>を差し引いた金額（<strong>最高88,000円</strong>）です" +
+              "（令和7年分。最新は国税庁で確認してください）。</p>" +
+              "<p><strong>ここが事故のもとです。</strong>" +
+              "この特例の適用を受ける場合は、<strong>通常の医療費控除を併せて受けることはできません。</strong>" +
+              "しかも<strong>更正の請求や修正申告によりこの選択を変更することはできません。</strong>" +
+              "出したあとで「やっぱり医療費控除のほうが得だった」と気づいても、戻せません。</p>" +
+              "<p>両方の候補がある年は、<strong>先に両方の金額を計算してから、大きいほうを選んでください。</strong></p>",
+        src: L.a1129 + '／' + L.a1120,
+        pit: "医療費控除の明細書と、セルフメディケーション税制の明細書は別の用紙です。両方に書いて両方出す、はできません。"
+      },
+      {
+        id: "a-furusato", title: "ふるさと納税：確定申告をすると、ワンストップ特例は無効になる", due: "いちばん多い事故", hard: true,
+        body: "<p><strong>ワンストップ特例が使えるのは、次の両方を満たすときだけ</strong>です。</p>" +
+              "<ul>" +
+              "<li>もともと<strong>確定申告が不要な給与所得者等</strong>であること</li>" +
+              "<li>寄附した団体が<strong>5団体以内</strong>であること</li>" +
+              "</ul>" +
+              "<p>申請書は、<strong>寄附した翌年1月10日まで</strong>に各自治体へ提出します。" +
+              "ワンストップ特例を使った場合、所得税からの控除は行われず、" +
+              "その分も含めた控除額の全額が<strong>翌年度の住民税から控除</strong>されます。</p>" +
+              "<p><strong>ここが本題です。</strong>" +
+              "医療費控除などの理由で<strong>あとから確定申告をすると、" +
+              "ワンストップ特例の申請の効力は失われます。</strong>" +
+              "国税庁も、<strong>「確定申告を行う方は、ふるさと納税ワンストップ特例の申請が無効となるため、" +
+              "ワンストップ特例の申請をした分も含めて寄附金控除額を計算する必要があります」</strong>としています。</p>" +
+              "<p>つまり、<strong>ワンストップ特例を申請済みの寄附も、全部まとめて申告書に書き直す</strong>必要があります。" +
+              "書き忘れると、その分の控除が丸ごと消えます。" +
+              "医療費控除のために申告して、ふるさと納税の控除を落とす——これがいちばん多い失敗です。</p>",
+        where: "<b>書くもの</b>　寄附先の団体名と寄附額。" +
+               "確定申告書の「都道府県、市区町村への寄附（特例控除対象）」欄にも、ふるさと納税として寄附した金額を必ず記載します<br>" +
+               "<b>集めるもの</b>　寄附金の受領証（受領証明書）。" +
+               "特定事業者が発行する「寄附金控除に関する証明書」を使う方法もあります",
+        src: L.a1155 + '／' + L.soumu,
+        pit: "翌年の6月ごろに届く住民税決定通知書で、寄附金税額控除が入っているかを必ず確かめてください。抜けていたら市区町村へ。"
+      },
+      {
+        id: "a-loan", title: "住宅ローン控除は、初年度だけ確定申告", due: "初年度", hard: true,
+        body: "<p>住宅借入金等特別控除は、<strong>最初の年分は確定申告が必要</strong>です。" +
+              "納税地の所轄税務署に、必要事項を記載した確定申告書に所定の書類を添付して提出します。</p>" +
+              "<p><strong>2年目以降の給与所得者は、年末調整でこの特別控除の適用を受けることができます。</strong>" +
+              "そのとき勤務先に出すのが、税務署から送られてくる" +
+              "「年末調整のための住宅借入金等特別控除証明書兼給与所得者の住宅借入金等特別控除申告書」と、" +
+              "金融機関からの「住宅取得資金に係る借入金の年末残高等証明書」です。</p>" +
+              "<p>控除の額・期間・対象になる住宅の要件は、<strong>居住を開始した年によって違います。</strong>" +
+              "ここは改正がとても多いところなので、金額はこのページには書きません。" +
+              "自分が住み始めた年に対応するページを国税庁で見てください。</p>",
+        where: "<b>初年度の主な添付書類</b>　住宅借入金等特別控除額の計算明細書／" +
+               "金融機関等から交付された住宅取得資金に係る借入金の年末残高等証明書／" +
+               "家屋の登記事項証明書など床面積を明らかにする書類／工事請負契約書または売買契約書の写し など",
+        src: L.a1211,
+        pit: "2年目以降に届く税務署からの控除証明書は、残りの年分がまとめて1通で来ます。なくすと再交付の手続きが要ります。"
+      },
+      {
+        id: "a-more", title: "年末調整で出し忘れた控除も、ここで足せる",
+        body: "<p>証明書が間に合わなくて年末調整に入れられなかった控除は、確定申告で入れ直せます。よくあるのは次のものです。</p>" +
+              "<ul>" +
+              "<li><strong>iDeCo（個人型確定拠出年金）の掛金</strong>　" +
+              "小規模企業共済等掛金控除として、<strong>その年に支払った掛金の全額</strong>が控除されます。" +
+              "国民年金基金連合会から届く「小規模企業共済等掛金払込証明書」が要ります</li>" +
+              "<li><strong>生命保険料控除</strong>　保険会社から秋に届く控除証明書</li>" +
+              "<li><strong>地震保険料控除</strong>　同じく控除証明書</li>" +
+              "<li><strong>社会保険料控除</strong>　家族の国民年金保険料を自分が払った分なども含みます</li>" +
+              "</ul>" +
+              "<p>金額の上限や計算方法は控除ごとに違い、改正もあるので、リンク先で確認してください。</p>",
+        where: "<b>確かめ方</b>　源泉徴収票の「生命保険料の控除額」「社会保険料等の金額」などの欄が、" +
+               "自分が払った分と合っているか。空欄や少なすぎる欄があれば、その控除は年末調整に入っていません",
+        src: L.a1135 + '／' + L.a1140 + '／' + L.a1145 + '／' + L.a1130
+      },
+      {
+        id: "a-taishoku", title: "年の途中で退職して、年末調整を受けていない年",
+        body: "<p>年の途中で退職し、<strong>年末調整を受けずに源泉徴収税額が納め過ぎとなっているとき</strong>は、" +
+              "還付申告の代表例です。給与から毎月引かれていた所得税は「1年間その給料が続く前提」で計算されているので、" +
+              "年の後半に収入がないと、多く払ったままになります。</p>" +
+              "<p>当てはまるのは、たとえばこういう年です。</p>" +
+              "<ul>" +
+              "<li>退職して、その年のうちに再就職しなかった</li>" +
+              "<li>再就職したが、前職の源泉徴収票を新しい勤務先に出さず、年末調整に含めてもらえなかった</li>" +
+              "<li>退職後に、国民年金・国民健康保険の保険料を自分で払った（社会保険料控除になります）</li>" +
+              "</ul>" +
+              "<p><strong>前の勤務先の源泉徴収票が要ります。</strong>もらっていなければ請求してください。</p>",
+        src: L.kanpu,
+        pit: "退職後に払った国民健康保険料・国民年金保険料は、年末調整では誰も入れてくれません。自分で申告しないと控除されません。"
+      }
+    ]
+  },
+
+  {
+    key: "B", cls: "b", label: "B",
+    pick: "会社員で、副業や雑所得がある",
+    pickSub: "ネット販売／原稿料／配達／アフィリエイト／暗号資産／フリマの売上",
+    title: "副業・雑所得がある会社員",
+    lead: "ここでいちばん多い誤解が<strong>「20万円以下なら申告しなくていい」</strong>です。" +
+          "半分は合っていて、半分は違います。正確に書きます。",
+    tasks: [
+      {
+        id: "b-20", title: "「20万円以下なら申告不要」の、正確な意味", due: "住民税は別の話", hard: true,
+        body: "<p><strong>所得税の話</strong>から。給与所得者のうち、" +
+              "<strong>1か所から給与の支払を受けている人で、" +
+              "給与所得および退職所得以外の各種の所得金額の合計額が20万円を超える人</strong>は、" +
+              "確定申告が必要とされています。" +
+              "2か所以上から給与を受けている人は、年末調整されなかった給与の収入金額と" +
+              "給与所得・退職所得以外の各種の所得金額との合計額で判定します。</p>" +
+              "<p>逆に言えば、20万円以下なら<strong>所得税の確定申告は不要</strong>です。ここまでは合っています。</p>" +
+              "<p><strong>ここからが本題です。住民税には、この20万円の決まりがありません。</strong>" +
+              "住民税は所得税と異なり、<strong>所得の多少にかかわらず、給与所得と合算して税額を計算する</strong>ことになっています。" +
+              "確定申告をした場合は住民税の申告がされたとみなされますが、" +
+              "<strong>確定申告をしなかった場合は、住民税の申告をする必要があります。</strong></p>" +
+              "<p>まとめると、副業の所得が20万円以下のとき、</p>" +
+              "<ul>" +
+              "<li>所得税の確定申告　→　<strong>しなくてよい</strong></li>" +
+              "<li>住民税の申告　→　<strong>市区町村にする必要がある</strong></li>" +
+              "</ul>" +
+              "<p>手続きの名前も出す場所も違います（住民税は<strong>市区町村の窓口</strong>、税務署ではありません）。" +
+              "申告書の様式・提出期限・出し方は市区町村ごとに案内が出ているので、" +
+              "「（お住まいの市区町村名） 住民税 申告」で確認してください。</p>" +
+              "<p>なお、20万円以下でも<strong>確定申告をするほうが有利な場合</strong>があります。" +
+              "医療費控除やふるさと納税で還付を受けるために確定申告をするなら、" +
+              "<strong>そのときは副業の所得も必ず書きます</strong>（20万円以下だからと省くことはできません）。</p>",
+        where: "<b>出す先</b>　所得税は所轄の税務署／住民税はお住まいの市区町村<br>" +
+               "<b>判定するのは「所得」</b>　売上ではありません。売上から必要経費を引いた残りが20万円を超えるかどうかです",
+        src: L.a1900 + '／' + L.yokohama,
+        pit: "「会社にばれたくないから申告しない」は、住民税の申告義務を放置することになります。住民税の徴収方法の相談は、市区町村の窓口でできます。"
+      },
+      {
+        id: "b-kubun", title: "雑所得か、事業所得か", due: "帳簿がものを言う", soft: true,
+        body: "<p>副業の所得を<strong>事業所得</strong>にできれば、青色申告特別控除や損益通算が使えます。" +
+              "そのため「事業所得にしたい」という相談が多いのですが、名乗れば通るものではありません。</p>" +
+              "<p>所得税基本通達は、事業所得と業務に係る雑所得の区分について、" +
+              "<strong>その所得を得るための活動が、社会通念上事業と称するに至る程度で行っているかどうかで判定する</strong>" +
+              "としています。そのうえで、<strong>帳簿書類の保存があるかどうか</strong>が判断の大きな材料になります。" +
+              "帳簿書類の保存がない場合の取扱いや、収入金額が300万円を超えるかどうかによる扱いの違いがあるので、" +
+              "自分の場合がどうなるかは、通達の本文と国税庁の記帳のページを読んでください。</p>" +
+              "<p>実務的な結論はひとつです。<strong>事業所得として申告したいなら、帳簿をつけること。</strong>" +
+              "あとから作れるものではありません。</p>",
+        where: "<b>保存のこと</b>　業務に係る雑所得でも、" +
+               "前々年分の業務に係る雑所得の収入金額が300万円を超える場合は、" +
+               "その業務に係る現金預金取引等関係書類を5年間保存する必要があります",
+        src: L.t35 + '／' + L.kicho,
+        pit: "「赤字の事業所得にして給与と損益通算する」ことを目的にした申告は、否認されることがあります。事業の実態が先です。"
+      },
+      {
+        id: "b-keihi", title: "経費にできるもの、家事按分の考え方",
+        body: "<p>必要経費になるのは、<strong>総収入金額に対応する売上原価その他その総収入金額を得るために直接要した費用の額</strong>と、" +
+              "<strong>その年に生じた販売費、一般管理費その他業務上の費用の額</strong>です。</p>" +
+              "<p>問題になるのは、生活と業務の両方にかかわる費用（<strong>家事関連費</strong>）です。" +
+              "自宅の家賃、電気代、通信費、車のガソリン代などがこれにあたります。" +
+              "これらのうち必要経費になるのは、<strong>取引の記録などに基づいて、" +
+              "業務の遂行上直接必要であったことが明らかに区分できる場合の、その区分できる金額に限られます。</strong></p>" +
+              "<p>つまり、按分そのものは否定されていません。" +
+              "求められているのは<strong>「なぜその割合なのか」を記録で説明できること</strong>です。</p>" +
+              "<ul>" +
+              "<li>家賃・電気代　→　作業に使っている面積の割合、使用時間の割合など。" +
+              "根拠にした図面や計算メモを残す</li>" +
+              "<li>通信費　→　業務に使った時間・通信量の割合</li>" +
+              "<li>車　→　走行距離のうち業務分の割合。運行記録があると強い</li>" +
+              "</ul>" +
+              "<p><strong>「だいたい5割」で決めて、根拠を残さないのがいちばん危ないやり方です。</strong>" +
+              "割合の大小より、説明できるかどうかが問われます。</p>",
+        src: L.a2210,
+        pit: "領収書は、何のために使ったかを裏か余白に書いて保存してください。数年後の自分は、絶対に思い出せません。"
+      },
+      {
+        id: "b-atsumeru", title: "副業がある人が集めるもの",
+        body: "<ul>" +
+              "<li><strong>勤務先の源泉徴収票</strong>（本業。2か所以上ならすべて）</li>" +
+              "<li><strong>副業の売上がわかるもの</strong>　支払調書、プラットフォームの売上明細、入金のある口座の通帳</li>" +
+              "<li><strong>経費の領収書・請求書</strong>　支払った日付順にまとめておく</li>" +
+              "<li><strong>按分の根拠メモ</strong>　面積、時間、走行距離など</li>" +
+              "</ul>" +
+              "<p><strong>支払調書は、必ずもらえるものではありません。</strong>" +
+              "届かない取引先があっても、売上を申告しなくてよいことにはなりません。" +
+              "自分の記録で集計してください。</p>" +
+              "<p>プラットフォームの売上明細は、退会したり年度が変わったりするとダウンロードできなくなることがあります。" +
+              "<strong>年内に、その年の分を落としておくと楽です。</strong></p>"
+      }
+    ]
+  },
+
+  {
+    key: "C", cls: "c", label: "C",
+    pick: "フリーランス・個人事業主",
+    pickSub: "開業した／青色申告をしたい／消費税やインボイスが気になる",
+    title: "フリーランス・個人事業主",
+    lead: "この系統でいちばん効くのは<strong>「期限のある届出を、期限内に出したかどうか」</strong>です。" +
+          "1日遅れると、その年分の青色申告が使えなくなることがあります。",
+    tasks: [
+      {
+        id: "c-kaigyo", title: "開業届（個人事業の開業・廃業等届出書）", due: "開業から1か月以内", hard: true,
+        body: "<p>新たに事業を始めたときは、<strong>個人事業の開業・廃業等届出書</strong>を提出します。" +
+              "提出時期は<strong>事業の開始等の事実があった日から1か月以内</strong>、" +
+              "提出先は納税地（事業開始地）の所轄税務署です。e-Taxでも提出できます。</p>" +
+              "<p>このほか、状況に応じて次のような届出があります。</p>" +
+              "<ul>" +
+              "<li><strong>所得税の青色申告承認申請書</strong>（青色申告をしたい場合。下の項目へ）</li>" +
+              "<li><strong>青色事業専従者給与に関する届出書</strong>（家族に給与を払う場合）</li>" +
+              "<li><strong>給与支払事務所等の開設届出書</strong>（人を雇って給与を払う場合。" +
+              "開設の事実があった日から1か月以内）</li>" +
+              "<li><strong>消費税に関する各種届出書</strong>（課税事業者選択、簡易課税制度選択など）</li>" +
+              "</ul>",
+        where: "<b>出す先</b>　納税地を所轄する税務署長<br>" +
+               "<b>出し方</b>　e-Tax・郵送・窓口",
+        src: L.a15 + '／' + L.a2090
+      },
+      {
+        id: "c-aoiro", title: "青色申告承認申請書の期限", due: "3月15日 or 開業から2か月", hard: true,
+        body: "<p>期限は<strong>2通り</strong>あります。自分がどちらか、必ず確かめてください。</p>" +
+              "<ul>" +
+              "<li><strong>すでに事業をしている人</strong>　" +
+              "青色申告をしようとする<strong>年の3月15日まで</strong>に申請書を提出します。" +
+              "たとえば今年分から青色にしたいなら、今年の3月15日までです。" +
+              "<strong>来年の申告のときに出しても、今年分には間に合いません。</strong></li>" +
+              "<li><strong>その年の1月16日以後に新たに開業した人</strong>　" +
+              "<strong>業務を開始した日から2か月以内</strong>に提出します</li>" +
+              "</ul>" +
+              "<p>青色申告ができるのは、<strong>不動産所得・事業所得・山林所得</strong>がある人です。</p>" +
+              "<p>帳簿書類は<strong>原則として7年間保存</strong>することとされています" +
+              "（請求書や見積書などの書類は5年間でよいものもあります）。</p>",
+        src: L.a2070,
+        pit: "開業届と青色申告承認申請書は別の用紙で、期限も違います。開業届だけ出して青色申告のつもりでいる人が、毎年います。"
+      },
+      {
+        id: "c-tokubetsu", title: "青色申告特別控除と、e-Tax・電子帳簿保存の関係", due: "期限内申告が条件", hard: true,
+        body: "<p>控除額は<strong>65万円・55万円・10万円</strong>の3段階です" +
+              "（令和7年分。最新は国税庁で確認してください）。</p>" +
+              "<p><strong>55万円の要件</strong></p>" +
+              "<ul>" +
+              "<li>不動産所得または事業所得を生ずべき<strong>事業</strong>を営んでいること</li>" +
+              "<li>これらの所得に係る取引を<strong>正規の簿記の原則（一般的には複式簿記）により記帳</strong>していること</li>" +
+              "<li>記帳に基づいて作成した<strong>貸借対照表、損益計算書および明細書を確定申告書に添付</strong>し、" +
+              "<strong>その年分の確定申告期限（翌年3月15日）までに提出</strong>すること</li>" +
+              "</ul>" +
+              "<p><strong>65万円は、55万円の要件に加えて</strong>、次のどちらかを満たす場合です。</p>" +
+              "<ul>" +
+              "<li>その年分の事業に係る<strong>仕訳帳および総勘定元帳について電子帳簿保存</strong>を行っていること" +
+              "（令和4年分以後は一定の届出書の提出も要件になっています）</li>" +
+              "<li>確定申告書、貸借対照表、損益計算書等を、" +
+              "<strong>確定申告書の提出期限までにe-Taxを使用して送信</strong>すること</li>" +
+              "</ul>" +
+              "<p>実務上は、<strong>e-Taxで期限内に送る</strong>のがいちばん確実な65万円の取り方です。</p>" +
+              "<p><strong>期限に1日遅れると、55万円・65万円は使えません。</strong>" +
+              "これが期限を守る最大の理由です。上記の要件に当たらない青色申告者は10万円になります。</p>",
+        src: L.a2072,
+        pit: "「e-Taxで送った」だけでは足りません。複式簿記の記帳と、貸借対照表の添付が前提です。"
+      },
+      {
+        id: "c-shohi", title: "消費税とインボイス：免税事業者の考え方",
+        body: "<p><strong>納税義務の免除（免税事業者）</strong>の基本は次の通りです。</p>" +
+              "<ul>" +
+              "<li><strong>基準期間における課税売上高が1,000万円以下</strong>である場合には、" +
+              "原則として納税義務が免除されます。個人事業者の基準期間は<strong>前々年</strong>です</li>" +
+              "<li>ただし、<strong>特定期間における課税売上高が1,000万円を超える</strong>場合には、" +
+              "基準期間が1,000万円以下でも納税義務は免除されません。" +
+              "個人の特定期間は<strong>前年1月1日から6月30日まで</strong>です" +
+              "（この判定は給与等支払額によることもできます）</li>" +
+              "<li><strong>適格請求書発行事業者の登録を受けている場合には、納税義務は免除されません。</strong>" +
+              "つまり、インボイスを出すために登録すると、売上が1,000万円以下でも消費税の申告が必要になります</li>" +
+              "</ul>" +
+              "<p>登録するかどうかは、<strong>取引先が課税事業者か（インボイスを求めてくるか）</strong>で判断が変わります。" +
+              "一般の消費者だけが相手なら、求められないこともあります。取引先に確認してから決めてください。</p>" +
+              "<p>免税事業者から登録して課税事業者になった小規模事業者の負担を軽くする" +
+              "<strong>経過措置（2割特例）</strong>があります。" +
+              "これは<strong>令和5年10月1日から令和8年9月30日までの日の属する課税期間</strong>が対象とされている措置で、" +
+              "適用できる課税期間かどうかには条件があります。" +
+              "自分の課税期間が対象になるかは、国税庁の特設ページで確認してください。</p>",
+        where: "<b>個人事業者の消費税の申告期限</b>　所得税より遅く、<strong>3月31日</strong>です" +
+               "（その日が土日祝に当たる年は翌平日）。上の「きょうの位置」に残り日数が出ます",
+        src: L.a6501 + '／' + L.nitokurei,
+        pit: "所得税を3月15日に出して安心し、消費税の申告を忘れる年があります。期限が違うことを覚えておいてください。"
+      },
+      {
+        id: "c-yotei", title: "予定納税：7月と11月に、前払いが来る", due: "7月・11月", hard: true,
+        body: "<p><strong>予定納税基準額が15万円以上になる方は、予定納税が必要</strong>です。" +
+              "前の年の所得をもとに計算された税額を、その年のうちに前払いする仕組みです。</p>" +
+              "<p>納付の時期は、<strong>第1期分が7月1日から7月31日まで、第2期分が11月1日から11月30日まで</strong>で、" +
+              "原則として予定納税基準額の<strong>3分の1の金額</strong>ずつ、2回に分けて納めます" +
+              "（その日が土日祝に当たる年は翌平日になります。正確な日付は国税庁の納期限一覧で確認してください）。</p>" +
+              "<p>通知は6月ごろに税務署から届きます。<strong>黙って引き落とされるものではありません。</strong>" +
+              "振替納税にしていない人は、自分で納付する必要があります。</p>" +
+              "<p><strong>今年の商売が去年より大きく落ちているとき</strong>は、" +
+              "<strong>予定納税額の減額申請</strong>ができます。" +
+              "前年並みの前払いを求められて資金が詰まる前に、所轄の税務署に相談してください。</p>",
+        src: L.a2040 + '／' + L.noufu,
+        pit: "開業2年目に予定納税の通知が来て、資金繰りが崩れる人が多いところです。1年目の利益が出たら、その分を別に取り分けておいてください。"
+      },
+      {
+        id: "c-furikae", title: "振替納税にしておく",
+        body: "<p>振替納税は、申告所得税および復興特別所得税と、個人事業者の消費税および地方消費税について、" +
+              "<strong>指定した預貯金口座から自動で引き落とす</strong>納付方法です。</p>" +
+              "<p>使うには<strong>預貯金口座振替依頼書</strong>を、" +
+              "所轄税務署または金融機関に提出します（e-Taxでの提出もできます）。" +
+              "<strong>提出は、その税目の納期限までに行う必要があります。</strong>" +
+              "一度手続きすれば、その後は続けて使えます。</p>" +
+              "<p>振替納税にすると、<strong>実際に口座から引き落とされる日（振替日）は、" +
+              "申告・納付の期限より後になります。</strong>" +
+              "その年の振替日がいつになるかは毎年決まるので、" +
+              "国税庁の「主な国税の納期限（法定納期限）及び振替日」で確認してください。</p>" +
+              "<p><strong>残高不足に注意してください。</strong>" +
+              "振替ができなかった場合、法定納期限の翌日から延滞税がかかります。" +
+              "振替日の前日までに入金しておいてください。</p>",
+        where: "<b>ほかの納め方</b>　ダイレクト納付、インターネットバンキング、クレジットカード納付、" +
+               "スマホアプリ納付、コンビニ納付、金融機関や税務署の窓口。" +
+               "使える方法と上限額は国税庁のページで確認してください",
+        src: L.furikae + '／' + L.noufu
+      },
+      {
+        id: "c-kicho", title: "帳簿は、年末にまとめて作らない",
+        body: "<p>個人で事業や不動産貸付け等を行う方には、<strong>記帳と帳簿書類の保存義務</strong>があります" +
+              "（所得税の申告の必要がない方も含みます）。</p>" +
+              "<p>2月に1年分をまとめて入力するのは、毎年いちばん多い苦しみ方です。" +
+              "<strong>事業用の口座とカードを生活用と分けるだけで、作業量が半分以下になります。</strong></p>" +
+              "<ul>" +
+              "<li>事業用の銀行口座を1つ作る</li>" +
+              "<li>事業の支払いはその口座のカードに寄せる</li>" +
+              "<li>現金払いは、できるだけ減らす</li>" +
+              "<li>月に一度、30分だけ帳簿を締める日を決める</li>" +
+              "</ul>" +
+              "<p>これだけで、申告期の仕事は「確認」に変わります。</p>",
+        src: L.kicho
+      }
+    ]
+  }
+];
+
+/* ---- 共通の段取り ---- */
+
+var STAGES = [
+  {
+    id: "s1", phase: "p1", chip: "集める", chipSub: "1月〜2月",
+    tag: "準備",
+    title: "書類を一か所に集める",
+    lead: "申告書を書き始めてから探し回るのが、いちばん時間を食います。" +
+          "<strong>先に集めきってしまうと、入力自体は1時間かからないことが多い</strong>です。",
+    tasks: [
+      {
+        id: "s-atsume", title: "いつ、何が届くか",
+        body: "<p>控除の証明書は、秋から冬にかけてばらばらに届きます。届いた順に封筒を1つにまとめてください。</p>" +
+              "<ul>" +
+              "<li><strong>10月〜11月ごろ</strong>　生命保険料・地震保険料の控除証明書、" +
+              "iDeCoの小規模企業共済等掛金払込証明書、国民年金保険料の控除証明書</li>" +
+              "<li><strong>12月〜1月ごろ</strong>　勤務先の源泉徴収票</li>" +
+              "<li><strong>1月〜2月ごろ</strong>　医療費のお知らせ（保険者による）、" +
+              "住宅ローンの年末残高等証明書、特定口座年間取引報告書</li>" +
+              "<li><strong>寄附のつど</strong>　ふるさと納税の受領証</li>" +
+              "</ul>" +
+              "<p>なくした証明書は再発行してもらえます。ただし<strong>時間がかかります。</strong>" +
+              "足りないものに気づくのは早いほどよいので、1月のうちに一度並べてみてください。</p>"
+      },
+      {
+        id: "s-mynaportal", title: "マイナポータル連携という近道",
+        body: "<p>国税庁の確定申告書等作成コーナーには、" +
+              "<strong>マイナポータル連携で控除証明書などのデータを自動入力する仕組み</strong>があります。" +
+              "対応している証明書の種類と、事前にやっておく設定は毎年広がっているので、" +
+              "使えるかどうかは国税庁のページで確認してください。</p>" +
+              "<p>使う場合、<strong>マイナンバーカードと電子証明書の有効期限</strong>を先に確かめてください。" +
+              "電子証明書は発行から5回目の誕生日までなど、カード本体とは別の期限です。" +
+              "切れていると市区町村の窓口で更新することになり、申告直前だと間に合わないことがあります。</p>",
+        src: L.tokushu
+      }
+    ]
+  },
+
+  {
+    id: "s2", phase: "p2", chip: "つくる", chipSub: "申告書",
+    tag: "作成",
+    title: "申告書をつくる",
+    lead: "税率表を自分で引く必要はありません。" +
+          "<strong>国税庁の確定申告書等作成コーナー</strong>が、金額を入れれば計算してくれます。",
+    tasks: [
+      {
+        id: "s-tsukuru", title: "確定申告書等作成コーナーを使う",
+        body: "<p>国税庁のサイト上で、画面の案内に従って金額を入力すると申告書ができます。" +
+              "スマートフォンからも使えます。できあがったものは、" +
+              "<strong>e-Taxでそのまま送信</strong>するか、<strong>印刷して郵送・持参</strong>するかを選べます。</p>" +
+              "<p>税額の計算・控除額の上限の判定・端数処理は、すべて自動です。" +
+              "<strong>このページに税率表や控除額の一覧を載せていないのは、そこを人間が引く必要がないからです。</strong></p>" +
+              "<p>入力の途中で保存できます。途中でやめるときは、必ずデータを保存してください。</p>",
+        src: L.tokushu + '／' + L.etax
+      },
+      {
+        id: "s-kaku", title: "書きもらしやすいところ",
+        body: "<ul>" +
+              "<li><strong>ふるさと納税</strong>　ワンストップ特例を申請済みの分も、確定申告するなら全部書きます</li>" +
+              "<li><strong>2か所目以降の給与</strong>　年末調整されていない給与があれば書きます</li>" +
+              "<li><strong>家族の分の医療費・社会保険料</strong>　生計を一にしていれば、自分が払った分をまとめられます</li>" +
+              "<li><strong>還付金の振込口座</strong>　本人名義の口座を書きます。屋号だけの口座や家族名義では振り込まれません</li>" +
+              "<li><strong>マイナンバー</strong>　申告書に記載が必要です</li>" +
+              "</ul>"
+      }
+    ]
+  },
+
+  {
+    id: "s3", phase: "p3", chip: "出す", chipSub: "期限まで",
+    tag: "提出",
+    title: "いつまでに、どこへ、どうやって出すか",
+    lead: "所得税の申告と納付の期限は、原則として<strong>その年の翌年3月15日</strong>です。" +
+          "土日に当たる年は動きます。動き方には決まりがあります。",
+    tasks: [
+      {
+        id: "s-kigen", title: "期限が土日祝に当たる年の決まり", due: "翌平日にずれる", hard: true,
+        body: "<p>国税の期限については、<strong>期限が土曜日、日曜日、国民の祝日、" +
+              "12月29日から31日に当たるときは、その後の最初の平日に繰り延べる</strong>" +
+              "という取扱いがあります（期限の特例）。</p>" +
+              "<p>だから、確定申告の期限は年によって<strong>3月15日・16日・17日</strong>と動きます。" +
+              "受付開始日（原則2月16日）も、同じ理由で動きます。" +
+              "たとえば令和7年分の申告と納税は、<strong>令和8年2月16日（月）から3月16日（月）まで</strong>でした。</p>" +
+              "<p><strong>このページの上に出ている日付は、この決まりで自動計算しています。</strong>" +
+              "ただし祝日は年によって変わる可能性があるので、最後は国税庁の発表で確かめてください。</p>",
+        src: L.kigen + '／' + L.tokushu + '／' + L.qa
+      },
+      {
+        id: "s-dou", title: "e-Tax・郵送・窓口",
+        body: "<p>出し方は3つあります。</p>" +
+              "<ul>" +
+              "<li><strong>e-Tax（電子申告）</strong>　" +
+              "24時間（利用可能時間内）送れます。添付書類の一部を省略できます。" +
+              "青色申告特別控除65万円の要件にもなります。" +
+              "マイナンバーカード方式とID・パスワード方式があります</li>" +
+              "<li><strong>郵送</strong>　" +
+              "確定申告書は「信書」に当たるため、<strong>郵便物（第一種郵便物）または信書便物として送る</strong>必要があります。" +
+              "宅配便などは使えません。" +
+              "<strong>その郵便物または信書便物の通信日付印により表示された日が提出日とみなされます</strong>" +
+              "（＝期限日の消印まで有効）。控えの返送用に、切手を貼った返信用封筒を同封します</li>" +
+              "<li><strong>窓口</strong>　" +
+              "所轄の税務署へ持参します。時間外は税務署の時間外収受箱に投函できる場合があります。" +
+              "申告期の窓口は非常に混み、相談は事前予約制のことがあります</li>" +
+              "</ul>",
+        where: "<b>出す先</b>　納税地を所轄する税務署（住所地が原則）",
+        src: L.a2036 + '／' + L.etax
+      }
+    ]
+  },
+
+  {
+    id: "s4", phase: "p4", chip: "納める・受け取る", chipSub: "納付と還付",
+    tag: "お金",
+    title: "納める。あるいは、戻ってくる",
+    lead: "<strong>申告書を出しただけでは、納税は終わっていません。</strong>" +
+          "納付の期限は、原則として申告の期限と同じ日です。",
+    tasks: [
+      {
+        id: "s-nofu", title: "納付の期限と方法", due: "申告期限と同じ日", hard: true,
+        body: "<p>所得税および復興特別所得税の納期限は、原則として<strong>申告期限と同じ日</strong>です" +
+              "（令和7年分は令和8年3月16日（月））。" +
+              "<strong>個人事業者の消費税および地方消費税は3月31日</strong>と、別の期限になっています" +
+              "（令和7年分は令和8年3月31日（火））。</p>" +
+              "<p>納め方は次のとおりです。使える方法・上限額・手数料は変わることがあるので、" +
+              "国税庁のページで確認してください。</p>" +
+              "<ul>" +
+              "<li><strong>振替納税</strong>（口座からの自動引き落とし。振替日は納期限より後）</li>" +
+              "<li><strong>ダイレクト納付</strong>（e-Taxからの口座引落し）</li>" +
+              "<li><strong>インターネットバンキング</strong></li>" +
+              "<li><strong>クレジットカード納付</strong>（決済手数料がかかります）</li>" +
+              "<li><strong>スマホアプリ納付</strong></li>" +
+              "<li><strong>コンビニ納付</strong>（QRコードまたはバーコード）</li>" +
+              "<li><strong>金融機関・税務署の窓口</strong>（現金に納付書を添えて）</li>" +
+              "</ul>" +
+              "<p><strong>期限までに納められないときも、申告書だけは期限内に出してください。</strong>" +
+              "無申告のほうが重く扱われます。納付が難しい事情があるときは、" +
+              "所轄の税務署に相談すると猶予の制度を案内してもらえることがあります。</p>",
+        src: L.noufu + '／' + L.tokushu,
+        pit: "クレジットカード納付の決済手数料は自己負担です。ポイント還元率より手数料が高いことがあります。"
+      },
+      {
+        id: "s-kanpu2", title: "還付金はいつ戻るか",
+        body: "<p>還付までの期間は、提出の方法と時期によって変わります。" +
+              "一般に<strong>e-Taxのほうが書面より早く</strong>、" +
+              "<strong>申告期の直前・直後より、早い時期に出したほうが早い</strong>傾向があります。" +
+              "正確な処理状況は、e-Taxのメッセージボックスで確認できます。</p>" +
+              "<p>振込先は<strong>本人名義の口座</strong>です。" +
+              "旧姓のままの口座や、屋号のみの口座には振り込まれないことがあります。</p>",
+        src: L.etax
+      },
+      {
+        id: "s-machigai", title: "出したあとで間違いに気づいたら",
+        body: "<p>期限内なら、<strong>もう一度出し直す</strong>ことができます" +
+              "（あとから出したものが有効になります）。</p>" +
+              "<p>期限を過ぎてからは、方向によって手続きの名前が変わります。</p>" +
+              "<ul>" +
+              "<li><strong>税金が少なすぎた（納め足りない）</strong>　→　<strong>修正申告</strong>。" +
+              "早く出すほど加算税・延滞税が軽くなります</li>" +
+              "<li><strong>税金が多すぎた（払いすぎ）</strong>　→　<strong>更正の請求</strong>。" +
+              "請求できる期間には制限があります</li>" +
+              "</ul>" +
+              "<p>ただし、<strong>セルフメディケーション税制と医療費控除の選択</strong>は、" +
+              "更正の請求や修正申告では変更できません（上の系統Aを参照）。</p>" +
+              "<p>自分のケースでどちらになるか、期間がどれだけ残っているかは、" +
+              "所轄の税務署に聞くのが早いです。</p>",
+        src: L.a1129
+      }
+    ]
+  }
+];
+
+/* ---- 持ちもの ---- */
+
+var KIT = [
+  { g: "g1", w: "だれでも", t: "マイナンバーがわかるもの", s: "マイナンバーカード、または通知カード＋本人確認書類" },
+  { g: "g1", w: "だれでも", t: "還付金の振込先口座", s: "本人名義。通帳またはキャッシュカード" },
+  { g: "g1", w: "給与がある", t: "源泉徴収票", s: "勤務先ごとに1枚。2か所以上ならすべて" },
+  { g: "g2", w: "医療費", t: "医療費の領収書・医療費のお知らせ", s: "生計を一にする家族の分もまとめられます。明細書を作るのに使います" },
+  { g: "g2", w: "医療費", t: "保険金などで補てんされた額がわかるもの", s: "入院給付金、高額療養費の支給決定通知など。医療費から差し引きます" },
+  { g: "g2", w: "寄附", t: "寄附金の受領証", s: "ふるさと納税の分も含めて全部。特定事業者の証明書でまとめる方法もあります" },
+  { g: "g2", w: "保険", t: "生命保険料・地震保険料の控除証明書", s: "年末調整で出し済みなら不要（源泉徴収票に反映されています）" },
+  { g: "g2", w: "年金等", t: "国民年金保険料の控除証明書、iDeCoの払込証明書", s: "国民健康保険料は証明書が出ない市区町村もあります。支払額を集計しておきます" },
+  { g: "g3", w: "住宅", t: "住宅取得資金に係る借入金の年末残高等証明書", s: "初年度は登記事項証明書や契約書の写しも要ります" },
+  { g: "g3", w: "副業", t: "売上のわかるもの・経費の領収書", s: "支払調書が来ない取引先の分も、自分の記録で集計します" },
+  { g: "g3", w: "事業", t: "帳簿、決算書（青色申告決算書・収支内訳書）", s: "青色で55万円・65万円を取るなら貸借対照表の添付が要ります" },
+  { g: "g4", w: "株・投信", t: "特定口座年間取引報告書", s: "源泉徴収ありの口座でも、損失の繰越などで申告することがあります" },
+  { g: "g4", w: "年金", t: "公的年金等の源泉徴収票", s: "日本年金機構などから届きます" },
+  { g: "g4", w: "去年出した", t: "前年の確定申告書の控え", s: "書き方の見本として、いちばん役に立ちます" }
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_TRACK = "kakutei.track.v1";
+var KEY_YEAR  = "kakutei.year.v1";
+var KEY_CHK   = "kakutei.checks.v1";
+var KEY_TH    = "kakutei.theme.v1";
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+var state = {
+  track: load(KEY_TRACK, ""),
+  year: null,
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+var WD = ["日", "月", "火", "水", "木", "金", "土"];
+function fmtJP(d) {
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日（" + WD[d.getDay()] + "）";
+}
+
+/* 令和の年。改元があれば表示だけずれるので、西暦を主にしてある */
+function reiwa(y) {
+  if (y < 2019) return "";
+  var n = y - 2018;
+  return "令和" + (n === 1 ? "元" : n) + "年分";
+}
+function yearLabel(y) {
+  var r = reiwa(y);
+  return y + "年分" + (r ? "（" + r + "）" : "");
+}
+
+/* 期限の特例：土曜・日曜に当たるときは、その後の最初の平日に繰り延べる。
+   （国民の祝日も同じ扱いだが、祝日は年によって変わるため、ここでは土日のみを自動で処理する） */
+function bizDay(y, m, d) {
+  var x = new Date(y, m - 1, d);
+  while (x.getDay() === 0 || x.getDay() === 6) x.setDate(x.getDate() + 1);
+  return x;
+}
+
+/* ある年分 y について、申告に関わる日付をまとめて返す */
+function marks(y) {
+  return {
+    open: bizDay(y + 1, 2, 16),      /* 受付開始（原則2月16日） */
+    due:  bizDay(y + 1, 3, 15),      /* 所得税の申告・納付期限（原則3月15日） */
+    sho:  bizDay(y + 1, 3, 31),      /* 個人事業者の消費税の申告・納付期限（原則3月31日） */
+    kanpu: new Date(y + 5, 11, 31)   /* 還付申告の期限（翌年1月1日から5年間） */
+  };
+}
+
+/* いま「ふつうに申告する対象になっている年分」。
+   1月1日〜その年の3月の期限までは前年分、期限を過ぎたらその年分。 */
+function currentTargetYear() {
+  var t = today0();
+  var y = t.getFullYear();
+  return (t <= bizDay(y, 3, 15)) ? y - 1 : y;
+}
+
+/* ============================================================
+   きょうの位置
+   ============================================================ */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var hint     = document.getElementById("hint");
+var nextup   = document.getElementById("nextup");
+var nextList = document.getElementById("nextList");
+var yearSel  = document.getElementById("yearSel");
+
+function nxRow(label, d, note) {
+  var t = today0();
+  var left = daysBetween(t, d);
+  var cls, when;
+  if (left < 0) {
+    cls = "over";
+    when = "<b>" + (-left) + "</b>日すぎ";
+  } else if (left === 0) {
+    cls = "soon";
+    when = "<b>きょう</b>";
+  } else if (left <= 30) {
+    cls = "soon";
+    when = "あと<b>" + left + "</b>日";
+  } else {
+    cls = "far";
+    when = "あと<b>" + left + "</b>日";
+  }
+  return '<div class="nx ' + cls + '" style="margin-top:8px">' +
+         '<div class="nx-when">' + when + "</div>" +
+         '<div class="nx-what">' + esc(label) +
+         "<span>" + fmtJP(d) + (note ? "　" + esc(note) : "") + "</span></div></div>";
+}
+
+function buildYearSel() {
+  var cur = currentTargetYear();
+  var h = "";
+  for (var i = 0; i <= 5; i++) {
+    var y = cur - i;
+    h += '<option value="' + y + '">' + yearLabel(y) + "</option>";
+  }
+  yearSel.innerHTML = h;
+
+  var saved = parseInt(load(KEY_YEAR, ""), 10);
+  if (saved && saved <= cur && saved >= cur - 5) state.year = saved;
+  else state.year = cur;
+  yearSel.value = String(state.year);
+}
+
+function renderToday() {
+  var t = today0();
+  var cur = currentTargetYear();
+  var y = state.year;
+  var m = marks(y);
+
+  if (y === cur) {
+    /* いま申告の対象になっている年分 */
+    var leftDue = daysBetween(t, m.due);
+    var leftOpen = daysBetween(t, m.open);
+
+    if (leftDue < 0) {
+      /* 期限の特例の関係でここには来ない想定だが、念のため */
+      dayBig.textContent = "期限を過ぎています";
+      daySub.textContent = yearLabel(y) + "の申告期限 " + fmtJP(m.due);
+      hint.innerHTML = "期限後でも、申告書は出せます。早く出すほど加算税・延滞税は軽くなります。" +
+                       "還付だけの申告なら、" + fmtJP(m.kanpu) + " まで出せます。";
+    } else if (leftOpen > 0) {
+      /* まだ受付が始まっていない */
+      dayBig.textContent = "あと" + leftDue + "日";
+      daySub.textContent = yearLabel(y) + "の申告期限まで";
+      if (t.getFullYear() === y) {
+        hint.innerHTML = "<strong>次の申告期間は、" + fmtJP(m.open) + " からです。</strong>" +
+                         "いまは書類を集める時期です。" +
+                         "なお、" + yearLabel(y) + "の還付申告は " + (y + 1) +
+                         "年1月1日から出せます（" + fmtJP(m.kanpu) + " まで）。";
+      } else {
+        hint.innerHTML = "<strong>受付開始は " + fmtJP(m.open) + " です。</strong>" +
+                         "ただし<strong>還付申告なら、いまでも提出できます</strong>" +
+                         "（" + fmtJP(m.kanpu) + " まで）。待つ必要はありません。";
+      }
+    } else if (leftDue === 0) {
+      dayBig.textContent = "きょうが期限";
+      daySub.textContent = yearLabel(y) + "の申告と納付";
+      hint.innerHTML = "<strong>e-Taxなら利用可能時間内、郵送なら今日の消印まで有効です。</strong>" +
+                       "間に合わないときも、申告書だけは出してください。";
+    } else {
+      dayBig.textContent = "あと" + leftDue + "日";
+      daySub.textContent = yearLabel(y) + "の申告期限まで";
+      hint.innerHTML = "受付中です（" + fmtJP(m.open) + " から）。" +
+                       "期限の週は税務署もe-Taxも混みます。早めに。";
+    }
+
+    var rows = "";
+    if (leftOpen > 0) rows += nxRow("申告書の受付開始", m.open, "還付申告はこれより前でも出せます");
+    rows += nxRow("所得税の申告と納付の期限", m.due, "原則3月15日");
+    rows += nxRow("個人事業者の消費税の申告と納付の期限", m.sho, "原則3月31日");
+    nextList.innerHTML = rows;
+    nextup.classList.add("on");
+
+  } else {
+    /* 過ぎた年分＝還付申告として出せるかどうか */
+    var leftK = daysBetween(t, m.kanpu);
+    if (leftK < 0) {
+      dayBig.textContent = "期限切れ";
+      daySub.textContent = yearLabel(y) + "の還付申告";
+      hint.innerHTML = "還付申告ができる5年間を過ぎています。";
+      nextList.innerHTML = nxRow("還付申告の期限", m.kanpu, "翌年1月1日から5年間");
+    } else {
+      dayBig.textContent = "あと" + leftK + "日";
+      daySub.textContent = yearLabel(y) + "の還付申告の期限まで";
+      hint.innerHTML = "<strong>還付を受けるための申告は、その年の翌年1月1日から5年間できます。</strong>" +
+                       "出し忘れた医療費控除やふるさと納税は、いまからでも間に合います。" +
+                       "ただし、納める税金がある人の申告は別の扱いです。税務署に相談してください。";
+      nextList.innerHTML = nxRow("還付申告の期限", m.kanpu, "翌年1月1日から5年間") +
+                           nxRow("この年分の本来の申告期限", m.due, "すでに過ぎています");
+    }
+    nextup.classList.add("on");
+  }
+}
+
+/* ============================================================
+   共通部品：手続きカード
+   ============================================================ */
+
+function taskHTML(t) {
+  var done = !!state.checks[t.id];
+  var due = t.due ? '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>" : "";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + t.id + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + t.id + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  if (t.pit) h += '<div class="pit"><b>つまずきやすいところ</b>' + esc(t.pit) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+/* ============================================================
+   入口（A / B / C）
+   ============================================================ */
+
+var pick = document.getElementById("pick");
+var routeHost = document.getElementById("routeHost");
+
+function buildPick() {
+  var h = "";
+  for (var i = 0; i < ROUTES.length; i++) {
+    var r = ROUTES[i];
+    h += '<button class="' + r.cls + '" type="button" data-k="' + r.key + '"' +
+         ' aria-pressed="' + (state.track === r.key ? "true" : "false") + '">' +
+         '<b><span class="kb">' + esc(r.label) + "</span>" + esc(r.pick) + "</b>" +
+         esc(r.pickSub) + "</button>";
+  }
+  pick.innerHTML = h;
+}
+
+function buildRoutes() {
+  var h = "";
+  for (var i = 0; i < ROUTES.length; i++) {
+    var r = ROUTES[i];
+    h += '<details class="rt ' + r.cls + '" id="rt-' + r.key + '"' +
+         (state.track === r.key ? " open" : "") + ">";
+    h += '<summary><span class="rt-k">' + esc(r.label) + "</span><h3>" + esc(r.title) + "</h3></summary>";
+    h += '<p class="lead">' + r.lead + "</p>";
+    for (var j = 0; j < r.tasks.length; j++) h += taskHTML(r.tasks[j]);
+    h += "</details>";
+  }
+  routeHost.innerHTML = h;
+}
+
+function syncPick() {
+  var bs = pick.querySelectorAll("button");
+  for (var i = 0; i < bs.length; i++) {
+    bs[i].setAttribute("aria-pressed", bs[i].getAttribute("data-k") === state.track ? "true" : "false");
+  }
+}
+
+/* ============================================================
+   共通の段取り（レール）
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         "<b>" + esc(s.chip) + "</b>" + esc(s.chipSub) + "</button>";
+  }
+  rail.innerHTML = h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+/* ============================================================
+   持ちもの
+   ============================================================ */
+
+function renderKit() {
+  var h = "";
+  for (var i = 0; i < KIT.length; i++) {
+    var k = KIT[i];
+    h += '<div class="row ' + k.g + '"><div class="w">' + esc(k.w) + "</div>" +
+         '<div class="t">' + esc(k.t) + "<span>" + esc(k.s) + "</span></div></div>";
+  }
+  document.getElementById("kitTable").innerHTML = h;
+}
+
+/* ============================================================
+   進捗
+   ============================================================ */
+
+function renderProgress() {
+  var total = 0, done = 0, i, j;
+  for (i = 0; i < ROUTES.length; i++) {
+    for (j = 0; j < ROUTES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[ROUTES[i].tasks[j].id]) done++;
+    }
+  }
+  for (i = 0; i < STAGES.length; i++) {
+    for (j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+pick.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest("button[data-k]") : null;
+  if (!b) return;
+  var k = b.getAttribute("data-k");
+  state.track = (state.track === k) ? "" : k;
+  save(KEY_TRACK, state.track);
+  syncPick();
+
+  var i;
+  for (i = 0; i < ROUTES.length; i++) {
+    var el = document.getElementById("rt-" + ROUTES[i].key);
+    if (el) el.open = (ROUTES[i].key === state.track);
+  }
+  if (state.track) {
+    var open = document.getElementById("rt-" + state.track);
+    if (open) open.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
+routeHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  toggleCheck(b);
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  toggleCheck(b);
+});
+
+function toggleCheck(b) {
+  var id = b.getAttribute("data-chk");
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest ? b.closest(".task") : null;
+  if (card) card.classList.toggle("done", !!state.checks[id]);
+  renderProgress();
+}
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = +b.getAttribute("data-i");
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+yearSel.addEventListener("change", function () {
+  var v = parseInt(yearSel.value, 10);
+  if (!v) return;
+  state.year = v;
+  save(KEY_YEAR, String(v));
+  renderToday();
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化
+   ============================================================ */
+
+buildYearSel();
+renderToday();
+buildPick();
+buildRoutes();
+buildRail();
+renderStage();
+renderKit();
+
+/* 進捗バーを段取りの下に足す */
+(function () {
+  var host = document.getElementById("stageHost");
+  var p = document.createElement("div");
+  p.className = "prog";
+  p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                '<span class="prog-bar"><i id="progFill"></i></span>';
+  host.parentNode.appendChild(p);
+})();
+
+renderProgress();
+</script>
+</body>
+</html>

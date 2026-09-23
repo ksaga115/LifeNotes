@@ -39,7 +39,14 @@ const NOTES = [
     ready: true,
   },
   { slug: "leaving",  title: "退職のノート",     desc: "退職日から。健康保険、年金、失業給付、住民税、確定申告。", ready: false },
-  { slug: "tax",      title: "確定申告ノート",   desc: "還付申告、副業の申告、事業所得。何を集めて、いつ出すか。", ready: false },
+  {
+    src: "kakutei.html",
+    slug: "tax",
+    title: "確定申告ノート",
+    dist: "確定申告ノート.html",
+    desc: "還付申告、副業の申告、事業所得。何を集めて、いつまでに出すか。期限は自動で数えます。",
+    ready: true,
+  },
   { slug: "disaster", title: "防災の備蓄ノート", desc: "家族構成から必要量を出して、期限を追う。", ready: false },
   { slug: "moving",   title: "引っ越しノート",   desc: "転出・転入の14日から、ライフライン、免許証まで。", ready: false },
 ];
