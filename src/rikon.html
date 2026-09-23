@@ -1,0 +1,1249 @@
+<title>離婚のノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+%%CSS%%
+
+/* ---------- このノート固有 ---------- */
+
+/* 身の安全の帯。.warn と並ぶので、色を変えて別物だとわかるようにする */
+.safety{
+  margin-top:14px;background:var(--surface);border:1px solid var(--p1);
+  border-radius:16px;padding:15px 16px;box-shadow:var(--shadow);
+}
+.safety>h2{font-size:15.5px;color:var(--p1)}
+.safety p{font-size:13px;color:var(--ink-2);line-height:1.85;margin:6px 0 0}
+.safety dl{margin:10px 0 0}
+.safety dt{font-weight:700;font-family:var(--display);font-size:13.5px;margin-top:11px}
+.safety dt:first-child{margin-top:0}
+.safety dd{margin:2px 0 0;color:var(--ink-2);font-size:12.5px;line-height:1.8}
+.safety a{color:var(--p1)}
+
+/* 電話番号 */
+.tel{
+  display:inline-block;font-family:var(--display);font-weight:700;
+  font-size:19px;letter-spacing:.04em;color:var(--ink);
+  font-variant-numeric:tabular-nums;margin-right:6px;
+}
+
+/* 2つの制度を並べる表（合意分割と3号分割など） */
+.cmp{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:12.5px;line-height:1.7}
+.cmp th,.cmp td{padding:6px 8px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
+.cmp thead th{font-weight:500;color:var(--muted);font-size:11.5px;letter-spacing:.06em}
+.cmp tbody th{font-weight:700;color:var(--ink);width:6.5em;font-family:var(--body)}
+.cmp tr:last-child td,.cmp tr:last-child th{border-bottom:0}
+
+/* 施行日でルールが変わるところに付ける印 */
+.era{
+  display:inline-block;font-size:11px;font-weight:700;border-radius:6px;
+  padding:1px 7px;margin-right:4px;white-space:nowrap;
+  background:var(--p3-bg);color:var(--p3);font-family:var(--body);
+}
+
+/* 起点の日付の下の補足 */
+.basis{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.75}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M9 2.6v12.8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity=".45"/>
+        <path d="M4.6 4.6h-1.2M4.6 13.4h-1.2M13.4 4.6h1.2M13.4 13.4h1.2" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/>
+        <path d="M5.9 5.9L3.4 9l2.5 3.1M12.1 5.9L14.6 9l-2.5 3.1" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round" stroke-linecap="round" opacity=".75"/>
+      </svg>
+      離婚のノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="%%HOME%%" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">
+    離婚の<strong>手続きとお金と期限</strong>だけを並べたノートです。
+    離婚が成立した日を入れると、いま何日目で、次に何の期限が来るのかが出ます。
+    どちらの立場にも立ちません。広告も関連記事もありません。
+    入れた日付とチェックは、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- 今日 -->
+  <section class="today">
+    <div class="eyebrow">きょうの位置</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">日付を入れてください</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <input type="date" id="dateIn" aria-label="離婚が成立した日">
+      <button class="solid" id="setBtn" type="button">この日から数える</button>
+      <button class="ghost" id="clearBtn" type="button" hidden>消す</button>
+    </div>
+    <p class="hint" id="hint">
+      まだ成立していなければ、空のままで使えます。日付はこの端末にだけ保存されます。
+    </p>
+    <p class="basis">
+      <b>入れる日</b>　協議離婚は<strong>離婚届が受理された日</strong>、調停は<strong>調停が成立した日</strong>、
+      裁判は<strong>判決が確定した日</strong>です。年金分割・財産分与・婚氏続称の期限は、いずれもこの日から数えます。
+    </p>
+
+    <div class="nextup" id="nextup">
+      <h4>つぎに来る期限</h4>
+      <div id="nextList"></div>
+    </div>
+  </section>
+
+  <!-- 最初に読む -->
+  <div class="warn">
+    <b>あとから取り返せないのは、この2つ</b>
+    離婚したあとに残っている手続きのうち、<strong>年金分割</strong>と<strong>財産分与</strong>には、
+    過ぎたら家庭裁判所でも動かせなくなる期限があります。
+    <strong>2026年（令和8年）4月1日以後に離婚した場合は5年、それより前に離婚した場合は2年です。</strong>
+    どちらに当たるかで、残り時間が倍以上ちがいます。上に離婚が成立した日を入れると、どちらで数えるかが出ます。
+    このほか、<strong>結婚していたときの氏をそのまま名のる届出は、離婚の日から3か月以内</strong>です。
+  </div>
+
+  <!-- 身の安全 -->
+  <section class="safety">
+    <h2>暴力や支配があるときは、順番が変わります</h2>
+    <p>
+      配偶者からの暴力がある場合、手続きの順番より先に、<strong>安全の確保と相談先の確保</strong>が来ます。
+      このノートの残りは読まなくてかまいません。
+      話し合いの場に出ること自体が危険なときは、その前提で進める方法があります。
+      <strong>まず窓口に、いまの状況をそのまま伝えてください。</strong>
+    </p>
+    <dl>
+      <dt>DV相談ナビ　<span class="tel">#8008</span></dt>
+      <dd>
+        全国共通の短縮番号です。かけると、お近くの都道府県の<strong>配偶者暴力相談支援センター</strong>につながります
+        （つながる先の受付時間内に限られます）。
+        センターでは、相談や相談機関の紹介、カウンセリング、被害者と同伴者の緊急時における安全の確保および一時保護、
+        自立して生活することを促進するための情報提供、被害者を居住させ保護する施設の利用についての情報提供、
+        保護命令制度の利用についての情報提供を受けられます。<br>
+        <a href="https://www.gender.go.jp/policy/no_violence/e-vaw/soudankikan/01.html" target="_blank" rel="noopener">内閣府男女共同参画局「配偶者暴力相談支援センター」</a>
+      </dd>
+      <dt>住民票をたどられないようにする（DV等支援措置）</dt>
+      <dd>
+        DV・ストーカー行為等・児童虐待およびこれらに準ずる行為の被害者は、市区町村に申し出ることで、
+        <strong>住民基本台帳の一部の写しの閲覧、住民票の写し等の交付、戸籍の附票の写しの交付</strong>を制限できます。
+        申出には、警察・配偶者暴力相談支援センター・児童相談所などの相談機関の意見が必要です。
+        支援措置の期間は<strong>1年</strong>で、期間が終わる前に申し出れば延長できます。<br>
+        <a href="https://www.soumu.go.jp/main_sosiki/jichi_gyousei/daityo/dv_shien.html" target="_blank" rel="noopener">総務省「住民票の写し等の交付等の制限」</a>
+      </dd>
+      <dt>子どもへの虐待の相談・通告　<span class="tel">189</span></dt>
+      <dd>
+        児童相談所虐待対応ダイヤル。お住まいの地域の児童相談所につながります。<br>
+        <a href="https://www.cfa.go.jp/policies/jidougyakutai/gyakutai-taiou-dial/" target="_blank" rel="noopener">こども家庭庁「児童相談所虐待対応ダイヤル189」</a>
+      </dd>
+      <dt>親権の決め方にも関わります</dt>
+      <dd>
+        家庭裁判所が親権者を定めるとき、<strong>虐待のおそれがあると認められるとき</strong>、
+        <strong>DVのおそれその他の事情により父母が共同して親権を行うことが困難であると認められるとき</strong>は、
+        必ず父母の一方を親権者と定めることとされています（殴る・蹴る等の身体的な暴力を伴うものに限られません）。
+        DVや虐待からの避難は、親権の「急迫の事情」の例としても挙げられています。<br>
+        <a href="https://www.moj.go.jp/MINJI/minji07_00357.html" target="_blank" rel="noopener">法務省「民法等の一部を改正する法律について」</a>
+      </dd>
+    </dl>
+  </section>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>順番にみること</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="段階"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 期限一覧 -->
+  <section class="sec">
+    <h2>期限の一覧</h2>
+    <p class="note" id="deadlineNote">
+      起算点は手続きごとに少しずつ違います（「離婚の時から」「離婚等をした日の翌日から」「知った時から」など）。
+      下の表はそれぞれの正式な起算点で書いています。
+    </p>
+    <div class="table" id="deadlineTable"></div>
+  </section>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>どこに聞けばいいか</h2>
+    <p class="note">制度ごとに窓口が分かれています。役所の1か所で全部は済みません。</p>
+    <div class="help">
+      <dl>
+        <dt>市区町村の戸籍の窓口</dt>
+        <dd>離婚届、婚氏続称の届、入籍届、不受理申出。届書の書き方に不明な点があるときは、ここに聞くのが早いです。</dd>
+        <dt>市区町村のひとり親支援・こども家庭の窓口</dt>
+        <dd>児童扶養手当、ひとり親家庭への支援、医療費の助成、貸付。
+          <strong>名称も、助成の中身も、自治体によって変わります。</strong>「ひとり親」と伝えれば案内してもらえます。</dd>
+        <dt>年金事務所・街角の年金相談センター</dt>
+        <dd>年金分割のための情報通知書の請求、年金分割の請求（標準報酬改定請求書）、国民年金の切替の相談。
+          期限のある手続きなので、迷ったら早めに電話を。</dd>
+        <dt>家庭裁判所</dt>
+        <dd>夫婦関係調整調停（離婚）、婚姻費用の分担請求、財産分与請求、年金分割の割合を定める調停、
+          親子交流（面会交流）、養育費、子の氏の変更許可。手続案内の窓口があります。</dd>
+        <dt>公証役場</dt>
+        <dd>養育費などの取決めを公正証書にするとき。強制執行についての条項をどう書くかも相談できます。</dd>
+        <dt>養育費・親子交流相談支援センター（こども家庭庁委託事業）</dt>
+        <dd>養育費や親子交流の取決め・不払いについての相談先です。
+          <strong>0120-965-419</strong>（携帯電話等からは03-3980-4108）。
+          お住まいの地域の母子家庭等就業・自立支援センターでも相談できます。</dd>
+        <dt>法テラス（日本司法支援センター）</dt>
+        <dd>どの制度の話なのかがわからないとき、どこに相談すればいいかを案内してもらえます。
+          <strong>0570-078374</strong>（IP電話からは03-6745-5600）。平日9:00〜21:00、土曜9:00〜17:00（祝日・年末年始を除く）。</dd>
+        <dt>弁護士</dt>
+        <dd>相手と直接やりとりしたくない、財産や借金が複雑、相手に代理人がついた、
+          このどれかに当たるなら、早い段階で一度相談しておくほうが、結果的に手間が少なく済むことが多いです。
+          各地の弁護士会に法律相談があります。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        ここに書いてあるのは<strong>制度の仕組みと、法令で決まっている期限</strong>です。
+        <strong>法的な助言ではありません。</strong>
+        どちらが有利か、何を求めるべきかは書いていません。それは事情によって変わるもので、
+        判断は弁護士など専門家に相談してください。
+      </p>
+      <p style="margin:0 0 10px">
+        <strong>自治体によって変わるもの</strong>（ひとり親への助成、医療費の助成、窓口の名前、手当の細かい取り扱い）と、
+        <strong>契約先によって変わるもの</strong>（住宅ローン、賃貸借契約、生命保険の受取人）は、
+        このページでは断定せず、どこに聞けばいいかだけ書いています。
+      </p>
+      <p style="margin:0 0 10px">
+        <strong>2026年（令和8年）4月1日に、離婚に関する民法などのルールが大きく変わりました。</strong>
+        親権、養育費、親子交流、財産分与の請求期間が対象です。
+        <strong>離婚した日が施行日の前か後かで、当てはまるルールが違います。</strong>
+        このページでは、変わったところに「2026年4月1日から」の印を付けています。
+      </p>
+      <p style="margin:0">
+        制度・期限・金額は<strong>法務省・裁判所・日本年金機構・こども家庭庁・国税庁・内閣府・総務省・e-Gov法令検索</strong>で
+        確認して書き、その項目に出典リンクを置いています。出典のない記述は、段取りの提案です。
+        どこまで信じるかを、読む人が決められるようにしてあります。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>法務省「<a href="https://www.moj.go.jp/MINJI/minji07_00357.html" target="_blank" rel="noopener">民法等の一部を改正する法律（父母の離婚後等の子の養育に関する見直し）について〔令和8年4月1日施行〕</a>」／同「<a href="https://www.moj.go.jp/content/001449160.pdf" target="_blank" rel="noopener">父母の離婚後の子の養育に関するルールが改正されました（2026年1月改訂）</a>」</li>
+      <li>法務省「<a href="https://www.moj.go.jp/ONLINE/FAMILYREGISTER/5-3.html" target="_blank" rel="noopener">離婚届</a>」／「<a href="https://www.moj.go.jp/MINJI/minji04_00082.html" target="_blank" rel="noopener">戸籍法の一部を改正する法律について（令和6年3月1日施行）</a>」／「<a href="https://www.moj.go.jp/content/001437226.pdf" target="_blank" rel="noopener">不受理申出制度、ご存じですか？</a>」</li>
+      <li>裁判所「<a href="https://www.courts.go.jp/saiban/syurui/fuufu/index.html" target="_blank" rel="noopener">夫婦（離婚等）</a>」／「<a href="https://www.courts.go.jp/saiban/syurui/syurui_kazi/kazi_07_01/index.html" target="_blank" rel="noopener">夫婦関係調整調停（離婚）</a>」／「<a href="https://www.courts.go.jp/saiban/syurui/syurui_kazi/kazi_07_08/index.html" target="_blank" rel="noopener">親子交流調停</a>」／「<a href="https://www.courts.go.jp/saiban/syurui/syurui_kazi/kazi_06_07/index.html" target="_blank" rel="noopener">子の氏の変更許可</a>」</li>
+      <li>裁判所「<a href="https://www.courts.go.jp/saiban/syurui/syurui_kazi/youikuhi-tetsuzuki/index.html" target="_blank" rel="noopener">養育費に関する手続</a>」／「<a href="https://www.courts.go.jp/toukei_siryou/siryo/H30shihou_houkoku/index.html" target="_blank" rel="noopener">平成30年度司法研究（養育費、婚姻費用の算定に関する実証的研究）＝養育費・婚姻費用算定表</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/kyotsu/rikon/20140421-04.html" target="_blank" rel="noopener">離婚時の年金分割</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/seido/kyotsu/rikon/20140421-02.html" target="_blank" rel="noopener">合意分割制度</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/seido/kyotsu/rikon/20140421-03.html" target="_blank" rel="noopener">3号分割制度</a>」／「<a href="https://www.nenkin.go.jp/tokusetsu/rikonbunkatsukaisei.html" target="_blank" rel="noopener">離婚時の年金分割の請求期限が改正されました</a>」／「<a href="https://www.nenkin.go.jp/service/pamphlet/kyufu.files/5-1.pdf" target="_blank" rel="noopener">離婚時の年金分割について（パンフレット）</a>」</li>
+      <li>こども家庭庁「<a href="https://www.cfa.go.jp/policies/hitori-oya/fuyou-teate/" target="_blank" rel="noopener">児童扶養手当について</a>」／「<a href="https://support-hitorioya.cfa.go.jp/support/" target="_blank" rel="noopener">ひとり親家庭のためのポータルサイト</a>」／「<a href="https://www.cfa.go.jp/policies/jidougyakutai/gyakutai-taiou-dial/" target="_blank" rel="noopener">児童相談所虐待対応ダイヤル189</a>」</li>
+      <li>国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1171.htm" target="_blank" rel="noopener">No.1171 ひとり親控除</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1170.htm" target="_blank" rel="noopener">No.1170 寡婦控除</a>」</li>
+      <li>内閣府男女共同参画局「<a href="https://www.gender.go.jp/policy/no_violence/e-vaw/soudankikan/01.html" target="_blank" rel="noopener">配偶者暴力相談支援センター</a>」／総務省「<a href="https://www.soumu.go.jp/main_sosiki/jichi_gyousei/daityo/dv_shien.html" target="_blank" rel="noopener">住民票の写し等の交付等の制限（DV等支援措置）</a>」</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/129AC0000000089" target="_blank" rel="noopener">民法</a>」／「<a href="https://laws.e-gov.go.jp/law/322AC0000000224" target="_blank" rel="noopener">戸籍法</a>」／「<a href="https://laws.e-gov.go.jp/law/423AC0000000052" target="_blank" rel="noopener">家事事件手続法</a>」／「<a href="https://laws.e-gov.go.jp/law/354AC0000000004" target="_blank" rel="noopener">民事執行法</a>」／「<a href="https://laws.e-gov.go.jp/law/335M50000100012" target="_blank" rel="noopener">国民年金法施行規則</a>」</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した日付とチェックは、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    ここに書いてあるのは制度の説明で、法的な助言ではありません。
+    実際の判断は、市区町村・年金事務所・家庭裁判所・弁護士の案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 一次情報で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「段取りの提案」であって、制度の断定ではない）
+   ============================================================ */
+
+var SRC_MOJ2026 = '法務省「<a href="https://www.moj.go.jp/MINJI/minji07_00357.html" target="_blank" rel="noopener">民法等の一部を改正する法律〔令和8年4月1日施行〕</a>」／' +
+                  '同「<a href="https://www.moj.go.jp/content/001449160.pdf" target="_blank" rel="noopener">父母の離婚後の子の養育に関するルールが改正されました</a>」';
+var SRC_EGOV_MINPO = 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/129AC0000000089" target="_blank" rel="noopener">民法</a>」';
+var SRC_EGOV_KOSEKI = 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/322AC0000000224" target="_blank" rel="noopener">戸籍法</a>」';
+
+var STAGES = [
+  {
+    id: "r1", phase: "p1", chip: "決める順番", chipSub: "出す前に",
+    tag: "はじめに",
+    title: "離婚届を出す前に決めること",
+    lead: "離婚届は1枚で、出せば受理されます。" +
+          "決めないまま出しても離婚は成立しますが、" +
+          "<strong>そのあとで決め直すには、相手の協力か、家庭裁判所が要ります。</strong>" +
+          "何を先に決めるかだけ、確かめておいてください。",
+    tasks: [
+      {
+        id: "r-shinken-first", title: "未成年の子がいるなら、親権者は先に決まっている必要がある",
+        body: "<p>離婚届には、<strong>親権者と定められる当事者の氏名と、その者が親権を行う子の氏名</strong>を" +
+              "記載することになっています。つまり、未成年の子がいる協議離婚では、" +
+              "<strong>親権者が決まっていないと離婚届は出せません。</strong></p>" +
+              "<p>親権者の指定を求める家事審判または家事調停の申立てがされている場合は、" +
+              "その旨を記載することとされています。</p>" +
+              "<p><span class=\"era\">2026年4月1日から</span>" +
+              "離婚後の親権者は、<strong>父母の双方とすることも、その一方とすることもできます。</strong>" +
+              "協議離婚では父母の協議で決めます。くわしくは「子どものこと」のところに書いています。</p>",
+        src: SRC_EGOV_KOSEKI + "（第76条）／" + SRC_MOJ2026
+      },
+      {
+        id: "r-atokara", title: "あとから決め直すのに、家庭裁判所が要るもの",
+        body: "<p>離婚したあとでも請求できますが、<strong>期限があるもの</strong>と、" +
+              "<strong>相手が応じなければ家庭裁判所に持ち込むしかないもの</strong>があります。</p>" +
+              "<ul>" +
+              "<li><strong>財産分与</strong>　協議が調わないときは家庭裁判所に請求できます。" +
+              "ただし離婚の時から一定の期間を過ぎると請求できません" +
+              "（<span class=\"era\">2026年4月1日から</span>離婚した場合は5年、それ以前の離婚は2年）</li>" +
+              "<li><strong>年金分割</strong>　離婚等をした日の翌日から起算して5年" +
+              "（2026年4月1日前の離婚は2年）</li>" +
+              "<li><strong>婚氏続称</strong>　離婚の日から3か月以内</li>" +
+              "<li><strong>養育費・親子交流</strong>　期限はありませんが、" +
+              "取決めがないまま時間が経つと、その間の分の扱いが争点になります</li>" +
+              "</ul>" +
+              "<p>上の日付欄に離婚が成立した日を入れると、それぞれの残りが出ます。</p>",
+        src: SRC_EGOV_MINPO + "（第767条第2項・第768条第2項）／" +
+              "日本年金機構「<a href=\"https://www.nenkin.go.jp/tokusetsu/rikonbunkatsukaisei.html\" target=\"_blank\" rel=\"noopener\">離婚時の年金分割の請求期限が改正されました</a>」"
+      },
+      {
+        id: "r-shiryou", title: "手元に集めておくと、話が早くなるもの", due: "段取り", soft: true,
+        body: "<p>制度ではなく、進め方の話です。話し合いでも調停でも、" +
+              "結局この資料の有無で速さが変わります。<strong>別居する前のほうが集めやすいものがあります。</strong></p>" +
+              "<ul>" +
+              "<li>двоих の収入がわかるもの（源泉徴収票、確定申告書の控え、直近の給与明細）</li>" +
+              "<li>預貯金の通帳、証券口座の残高、保険の証券</li>" +
+              "<li>不動産の登記事項証明書、住宅ローンの残高証明</li>" +
+              "<li>年金手帳・基礎年金番号がわかるもの</li>" +
+              "<li>子どもの学費・保育料がわかるもの</li>" +
+              "</ul>" +
+              "<p>写真に撮っておくだけでも違います。" +
+              "ただし、身の安全に関わる状況で無理に集めないでください。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "r2", phase: "p1", chip: "離婚の種類", chipSub: "4つの道",
+    tag: "手続き",
+    title: "協議・調停・審判・裁判",
+    lead: "話し合いでまとまれば協議離婚で終わります。" +
+          "まとまらないときは家庭裁判所ですが、<strong>いきなり裁判にはなりません。</strong>" +
+          "順番が決まっています。",
+    tasks: [
+      {
+        id: "r-kyogi", title: "協議離婚",
+        body: "<p>民法は「<strong>夫婦は、その協議で、離婚をすることができる</strong>」と定めています。" +
+              "役所に離婚届を出して受理されれば成立します。裁判所は関わりません。</p>" +
+              "<p>親権者以外のこと（養育費、親子交流、財産分与、年金分割、慰謝料）は、" +
+              "離婚届に書く欄がありません。<strong>決めても決めなくても受理されます。</strong>" +
+              "決めた内容を残すかどうかは、当事者にまかされています。</p>",
+        src: SRC_EGOV_MINPO + "（第763条）"
+      },
+      {
+        id: "r-chotei", title: "調停（夫婦関係調整調停・離婚）",
+        body: "<p>離婚について当事者間の話合いがまとまらない場合や話合いができない場合には、" +
+              "家庭裁判所の調停手続を利用することができます。" +
+              "<strong>離婚そのものだけでなく、財産分与、慰謝料、親権者の指定、年金分割についても" +
+              "一緒に話し合えます。</strong></p>" +
+              "<p>調停で当事者間に合意が成立し、これを調書に記載したときは、" +
+              "<strong>その記載は確定判決と同一の効力を有します。</strong>" +
+              "これが、調停調書にしておく意味です。</p>" +
+              "<p>調停の場では、相手と顔を合わせずに進める運用がされていることがあります。" +
+              "心配があるときは、申立てのときに家庭裁判所に伝えてください。</p>",
+        where: "<b>申立先</b>　相手方の住所地の家庭裁判所、または当事者が合意で定める家庭裁判所<br>" +
+               "<b>費用</b>　収入印紙1,200円分と連絡用の郵便切手（金額は裁判所ごとに異なります）<br>" +
+               "<b>おもな書類</b>　申立書とその写し、夫婦の戸籍謄本、事情説明書、進行に関する照会回答書、" +
+               "送達場所等届出書。<strong>年金分割についての申立てをする場合は、年金分割のための情報通知書</strong>",
+        src: '裁判所「<a href="https://www.courts.go.jp/saiban/syurui/syurui_kazi/kazi_07_01/index.html" target="_blank" rel="noopener">夫婦関係調整調停（離婚）</a>」／' +
+             'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/423AC0000000052" target="_blank" rel="noopener">家事事件手続法</a>」（第268条第1項）'
+      },
+      {
+        id: "r-shinpan", title: "調停に代わる審判",
+        body: "<p>家庭裁判所は、調停が成立しない場合において相当と認めるときは、" +
+              "当事者双方のために衡平に考慮し、一切の事情を考慮して、職権で、" +
+              "事件の解決のため必要な審判（<strong>調停に代わる審判</strong>）をすることができます。</p>" +
+              "<p>調停が不成立になったとき、必ずこの審判になるわけではありません。" +
+              "家庭裁判所が相当と認めたときに行われるものです。</p>",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/423AC0000000052" target="_blank" rel="noopener">家事事件手続法</a>」（第284条）'
+      },
+      {
+        id: "r-saiban", title: "裁判（離婚訴訟）",
+        body: "<p>調停で解決できない場合の手続です。" +
+              "民法は、夫婦の一方が離婚の訴えを提起できる場合を、次に限っています。</p>" +
+              "<ul>" +
+              "<li>配偶者に不貞な行為があったとき</li>" +
+              "<li>配偶者から悪意で遺棄されたとき</li>" +
+              "<li>配偶者の生死が3年以上明らかでないとき</li>" +
+              "<li>その他婚姻を継続し難い重大な事由があるとき</li>" +
+              "</ul>" +
+              "<p>裁判所は、上の1つめから3つめの事由がある場合であっても、" +
+              "一切の事情を考慮して婚姻の継続を相当と認めるときは、離婚の請求を棄却することができます。</p>" +
+              "<p><span class=\"era\">2026年4月1日から</span>" +
+              "「強度の精神病にかかって回復の見込みがないこと」は、離婚の事由から削除されました。</p>",
+        src: SRC_EGOV_MINPO + "（第770条）／" + SRC_MOJ2026
+      },
+      {
+        id: "r-adr", title: "裁判所の外で話し合う方法",
+        body: "<p>第三者を間に入れて話し合いたい場合や、仕事等の都合で家庭裁判所の調停手続等を" +
+              "利用することが難しい場合について、法務省は" +
+              "<strong>法務大臣の認証を受けた民間事業者によるADR（調停）</strong>を案内しています。</p>" +
+              "<p>どこに相談すればいいかがわからない段階なら、" +
+              "法テラス・サポートダイヤル（0570-078374）で案内を受けられます。</p>",
+        src: SRC_MOJ2026
+      }
+    ]
+  },
+
+  {
+    id: "r3", phase: "p1", chip: "離婚届", chipSub: "出し方",
+    tag: "とどけ出",
+    title: "離婚届のこと",
+    lead: "紙1枚の手続きですが、<strong>出す先と、証人と、出されないようにする仕組み</strong>で" +
+          "つまずく人がいます。ここだけ確かめておいてください。",
+    tasks: [
+      {
+        id: "r-todoke", title: "どこに、いつまでに出すか",
+        body: "<p><strong>届出期間</strong>　協議離婚は<strong>随時</strong>。" +
+              "裁判離婚は<strong>裁判が確定した日から10日以内</strong>です。</p>" +
+              "<p><strong>届出地</strong>　届出人の本籍地または所在地の市役所・区役所・町村役場。" +
+              "<strong>手数料はかかりません。</strong></p>" +
+              "<p><strong>協議離婚の届書には、成年の証人2名の署名が必要です</strong>（押印は任意）。" +
+              "証人は成年であれば誰でもよく、当事者の親族でもかまいません。" +
+              "窓口に行くとき、本人確認書類（運転免許証やパスポートなど）を持っていってください。</p>" +
+              "<p>裁判離婚の場合は、判決離婚なら判決の謄本と確定証明書、" +
+              "調停離婚なら調停調書の謄本、審判離婚なら審判書の謄本と確定証明書を添えます。" +
+              "この場合、本人確認書類の持参は不要とされています。</p>",
+        where: "<b>出す先</b>　届出人の本籍地または所在地の市役所・区役所・町村役場",
+        src: '法務省「<a href="https://www.moj.go.jp/ONLINE/FAMILYREGISTER/5-3.html" target="_blank" rel="noopener">離婚届</a>」'
+      },
+      {
+        id: "r-honseki", title: "本籍地以外に出すとき",
+        body: "<p><span class=\"era\">令和6年3月1日から</span>" +
+              "本籍地ではない市区町村の窓口に戸籍の届出を行う場合でも、" +
+              "提出先の市区町村の職員が本籍地の戸籍を確認することができるようになったため、" +
+              "<strong>戸籍届出時の戸籍証明書等の添付が原則不要になりました。</strong></p>" +
+              "<p>同じ改正で、<strong>本籍地が遠くにある場合でも、" +
+              "お住まいや勤務先の最寄りの市区町村の窓口で戸籍証明書を請求できる</strong>ようになりました" +
+              "（広域交付）。複数の本籍地の戸籍をまとめて1か所で請求することもできます。" +
+              "ただし、コンピュータ化されていない一部の戸籍・除籍は対象外で、" +
+              "一部事項証明書・個人事項証明書は請求できません。</p>" +
+              "<p>「原則不要」であって「必ず不要」ではありません。" +
+              "本籍地以外に出す予定なら、<strong>持ちものをその市区町村に一度確認してください。</strong></p>",
+        src: '法務省「<a href="https://www.moj.go.jp/MINJI/minji04_00082.html" target="_blank" rel="noopener">戸籍法の一部を改正する法律について（令和6年3月1日施行）</a>」'
+      },
+      {
+        id: "r-fujuri", title: "離婚届不受理申出",
+        body: "<p>本人の意思に基づかない戸籍の届出が受理されることを防止するための制度です。" +
+              "<strong>婚姻届・離婚届・養子縁組届・養子離縁届・認知届</strong>が対象になります" +
+              "（裁判による離婚、養子離縁、認知は対象外）。</p>" +
+              "<p>協議離婚の不受理申出ができるのは夫婦です。" +
+              "申出をすると、離婚届が提出されても、" +
+              "<strong>申出をした本人が窓口に来て届け出たことを確認できなかったときは、受理されません。</strong></p>" +
+              "<p><strong>不受理申出は、申出人が取り下げない限り有効です。</strong>期限はありません。" +
+              "手数料・利用料金もかかりません。</p>" +
+              "<p>署名した離婚届を相手が持っている、まだ話し合いが終わっていないのに出されそうだ——" +
+              "という状況のときに使われる制度です。</p>",
+        where: "<b>出す先</b>　申出人の本籍地の市区町村役場、または申出人の住所地・所在地の市区町村役場。" +
+               "原則として申出人本人が窓口で提出します<br>" +
+               "<b>持ちもの</b>　申出人の本人確認書類（運転免許証・マイナンバーカード等、顔写真の付いた身分証明書等）と、" +
+               "不受理申出書（市区町村役場の窓口で配布。ホームページに掲載している市区町村もあります）",
+        src: '法務省「<a href="https://www.moj.go.jp/content/001437226.pdf" target="_blank" rel="noopener">不受理申出制度、ご存じですか？</a>」'
+      }
+    ]
+  },
+
+  {
+    id: "r4", phase: "p2", chip: "期限のあるお金", chipSub: "年金と財産",
+    tag: "ここが本題",
+    title: "過ぎると請求できなくなるもの",
+    lead: "離婚してから気づいても間に合うものが多いなかで、" +
+          "<strong>年金分割と財産分与には、過ぎたら終わりの期限があります。</strong>" +
+          "どちらも、離婚が成立した日から数えます。",
+    tasks: [
+      {
+        id: "r-nenkin", title: "年金分割を請求する", due: "5年／2年", hard: true,
+        body: "<p>離婚した場合、婚姻期間中の厚生年金を分割して、" +
+              "それぞれ自分の年金とすることができる制度です。分割方法は2種類あります。</p>" +
+              '<table class="cmp"><thead><tr><th></th><th>合意分割</th><th>3号分割</th></tr></thead><tbody>' +
+              "<tr><th>分ける対象</th><td>婚姻期間中の二人の厚生年金の記録</td>" +
+              "<td>平成20年4月1日以後の国民年金第3号被保険者期間中の記録</td></tr>" +
+              "<tr><th>相手の合意</th><td><strong>必要</strong>（または裁判手続で按分割合を定める）</td>" +
+              "<td><strong>不要</strong>。第3号被保険者だった人からの請求だけでできる</td></tr>" +
+              "<tr><th>割合</th><td>按分割合を定める。<strong>上限は50%</strong></td>" +
+              "<td><strong>2分の1ずつ</strong>で固定</td></tr>" +
+              "</tbody></table>" +
+              "<p>按分割合とは、年金分割の対象となる期間の二人の標準報酬合計額のうち、" +
+              "分割分を受ける側の持分を表したものです。" +
+              "<strong>上限は50%で、分割を受ける側の持分が減らないように、" +
+              "また相手の持分を超えないように決めなければなりません。</strong></p>" +
+              "<p><strong>請求期限</strong>　離婚等をした日の翌日から起算して<strong>5年</strong>。" +
+              "ただし<strong>令和8年（2026年）4月1日前に離婚等をした場合は、従前のとおり2年</strong>です。" +
+              "また、すでに離婚等が成立し、相手方が死亡した日から起算して1か月を経過すると請求できません。" +
+              "審判・調停の申立てをして期限を越えたときなどの特例もあります。</p>" +
+              "<p>分割しても、相手の年金をもらうわけではありません。" +
+              "<strong>保険料の納付記録そのものを分けて、それぞれの年金額が計算し直されます。</strong>" +
+              "すでに年金を受給している場合、年金分割を請求した日の属する月の翌月分から年金額が改定されます。</p>",
+        where: "<b>請求先</b>　年金事務所または街角の年金相談センター（標準報酬改定請求書）",
+        src: '日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/kyotsu/rikon/20140421-04.html" target="_blank" rel="noopener">離婚時の年金分割</a>」／' +
+             '「<a href="https://www.nenkin.go.jp/tokusetsu/rikonbunkatsukaisei.html" target="_blank" rel="noopener">離婚時の年金分割の請求期限が改正されました</a>」／' +
+             '「<a href="https://www.nenkin.go.jp/service/pamphlet/kyufu.files/5-1.pdf" target="_blank" rel="noopener">離婚時の年金分割について</a>」'
+      },
+      {
+        id: "r-tsuchisho", title: "年金分割のための情報通知書を請求する",
+        body: "<p>按分割合は自由に決められず、法律で定める範囲内になるように決めることとされています。" +
+              "<strong>その範囲、分割の対象となる期間等の情報提供（情報通知書）</strong>を受けられます。" +
+              "調停を申し立てるときにも、この情報通知書が必要書類になっています。</p>" +
+              "<p><strong>請求は、二人一緒でも、一人でもできます。</strong>" +
+              "交付のされ方は次のとおりです。</p>" +
+              "<ul>" +
+              "<li>二人一緒に請求した場合　それぞれに交付されます</li>" +
+              "<li>一人で請求した場合で、<strong>すでに離婚している</strong>とき　それぞれに交付されます</li>" +
+              "<li>一人で請求した場合で、<strong>まだ離婚していない</strong>とき　" +
+              "<strong>請求した人のみに交付されます</strong></li>" +
+              "</ul>" +
+              "<p>50歳以上で老齢年金の受給資格期間を満たしている方は、" +
+              "年金分割時の老齢厚生年金の見込額を試算できます。" +
+              "障害厚生年金を受けている方は障害厚生年金の見込額を試算できます。</p>" +
+              "<p>なお、<strong>3号分割のみを請求する場合は、情報通知書を受けることができません。</strong></p>",
+        where: "<b>出すもの</b>　年金分割のための情報提供請求書<br>" +
+               "<b>添えるもの</b>　基礎年金番号またはマイナンバーを明らかにすることができる書類、" +
+               "婚姻期間を明らかにすることができる戸籍謄本等（請求日から6か月以内に交付されたもの）<br>" +
+               "<b>出す先</b>　お近くの年金事務所",
+        src: '日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/kyotsu/rikon/20140421-02.html" target="_blank" rel="noopener">合意分割制度</a>」／' +
+             '「<a href="https://www.nenkin.go.jp/service/pamphlet/kyufu.files/5-1.pdf" target="_blank" rel="noopener">離婚時の年金分割について</a>」'
+      },
+      {
+        id: "r-zaisan", title: "財産分与を請求する", due: "5年／2年", hard: true,
+        body: "<p>協議上の離婚をした者の一方は、相手方に対して財産の分与を請求することができます。" +
+              "当事者間に協議が調わないとき、または協議をすることができないときは、" +
+              "<strong>家庭裁判所に対して協議に代わる処分を請求することができます。" +
+              "ただし、離婚の時から5年を経過したときは、請求できません。</strong></p>" +
+              "<p><span class=\"era\">2026年4月1日から</span>" +
+              "この期間が2年から5年に伸びました。" +
+              "<strong>改正法の施行前（令和8年3月31日以前）に離婚した夫婦が財産分与の請求をすることができる期間は、" +
+              "離婚後2年です。</strong></p>" +
+              "<p>同じ改正で、家庭裁判所が考慮する要素が条文に例示されました。" +
+              "婚姻中に取得または維持した財産の額、その取得・維持についての各当事者の寄与の程度、" +
+              "婚姻の期間、婚姻中の生活水準、婚姻中の協力および扶助の状況、" +
+              "各当事者の年齢、心身の状況、職業および収入その他一切の事情です。</p>" +
+              "<p><strong>寄与の程度は、その程度が異なることが明らかでないときは、相等しいものとする</strong>" +
+              "と定められました。法務省の解説では、直接収入を得るための就労だけでなく、" +
+              "家事労働や育児の分担など様々な性質のものが含まれることから、" +
+              "寄与の程度は原則として夫婦対等（2分の1ずつ）とされています。</p>" +
+              "<p>また、裁判手続では、家庭裁判所が当事者に対して財産情報の開示を命じることが" +
+              "できるようになりました。</p>",
+        src: SRC_EGOV_MINPO + "（第768条）／" + SRC_MOJ2026
+      },
+      {
+        id: "r-isharyo", title: "慰謝料の時効", due: "起算点が違う", soft: true,
+        body: "<p>慰謝料は、不法行為による損害賠償の請求です。" +
+              "<strong>起算点が離婚の日ではないため、このノートの日付では数えられません。</strong></p>" +
+              "<p>不法行為による損害賠償の請求権は、次の場合に時効によって消滅します。</p>" +
+              "<ul>" +
+              "<li>被害者またはその法定代理人が<strong>損害および加害者を知った時から3年間</strong>行使しないとき</li>" +
+              "<li><strong>不法行為の時から20年間</strong>行使しないとき</li>" +
+              "</ul>" +
+              "<p>ただし、<strong>人の生命または身体を害する不法行為</strong>による損害賠償請求権については、" +
+              "上の「3年間」が「<strong>5年間</strong>」になります。</p>" +
+              "<p>何を不法行為とし、いつ「知った」ことになるのかは、事情によって変わります。" +
+              "ここは自分で判断せず、弁護士に確認してください。</p>",
+        src: SRC_EGOV_MINPO + "（第724条・第724条の2）"
+      },
+      {
+        id: "r-konshi", title: "結婚していたときの氏をそのまま名のる（婚氏続称）", due: "3か月以内", hard: true,
+        body: "<p>婚姻によって氏を改めた夫または妻は、協議上の離婚によって<strong>婚姻前の氏に復します</strong>。" +
+              "これが原則です。</p>" +
+              "<p>婚姻前の氏に復した夫または妻は、" +
+              "<strong>離婚の日から3か月以内に戸籍法の定めるところにより届け出ることによって、" +
+              "離婚の際に称していた氏を称することができます。</strong>" +
+              "届書には離婚の年月日を記載します。裁判上の離婚でも同じです。</p>" +
+              "<p>離婚届と同時に出すこともできます。" +
+              "<strong>3か月を過ぎると、この届出ではできなくなります</strong>" +
+              "（そのあとは、家庭裁判所の氏の変更許可という別の手続になります）。</p>" +
+              "<p>子の氏は、この届出では変わりません。" +
+              "子の戸籍と氏を動かすには、別の手続が要ります（「子どものこと」を見てください）。</p>",
+        where: "<b>出す先</b>　市区町村の戸籍の窓口",
+        src: SRC_EGOV_MINPO + "（第767条・第771条）／" + SRC_EGOV_KOSEKI + "（第77条の2）"
+      }
+    ]
+  },
+
+  {
+    id: "r5", phase: "p2", chip: "子どものこと", chipSub: "親権・養育費",
+    tag: "こども",
+    title: "親権、養育費、親子交流",
+    lead: "<strong>2026年（令和8年）4月1日に、ここのルールが大きく変わりました。</strong>" +
+          "離婚した日が施行日の前か後かで、当てはまるものが違います。" +
+          "改正の対象になったところには印を付けています。",
+    tasks: [
+      {
+        id: "r-shinken", title: "親権者の決め方", due: "2026年4月1日から", soft: true,
+        body: "<p><span class=\"era\">2026年4月1日から</span>" +
+              "父母の婚姻中は父母双方が親権者ですが、これまでの民法では、" +
+              "離婚後は父母の一方のみを親権者と定めなければなりませんでした。" +
+              "改正により、離婚後は、<strong>共同親権の定めをすることも、単独親権の定めをすることもできます。</strong></p>" +
+              "<ul>" +
+              "<li><strong>協議離婚の場合</strong>　父母が、その協議により、" +
+              "親権者を父母双方とするか、その一方とするかを定めます</li>" +
+              "<li><strong>協議が調わない場合や裁判離婚の場合</strong>　家庭裁判所が、" +
+              "父母とこどもとの関係や、父と母との関係などの様々な事情を考慮した上で、" +
+              "こどもの利益の観点から定めます。この裁判手続では、家庭裁判所は父母それぞれから意見を聴かなければならず、" +
+              "こどもの意思を把握するよう努めなければならないとされています</li>" +
+              "</ul>" +
+              "<p><strong>次の場合には、家庭裁判所は必ず単独親権の定めをすることとされています。</strong></p>" +
+              "<ul>" +
+              "<li>虐待のおそれがあると認められるとき</li>" +
+              "<li>DVのおそれその他の事情により父母が共同して親権を行うことが困難であると認められるとき</li>" +
+              "</ul>" +
+              "<p>殴る・蹴る等の身体的な暴力を伴う虐待・DVに限定されません。" +
+              "また、これらの場合以外にも、共同親権と定めることでこどもの利益を害すると認められるときは、" +
+              "裁判所は必ず単独親権の定めをすることとされています。</p>",
+        src: SRC_MOJ2026 + "／" + SRC_EGOV_MINPO + "（第819条）"
+      },
+      {
+        id: "r-sekou-mae", title: "2026年4月1日より前に離婚した場合",
+        body: "<p>法務省は次のように説明しています。</p>" +
+              "<p><strong>すでに離婚して単独親権の定めをしている場合には、" +
+              "改正法の施行によって自動的に共同親権に変更されることはありません。</strong></p>" +
+              "<p>ただし、改正法の施行後に、家庭裁判所が、こども自身やその親族の申立てに基づいて、" +
+              "こどもの利益のための必要性を踏まえて、親権者を単独親権から共同親権に変更する場合があります。" +
+              "どのような場合に認められるかはケースバイケースであるとされています。" +
+              "<strong>虐待やDVのおそれがあるときや、父母が共同して親権を行うことが困難であるときは、" +
+              "共同親権への変更は認められません。</strong></p>" +
+              "<p>なお、父が認知をしたこどもについても、改正により、父母の協議で" +
+              "父母双方を親権者とすることができるようになりました。</p>",
+        src: SRC_MOJ2026
+      },
+      {
+        id: "r-kyodo-koshi", title: "父母双方が親権者のときの、日々の決め方",
+        body: "<p>親権は、父母が共同して行います。ただし、父母の一方のみが親権者であるとき、" +
+              "他の一方が親権を行うことができないとき、" +
+              "<strong>子の利益のため急迫の事情があるとき</strong>は、その一方が行います。</p>" +
+              "<p>また、父母双方が親権者であるときでも、" +
+              "<strong>監護及び教育に関する日常の行為に係る親権の行使は、単独ですることができます。</strong></p>" +
+              "<p>法務省の解説では、次のように例示されています（個別具体的な事情によります）。</p>" +
+              "<ul>" +
+              "<li><strong>日常の行為に当たる例（単独で可）</strong>　食事や服装の決定、短期間の観光目的での旅行、" +
+              "心身に重大な影響を与えない医療行為の決定、通常のワクチンの接種、習い事、" +
+              "高校生の放課後のアルバイトの許可</li>" +
+              "<li><strong>当たらない例（共同で行う）</strong>　こどもの転居、進路に影響する進学先の決定" +
+              "（高校に進学せずに就職するなどの判断を含む）、心身に重大な影響を与える医療行為の決定、" +
+              "財産の管理（預金口座の開設など）</li>" +
+              "<li><strong>急迫の事情の例</strong>　DVや虐待からの避難（こどもの転居などを含む。被害直後に限りません）、" +
+              "こどもに緊急の医療行為を受けさせる必要がある場合、" +
+              "入学試験の結果発表後に入学手続の期限が迫っているような場合</li>" +
+              "</ul>" +
+              "<p>特定の事項について父母の意見が対立するときは、家庭裁判所が、父又は母の請求により、" +
+              "<strong>その事項に係る親権行使者</strong>を定めることができます。</p>" +
+              "<p>離婚後の父母双方を親権者とした場合であっても、その一方を<strong>監護者</strong>と定めることで、" +
+              "こどもの監護をその一方に委ねることができます。</p>",
+        src: SRC_MOJ2026 + "／" + SRC_EGOV_MINPO + "（第824条の2）"
+      },
+      {
+        id: "r-youikuhi", title: "養育費の額を決める（算定表）",
+        body: "<p>養育費は、こどもの健やかな成長に必要な費用で、" +
+              "父母は婚姻関係の有無にかかわらず、経済力に応じて分担する責務を負います。</p>" +
+              "<p>家庭裁判所では、標準的な養育費・婚姻費用の額を簡易迅速に算定するための" +
+              "<strong>標準算定方式・算定表</strong>が使われています。" +
+              "表は<strong>子の人数（1〜3人）と年齢（0〜14歳／15歳以上）</strong>で分かれていて、" +
+              "父母それぞれの収入から目安の額を読み取ります（表1〜表9が養育費、表10〜表19が婚姻費用）。</p>" +
+              "<p>算定表は裁判所のサイトで公表されていて、誰でも見られます。" +
+              "話し合いの段階で、双方が同じ表を見ながら話すと、額の議論が短くなります。</p>",
+        where: '<b>算定表</b>　<a href="https://www.courts.go.jp/toukei_siryou/siryo/H30shihou_houkoku/index.html" target="_blank" rel="noopener">裁判所「養育費・婚姻費用算定表」</a>',
+        src: '裁判所「<a href="https://www.courts.go.jp/saiban/syurui/syurui_kazi/youikuhi-tetsuzuki/index.html" target="_blank" rel="noopener">養育費に関する手続</a>」／' +
+             '「<a href="https://www.courts.go.jp/toukei_siryou/siryo/H30shihou_houkoku/index.html" target="_blank" rel="noopener">平成30年度司法研究（養育費、婚姻費用の算定に関する実証的研究）</a>」'
+      },
+      {
+        id: "r-houtei-youikuhi", title: "取決めがないまま離婚したとき（法定養育費）", due: "2026年4月1日から", soft: true,
+        body: "<p><span class=\"era\">2026年4月1日から</span>" +
+              "これまでの民法では、父母の協議や家庭裁判所の手続により養育費の額を取り決めなければ、" +
+              "養育費を請求することができませんでした。</p>" +
+              "<p>改正により、離婚のときに養育費の取決めをしていなくても、" +
+              "離婚のときから引き続きこどもの監護を主として行う父母は、" +
+              "他方に対して、<strong>暫定的に一定額の養育費を請求することができる</strong>ようになりました。" +
+              "<strong>その額は、子一人当たり月額2万円です。</strong>" +
+              "支払がされないときは、差押えの手続を申し立てることができます。</p>" +
+              "<p><strong>離婚の日から発生し</strong>、支払義務を負う父母は毎月末に、その月の分を支払います。" +
+              "次のいずれか早い日まで発生し続けます。" +
+              "①父母が養育費の取決めをした日　②家庭裁判所における養育費の審判が確定した日　" +
+              "③こどもが18歳に達した日。</p>" +
+              "<p><strong>この規定は、改正法施行後に離婚したケースのみに適用されます。</strong>" +
+              "令和8年3月31日までに離婚した場合には、父母の協議や家庭裁判所の手続により" +
+              "養育費の額を取り決める必要があります。</p>" +
+              "<p>請求を受けた側は、支払能力を欠くために支払をすることができないことや、" +
+              "支払をすることによって自らの生活が著しく窮迫することを証明したときは、" +
+              "その全部または一部の支払を拒むことができます。</p>" +
+              "<p>法務省は、この制度は<strong>あくまでも取決めをするまでの暫定的・補充的なもの</strong>であり、" +
+              "父母の協議や家庭裁判所の手続により、各自の収入などを踏まえた適正な額の取決めをすることが" +
+              "重要であるとしています。</p>",
+        src: SRC_MOJ2026 + "／" + SRC_EGOV_MINPO + "（第766条の3）"
+      },
+      {
+        id: "r-shikko", title: "取決めを公正証書や調停調書にしておく意味",
+        body: "<p>払われなかったときに、<strong>相手の給料や預金を差し押さえられるかどうか</strong>が変わります。" +
+              "差押えには、原則として<strong>債務名義</strong>と呼ばれる書面が要ります。</p>" +
+              "<p>債務名義になるものには、確定判決、調停調書のような" +
+              "<strong>確定判決と同一の効力を有するもの</strong>、" +
+              "そして<strong>公正証書のうち、金銭の一定の額の支払を目的とする請求について公証人が作成し、" +
+              "債務者が直ちに強制執行に服する旨の陳述が記載されているもの（執行証書）</strong>があります。</p>" +
+              "<p>つまり、同じ内容を決めても、<strong>私的な覚書と、公正証書・調停調書とでは、" +
+              "不払いのときにできることが違います。</strong></p>" +
+              "<p>さらに、養育費のような扶養義務等に係る定期金債権では、" +
+              "その一部に不履行があるときは、<strong>まだ支払期限が来ていない分についても" +
+              "債権執行を開始することができる</strong>特例があります" +
+              "（給料など継続的給付に係る債権の差押えについて）。</p>" +
+              "<p><span class=\"era\">2026年4月1日から</span>" +
+              "養育費債権に<strong>先取特権</strong>が付与されたため、" +
+              "債務名義がなくても、取決めの際に父母間で作成した文書に基づいて" +
+              "差押えの手続を申し立てることができるようになりました。" +
+              "<strong>先取特権が付与される上限額は、子一人当たり月額8万円です。</strong>" +
+              "施行前（令和8年3月31日以前）に取決めがされていた場合には、" +
+              "施行後に生ずる養育費に限って先取特権が付与されます。</p>" +
+              "<p>上限額があるので、<strong>公正証書や調停調書にしておく意味がなくなったわけではありません。</strong></p>",
+        src: SRC_MOJ2026 + '／e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/354AC0000000004" target="_blank" rel="noopener">民事執行法</a>」（第22条・第151条の2）'
+      },
+      {
+        id: "r-koryu", title: "親子交流（面会交流）",
+        body: "<p>離婚後または別居中の子との交流について、父母の話し合いがまとまらない場合には、" +
+              "<strong>家庭裁判所の調停または審判の手続</strong>を利用することができます。" +
+              "子の年齢や発達の程度に応じて、その意見・意向等を適切に尊重した取決めができるように、" +
+              "話合いが進められます。</p>" +
+              "<p><span class=\"era\">2026年4月1日から</span>" +
+              "家庭裁判所の手続中に<strong>親子交流を試行的に実施する</strong>制度が設けられました。" +
+              "家庭裁判所は、こどもの心身の状況に照らして相当であるかなどを考慮して試行的実施を促すか否かを検討し、" +
+              "促す場合には日時・場所・方法等の条件を定めることができます。" +
+              "<strong>こどもの心身の状態に照らして相当でないときは、促すことができないこととされています。</strong></p>" +
+              "<p>同じ改正で、婚姻中に別居している場合の親子交流のルールが明確化され、" +
+              "また、こどもの利益のため特に必要があるときは、" +
+              "<strong>父母以外の親族（祖父母等）とこどもとの交流</strong>を家庭裁判所が定められるようになりました。</p>",
+        where: "<b>申立先</b>　相手方の住所地の家庭裁判所、または当事者が合意で定める家庭裁判所<br>" +
+               "<b>費用</b>　収入印紙1,200円分（こども1人につき）と連絡用の郵便切手<br>" +
+               "<b>おもな書類</b>　申立書とその写し、未成年者の戸籍謄本、事情説明書（親子交流）、" +
+               "進行に関する照会回答書、送達場所等届出書",
+        src: '裁判所「<a href="https://www.courts.go.jp/saiban/syurui/syurui_kazi/kazi_07_08/index.html" target="_blank" rel="noopener">親子交流調停</a>」／' + SRC_MOJ2026
+      },
+      {
+        id: "r-kouji", title: "子の氏を変える（子の氏の変更許可と入籍届）",
+        body: "<p><strong>離婚しても、子の氏と戸籍は自動では変わりません。</strong>" +
+              "親権者になっただけでは、子は元の戸籍に残ったままです。</p>" +
+              "<p>子が父または母と氏を異にする場合には、子は、" +
+              "<strong>家庭裁判所の許可を得て、戸籍法の定めるところにより届け出ることによって、" +
+              "その父または母の氏を称することができます。</strong>" +
+              "子が15歳未満であるときは、その法定代理人が子を代理します。</p>" +
+              "<p>手続は2段階です。<strong>①家庭裁判所に子の氏の変更許可を申し立てる　" +
+              "②許可が出たら、市区町村に入籍届を出す</strong>。①だけでは戸籍は動きません。</p>" +
+              "<p><strong>法律上の期限はありません。</strong>ただし、学校や健康保険の手続と関わるので、" +
+              "動かすと決めているなら早いほうが手間が少なく済みます。</p>" +
+              "<p><span class=\"era\">2026年4月1日から</span>" +
+              "裁判所は、<strong>共同親権の場合は原則として父母が共同で申し立てる必要がある</strong>と" +
+              "案内しています。</p>" +
+              "<p>なお、この手続で氏を改めた未成年の子は、成年に達した時から1年以内に届け出ることによって、" +
+              "従前の氏に復することができます。</p>",
+        where: "<b>申立先</b>　子の住所地の家庭裁判所（複数の子が申し立てる場合は、" +
+               "そのうちの1人の子の住所地の家庭裁判所）<br>" +
+               "<b>費用</b>　収入印紙800円分（子1人につき）と連絡用の郵便切手<br>" +
+               "<b>おもな書類</b>　申立書、申立人（子）の戸籍謄本、父・母の戸籍謄本、" +
+               "親権行使者の指定がある場合はその審判書謄本等",
+        src: '裁判所「<a href="https://www.courts.go.jp/saiban/syurui/syurui_kazi/kazi_06_07/index.html" target="_blank" rel="noopener">子の氏の変更許可</a>」／' +
+             SRC_EGOV_MINPO + "（第791条）／" + SRC_EGOV_KOSEKI + "（第98条）"
+      }
+    ]
+  },
+
+  {
+    id: "r6", phase: "p3", chip: "お金と暮らし", chipSub: "手当・保険・税",
+    tag: "生活",
+    title: "手当、保険、税、住まい",
+    lead: "ここは<strong>自治体によって中身が変わるもの</strong>が多いところです。" +
+          "このノートでは国の制度の枠組みだけ書いて、" +
+          "額や条件の細かいところは断定せず、問い合わせ先を置いています。",
+    tasks: [
+      {
+        id: "r-jidou-fuyou", title: "児童扶養手当",
+        body: "<p>父または母と生計を同じくしていない児童が育成されるひとり親家庭等の" +
+              "生活の安定と自立の促進に寄与するための手当です。</p>" +
+              "<ul>" +
+              "<li><strong>対象</strong>　18歳に達する日以後の最初の3月31日までの間にある児童" +
+              "（障害児の場合は20歳未満）を監護する母等</li>" +
+              "<li><strong>支給要件</strong>　父母が婚姻を解消した児童、父または母が死亡した児童、" +
+              "父または母が一定程度の障害の状態にある児童、父または母の生死が明らかでない児童等を" +
+              "監護していること等</li>" +
+              "<li><strong>支給期月</strong>　1月、3月、5月、7月、9月、11月（年6回）</li>" +
+              "<li><strong>実施主体</strong>　都道府県、市、福祉事務所設置町村</li>" +
+              "</ul>" +
+              "<p>手当額には、全額が出る<strong>全部支給</strong>と、所得に応じて減る<strong>一部支給</strong>が" +
+              "あります。こども家庭庁の資料では、令和8年4月からの見込額として、" +
+              "<strong>全部支給 月額48,050円</strong>、一部支給 48,040円〜11,340円、" +
+              "児童2人目以降1人につき加算額が全部支給 11,350円、一部支給 11,340円〜5,680円と" +
+              "示されています。所得制限限度額（収入ベース・2人世帯）は全部支給190万円、一部支給385万円です。</p>" +
+              "<p><strong>額は毎年度見直され、所得の計算も世帯の事情で変わります。" +
+              "実際にいくらになるかは、お住まいの市区町村で確認してください。</strong>" +
+              "申請しないと始まりません。</p>",
+        where: "<b>窓口</b>　お住まいの市区町村（ひとり親支援・こども家庭の担当課）",
+        src: 'こども家庭庁「<a href="https://www.cfa.go.jp/policies/hitori-oya/fuyou-teate/" target="_blank" rel="noopener">児童扶養手当について</a>」'
+      },
+      {
+        id: "r-hitorioya", title: "ひとり親家庭への支援",
+        body: "<p>こども家庭庁のポータルサイトでは、ひとり親家庭が使える支援として" +
+              "次のようなものが案内されています。<strong>実施しているかどうか、中身、" +
+              "所得の条件は、自治体によって変わります。</strong></p>" +
+              "<ul>" +
+              "<li><strong>ひとり親家庭等就業・自立支援事業</strong>　就業相談、訓練講習会、情報発信など</li>" +
+              "<li><strong>母子・父子自立支援プログラム策定事業</strong>　個別の生活・就業支援計画を作ってもらえます</li>" +
+              "<li><strong>自立支援教育訓練給付金</strong>　講座の受講費用の一部が支給されます</li>" +
+              "<li><strong>高等職業訓練促進給付金</strong>　資格取得のために修学する間の生活の負担を軽くするもの</li>" +
+              "<li><strong>ひとり親家庭等日常生活支援事業</strong>　家事支援・保育サービス</li>" +
+              "<li><strong>こどもの生活・学習支援事業</strong>　学習支援、生活習慣の支援</li>" +
+              "<li><strong>離婚前後家庭支援事業</strong>　親支援講座、養育費の支援</li>" +
+              "<li><strong>母子父子寡婦福祉資金貸付金</strong>　12種類の貸付。無利子または年利1.0%</li>" +
+              "</ul>" +
+              "<p>このほか、多くの自治体が<strong>ひとり親家庭等医療費助成</strong>や、" +
+              "保育料・上下水道料金・交通費などの減免を独自に行っています。" +
+              "<strong>あるかどうか、条件がどうかは自治体ごとに違うので、ここでは書きません。</strong>" +
+              "市区町村の窓口で「ひとり親になりました」と伝えれば、使えるものを一覧で案内してもらえます。</p>",
+        where: '<b>一覧</b>　<a href="https://support-hitorioya.cfa.go.jp/support/" target="_blank" rel="noopener">こども家庭庁「ひとり親家庭のためのポータルサイト」</a>',
+        src: 'こども家庭庁「<a href="https://support-hitorioya.cfa.go.jp/support/" target="_blank" rel="noopener">ひとり親家庭のためのポータルサイト</a>」'
+      },
+      {
+        id: "r-hoken", title: "健康保険と年金を切り替える", due: "14日以内", hard: true,
+        body: "<p>相手の勤務先の健康保険に<strong>被扶養者</strong>として入っていた場合、" +
+              "離婚によってその資格を失います。子も一緒に入っていたなら、子の分も同じです。" +
+              "<strong>手元の保険証は使えなくなります。</strong></p>" +
+              "<p>次のどれかに移ることになります。どれになるかは、離婚後の働き方で変わります。</p>" +
+              "<ul>" +
+              "<li>自分の勤務先の健康保険に入る</li>" +
+              "<li>市区町村の国民健康保険に入る</li>" +
+              "</ul>" +
+              "<p>国民健康保険に入るときは、<strong>資格を失ったことの証明（健康保険資格喪失証明書など）</strong>を" +
+              "相手の勤務先から出してもらう必要があるのが一般的です。" +
+              "ここで止まる人が多いところなので、離婚の前後に段取りしておくと楽です。</p>" +
+              "<p><strong>年金のほうは期限があります。</strong>" +
+              "相手の厚生年金の被扶養配偶者（国民年金の第3号被保険者）だった人が" +
+              "第1号被保険者になるときの種別変更の届出は、" +
+              "<strong>その事実があった日から14日以内に、市町村長に提出する</strong>ことと定められています。</p>" +
+              "<p>離婚後に自分が就職して厚生年金に入る場合は、勤務先が手続きします。</p>",
+        where: "<b>出す先</b>　健康保険は市区町村または勤務先／国民年金の種別変更は市区町村",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/335M50000100012" target="_blank" rel="noopener">国民年金法施行規則</a>」（第6条の2）'
+      },
+      {
+        id: "r-zei", title: "税のこと（ひとり親控除・寡婦控除）",
+        body: "<p>所得税・住民税には、ひとり親や寡婦のための控除があります。" +
+              "<strong>年末調整または確定申告で申告しないと、適用されません。</strong></p>" +
+              "<p><strong>ひとり親控除　控除額35万円</strong>。" +
+              "その年の12月31日の現況で、婚姻をしていないことまたは配偶者の生死の明らかでない一定の人のうち、" +
+              "次の3つの要件のすべてに当てはまる人が対象です。</p>" +
+              "<ul>" +
+              "<li>その人と事実上婚姻関係と同様の事情にあると認められる一定の人がいないこと</li>" +
+              "<li>生計を一にする子がいること" +
+              "（その子の総所得金額等が令和8年分は58万円以下で、" +
+              "他の人の同一生計配偶者や扶養親族になっていない人に限られます）</li>" +
+              "<li>合計所得金額が500万円以下であること</li>" +
+              "</ul>" +
+              "<p><strong>寡婦控除　控除額27万円</strong>。" +
+              "ひとり親に該当せず、夫と離婚した後婚姻をしておらず扶養親族がいる人で" +
+              "合計所得金額が500万円以下である人などが対象です。</p>" +
+              "<p>相手の扶養に入っていた場合、離婚によって扶養からも外れます。" +
+              "<strong>住民税は前年の所得に対してかかるので、離婚した年の翌年にまとめて来ることがあります。</strong>" +
+              "納税通知が届いてから慌てないよう、頭に入れておいてください。</p>" +
+              "<p>確定申告そのものの手順は" +
+              "<strong><a href=\"%%NOTE:tax%%\">確定申告ノート</a></strong>にまとめてあります。</p>",
+        src: '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1171.htm" target="_blank" rel="noopener">No.1171 ひとり親控除</a>」／' +
+             '「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1170.htm" target="_blank" rel="noopener">No.1170 寡婦控除</a>」'
+      },
+      {
+        id: "r-sumai", title: "住まいと名義",
+        body: "<p>ここは<strong>制度ではなく契約の話</strong>なので、このノートでは断定しません。" +
+              "確認する先だけ書いておきます。</p>" +
+              "<ul>" +
+              "<li><strong>住宅ローンのある家</strong>　" +
+              "名義を移す、住む人を変える、連帯保証を外す——" +
+              "いずれも<strong>金融機関との契約の話</strong>です。" +
+              "当事者どうしで決めても、金融機関が同意しなければ実現しません。" +
+              "<strong>先に借入先の金融機関に確認してください。</strong>" +
+              "財産分与の話し合いを始める前に聞いておくほうが、やり直しが少なくて済みます</li>" +
+              "<li><strong>不動産の名義</strong>　登記の手続は法務局です。" +
+              "財産分与による所有権移転登記にかかる税や費用も含めて、" +
+              "司法書士か法務局の相談窓口で確認できます</li>" +
+              "<li><strong>賃貸の家</strong>　契約者・連帯保証人を変えられるかは、" +
+              "貸主と管理会社しだいです。退去するほうが名義人なら、そのままにしないこと</li>" +
+              "<li><strong>生命保険の受取人、携帯の家族契約、クレジットカードの家族カード</strong>　" +
+              "離婚では自動で変わりません。一覧にして、1つずつ連絡することになります</li>" +
+              "</ul>" +
+              "<p>引っ越しに伴う住所変更・ライフライン・免許証などの手続は" +
+              "<strong><a href=\"%%NOTE:moving%%\">引っ越しノート</a></strong>にまとめてあります。" +
+              "<strong>ただし、住所を知られたくない事情があるときは、" +
+              "先に「暮らしの安全」のところのDV等支援措置を見てください。</strong></p>"
+      }
+    ]
+  }
+];
+
+/* 期限一覧。span は離婚日によって2年／5年が変わるもの */
+var DEADLINES = [
+  { g: "g1", w: "10日", t: "離婚届の提出（調停・審判・裁判のとき）",
+    s: "裁判が確定した日から。協議離婚は随時で、期限はありません" },
+  { g: "g1", w: "14日", t: "国民年金の種別変更（第3号被保険者だった人）",
+    s: "その事実があった日から。市町村長へ" },
+  { g: "g2", w: "3か月", t: "婚氏続称の届出",
+    s: "離婚の日から。結婚していたときの氏をそのまま名のる場合" },
+  { g: "g3", w: "2年／5年", span: 1, t: "年金分割の請求",
+    s: "離婚等をした日の翌日から起算。2026年4月1日以後の離婚は5年、それより前は2年" },
+  { g: "g3", w: "2年／5年", span: 1, t: "財産分与の請求（家庭裁判所へ）",
+    s: "離婚の時から。2026年4月1日以後の離婚は5年、それより前は2年" },
+  { g: "g4", w: "3年／5年", t: "慰謝料の請求（消滅時効）",
+    s: "損害および加害者を知った時から3年（生命・身体を害する場合は5年）。不法行為の時から20年" },
+  { g: "g4", w: "期限なし", t: "子の氏の変更許可と入籍届",
+    s: "法律上の期限はありません。子の戸籍と氏を動かすときの2段階の手続" },
+  { g: "g4", w: "期限なし", t: "養育費・親子交流の取決め",
+    s: "家庭裁判所の調停・審判はいつでも申し立てられます" }
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_DATE = "rikon.date.v1";
+var KEY_CHK  = "rikon.checks.v1";
+var KEY_TH   = "kurashi.theme.v1";
+
+/* 民法等改正法の施行日。この日以後に離婚した場合、年金分割・財産分与が5年になる */
+var LAW2026 = new Date(2026, 3, 1);
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+var state = {
+  date: load(KEY_DATE, ""),
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
+function fmtJP(d) { return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日"; }
+function addDays(d, n) { var x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+
+/* 月・年は日数の足し算ではなく暦どおりに数える。
+   月末の扱い（1月31日の3か月後など）は、その月の末日に丸める */
+function addMonths(d, n) {
+  var y = d.getFullYear(), m = d.getMonth() + n, day = d.getDate();
+  var last = new Date(y, m + 1, 0).getDate();
+  return new Date(y, m, day < last ? day : last);
+}
+function addYears(d, n) { return addMonths(d, n * 12); }
+
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* 離婚日によって、年金分割・財産分与が5年か2年か */
+function spanYears(d) { return d >= LAW2026 ? 5 : 2; }
+
+/* 経過の言い換え。年・月は日数の割り算ではなく暦どおりに数える */
+function elapsedLabel(n, from) {
+  if (n < 0)   return "まだ先の日付です";
+  if (n === 0) return "きょう成立";
+  if (n < 31)  return n + "日目";
+
+  var t = today0();
+  var months = (t.getFullYear() - from.getFullYear()) * 12 + (t.getMonth() - from.getMonth());
+  if (t.getDate() < from.getDate()) months--;
+  if (months < 0) months = 0;
+
+  if (months < 12) return months + "か月ごろ（" + n + "日目）";
+  var y = Math.floor(months / 12);
+  var rm = months % 12;
+  return y + "年" + (rm > 0 ? rm + "か月" : "") + "ごろ（" + n + "日目）";
+}
+
+/* 「つぎに来る期限」に出すもの。離婚日から組み立てる。
+   noOverdue: 過ぎたときは出さない（当てはまらない人に「◯日すぎ」と出さないため） */
+function buildMilestones(d) {
+  var sp = spanYears(d);
+  var list = [
+    { on: addDays(d, 10), t: "離婚届の提出",
+      s: "調停・審判・裁判で離婚した場合。確定の日から10日以内", noOverdue: true },
+    { on: addDays(d, 14), t: "国民年金の種別変更",
+      s: "相手の扶養（第3号被保険者）だった場合。14日以内に市区町村へ" },
+    { on: addMonths(d, 3), t: "婚氏続称の届出",
+      s: "離婚の日から3か月以内。結婚していたときの氏をそのまま名のる場合" },
+    { on: addYears(d, sp), t: "年金分割の請求",
+      s: "離婚等をした日の翌日から起算して" + sp + "年" },
+    { on: addYears(d, sp), t: "財産分与の請求（家庭裁判所へ）",
+      s: "離婚の時から" + sp + "年" }
+  ];
+  list.sort(function (a, b) { return a.on - b.on; });
+  return list;
+}
+
+/* ============================================================
+   描画
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         "<b>" + esc(s.chip) + "</b>" + esc(s.chipSub) + "</button>";
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(t) {
+  var done = !!state.checks[t.id];
+  var due = t.due ? '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>" : "";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + t.id + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + t.id + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+function renderDeadlines() {
+  var d = parseDate(state.date);
+  var sp = d ? spanYears(d) : 0;
+  var h = "";
+  for (var i = 0; i < DEADLINES.length; i++) {
+    var x = DEADLINES[i];
+    var w = x.w;
+    if (x.span && sp) w = sp + "年";
+    h += '<div class="row ' + x.g + '"><div class="w">' + esc(w) + "</div>" +
+         '<div class="t">' + esc(x.t) + "<span>" + esc(x.s) + "</span></div></div>";
+  }
+  document.getElementById("deadlineTable").innerHTML = h;
+
+  var note = document.getElementById("deadlineNote");
+  var base = "起算点は手続きごとに少しずつ違います（「離婚の時から」「離婚等をした日の翌日から」" +
+             "「知った時から」など）。下の表はそれぞれの正式な起算点で書いています。";
+  if (d) {
+    base += sp === 5
+      ? "　入れた日付は2026年4月1日以後なので、年金分割と財産分与は5年で数えています。"
+      : "　入れた日付は2026年4月1日より前なので、年金分割と財産分与は2年で数えています。";
+  }
+  note.textContent = base;
+}
+
+/* ---- 今日の位置 ---- */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var dateIn   = document.getElementById("dateIn");
+var clearBtn = document.getElementById("clearBtn");
+var hint     = document.getElementById("hint");
+var nextup   = document.getElementById("nextup");
+var nextList = document.getElementById("nextList");
+
+function renderToday() {
+  var d = parseDate(state.date);
+  if (!d) {
+    dayBig.textContent = "日付を入れてください";
+    daySub.textContent = "";
+    clearBtn.hidden = true;
+    nextup.classList.remove("on");
+    hint.textContent = "まだ成立していなければ、空のままで使えます。日付はこの端末にだけ保存されます。";
+    return;
+  }
+
+  var n = daysBetween(d, today0());
+  dayBig.textContent = elapsedLabel(n, d);
+  daySub.textContent = fmtJP(d) + " から";
+  clearBtn.hidden = false;
+  hint.textContent = "この日付はこの端末のブラウザにだけ保存されています。";
+
+  /* つぎに来る期限を3つ。過ぎたものは、直近の1件だけ上に出す
+     （全部を「◯日すぎ」で埋めると、次に何が来るのかが見えなくなるため） */
+  var ms = buildMilestones(d);
+  var rows = [], overdue = null;
+  for (var m = 0; m < ms.length; m++) {
+    var left = daysBetween(today0(), ms[m].on);
+    if (left < 0) {
+      if (!ms[m].noOverdue && left >= -60) overdue = { ms: ms[m], left: left };
+      continue;
+    }
+    if (rows.length < 3) rows.push({ ms: ms[m], left: left });
+  }
+  if (overdue) rows.unshift(overdue);
+
+  if (!rows.length) {
+    nextList.innerHTML = '<div class="nx far"><div class="nx-when"><b>—</b></div>' +
+      '<div class="nx-what">このノートで数えている期限は、すべて過ぎています' +
+      "<span>養育費・親子交流・子の氏の変更には期限がありません。下の一覧を見てください</span></div></div>";
+    nextup.classList.add("on");
+    return;
+  }
+
+  var h = "";
+  for (var r = 0; r < rows.length; r++) {
+    var row = rows[r];
+    var cls = row.left < 0 ? "over" : (row.left <= 30 ? "soon" : "far");
+    var when = row.left < 0
+      ? "<b>" + Math.abs(row.left) + "</b>日すぎ"
+      : (row.left === 0 ? "<b>きょう</b>" : "あと<b>" + row.left + "</b>日");
+    h += '<div class="nx ' + cls + '">' +
+         '<div class="nx-when">' + when + "</div>" +
+         '<div class="nx-what">' + esc(row.ms.t) +
+         "<span>" + fmtJP(row.ms.on) + "まで　" + esc(row.ms.s) + "</span></div></div>";
+  }
+  nextList.innerHTML = h;
+  nextup.classList.add("on");
+}
+
+/* ---- 進捗 ---- */
+function renderProgress() {
+  var total = 0, done = 0;
+  for (var i = 0; i < STAGES.length; i++) {
+    for (var j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = +b.dataset.i;
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  var id = b.dataset.chk;
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest(".task");
+  if (card) card.classList.toggle("done", !!state.checks[id]);
+  renderProgress();
+});
+
+document.getElementById("setBtn").addEventListener("click", function () {
+  var v = dateIn.value;
+  var d = parseDate(v);
+  if (!d) { hint.textContent = "日付を選んでください。"; return; }
+  if (daysBetween(d, today0()) < 0) { hint.textContent = "未来の日付は入れられません。"; return; }
+  state.date = v;
+  save(KEY_DATE, v);
+  renderToday();
+  renderDeadlines();
+});
+
+clearBtn.addEventListener("click", function () {
+  state.date = "";
+  dateIn.value = "";
+  save(KEY_DATE, "");
+  renderToday();
+  renderDeadlines();
+});
+
+dateIn.addEventListener("change", function () {
+  if (parseDate(dateIn.value)) document.getElementById("setBtn").click();
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化
+   ============================================================ */
+
+buildRail();
+renderStage();
+renderDeadlines();
+
+/* 進捗バーを期限一覧の下に足す */
+(function () {
+  var sec = document.getElementById("deadlineTable").parentNode;
+  var p = document.createElement("div");
+  p.className = "prog";
+  p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                '<span class="prog-bar"><i id="progFill"></i></span>';
+  sec.appendChild(p);
+})();
+
+if (state.date) dateIn.value = state.date;
+renderToday();
+renderProgress();
+</script>

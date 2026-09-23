@@ -1,0 +1,1237 @@
+<title>病気・けがのノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+%%CSS%%
+
+/* ---------- このノート固有 ---------- */
+
+/* 高額療養費の区分表 */
+.lim{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:12px}
+.lim th,.lim td{padding:6px 7px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top;line-height:1.55}
+.lim th{font-weight:500;color:var(--muted);font-size:11px;letter-spacing:.06em}
+.lim td:first-child{font-weight:700;white-space:nowrap}
+.lim td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.lim tr:last-child td{border-bottom:0}
+
+/* 2つを見比べる表 */
+.cmp{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:12.5px}
+.cmp th,.cmp td{padding:6px 8px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top;line-height:1.6}
+.cmp th{font-weight:500;color:var(--muted);font-size:11px;letter-spacing:.06em;white-space:nowrap}
+.cmp td:first-child{font-weight:700}
+.cmp td:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.cmp tr:last-child td{border-bottom:0}
+
+/* 表のなかの小さな補足 */
+.lim .cap,.cmp .cap{display:block;font-size:11px;color:var(--muted);margin-top:1px;font-weight:400;white-space:normal}
+
+/* 箇条書きを詰める */
+.task-body ul.tight{margin:4px 0 7px}
+.task-body ul.tight li{margin-bottom:1px}
+
+/* 節目が全部過ぎたときの一言 */
+.nx-none{font-size:12.5px;color:var(--muted);line-height:1.8;margin-top:4px}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <rect x="3.2" y="3.2" width="11.6" height="11.6" rx="3.2" fill="none"
+              stroke="currentColor" stroke-width="1.3" opacity=".55"/>
+        <path d="M9 6.2v5.6M6.2 9h5.6" fill="none" stroke="currentColor"
+              stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      病気・けがのノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="%%HOME%%" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">
+    病気やけがで働けなくなったとき、<strong>医療費をどこまで抑えられるか、収入をどこから支えるか</strong>を、
+    順番に並べたノートです。働けなくなった日（または初診日）を入れると、いま何日目で、
+    次にどの節目が来るのかが出ます。
+    広告も関連記事もありません。入れた日付とチェックは、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- 今日 -->
+  <section class="today">
+    <div class="eyebrow">きょうの位置</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">日付を入れてください</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <input type="date" id="dateIn" aria-label="働けなくなった日、または初診日">
+      <button class="solid" id="setBtn" type="button">この日から数える</button>
+      <button class="ghost" id="clearBtn" type="button" hidden>消す</button>
+    </div>
+    <p class="hint" id="hint">
+      入れるのは<strong>働けなくなった日</strong>（仕事を休み始めた日）か、
+      <strong>初診日</strong>（その病気・けがで最初に医師にかかった日）です。
+      日付はこの端末のブラウザにだけ保存され、サーバーには送られません。
+    </p>
+
+    <div class="nextup" id="nextup">
+      <h4>つぎに来る節目</h4>
+      <div id="nextList"></div>
+    </div>
+  </section>
+
+  <!-- 最初に読む -->
+  <div class="warn">
+    <b>読む順番だけ、先に決めます</b>
+    やることは多いので、この順で片づけてください。
+    <strong>① 治療を続けられる形をつくる</strong>（受診と通院の足を確保する）。
+    <strong>② 収入</strong>（会社員なら傷病手当金。仕事が原因なら労災）。
+    <strong>③ 医療費</strong>（高額療養費の事前手続き。窓口で上限までにする）。
+    <strong>④ 仕事</strong>（休職の扱い、会社との連絡の仕方）。<br>
+    退職を先に決めないでください。<strong>在職中にしか始められない手続きがあります。</strong>
+    このページは制度・お金・手続きだけを扱います。治療や受診の判断は主治医に聞いてください。
+  </div>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>順番にすること</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="段階"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 期限一覧 -->
+  <section class="sec">
+    <h2>期限の一覧</h2>
+    <p class="note">
+      起算点は手続きごとに違います（「診療を受けた月の翌月1日から」「支給開始日から」「初診日から」など）。
+      下の表はそれぞれの正式な起算点で書いています。
+    </p>
+    <div class="table" id="deadlineTable"></div>
+  </section>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>迷ったときの相談先</h2>
+    <p class="note">どこに聞けばいいかわからない、が一番よくあるつまずきです。窓口は分かれています。</p>
+    <div class="help">
+      <dl>
+        <dt>加入している健康保険（保険者）</dt>
+        <dd>傷病手当金、高額療養費、限度額適用認定証。
+          健康保険証や資格情報のお知らせに保険者の名前が書いてあります。
+          協会けんぽなら都道府県支部、健康保険組合なら組合の事務所、
+          国民健康保険なら市区町村の国保の窓口です。</dd>
+        <dt>病院の医療相談室・がん相談支援センター</dt>
+        <dd>medical social worker（医療ソーシャルワーカー）がいます。
+          制度の当たりをつけてもらう相手としては、いちばん早いことが多いところです。
+          入院していなくても、かかっている病院に相談窓口があるか聞いてみてください。</dd>
+        <dt>年金事務所・街角の年金相談センター</dt>
+        <dd>障害年金の相談と請求。初診日の証明をどう用意するかも、ここで相談できます。
+          障害基礎年金だけの請求は、お住まいの市区町村の国民年金の窓口でも受け付けています。</dd>
+        <dt>市区町村の障害福祉担当課</dt>
+        <dd>自立支援医療、障害者手帳、重度心身障害者医療費助成など。
+          <strong>自治体ごとに名前も中身も違う制度があるので、ここは直接聞くしかありません。</strong></dd>
+        <dt>都道府県・指定都市の保健所等</dt>
+        <dd>指定難病の医療費助成の相談と申請。難病相談支援センターもここから案内されます。</dd>
+        <dt>ハローワーク</dt>
+        <dd>失業給付の受給期間の延長、退職後の求職。
+          働けない期間があるなら、まず延長の申請だけ先に済ませておく相談ができます。</dd>
+        <dt>労働基準監督署</dt>
+        <dd>仕事や通勤が原因の病気・けがなら、健康保険ではなく労災保険です。請求先はここ。</dd>
+        <dt>会社の人事・労務、産業医</dt>
+        <dd>休職の期間と扱い、傷病手当金の申請書の事業主証明、復職のときの就業上の配慮。
+          主治医への情報提供も会社経由でできます。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        ここに書いてあるのは<strong>制度の一般的な仕組みと、全国共通の基準</strong>です。
+        金額や期限は、厚生労働省・全国健康保険協会（協会けんぽ）・日本年金機構・国税庁・
+        e-Gov法令検索で確認したものだけを書き、その項目に出典リンクを置いています。
+        <strong>出典のない記述は、進め方の提案です。</strong>
+      </p>
+      <p style="margin:0 0 10px">
+        <strong>加入している健康保険によって変わります。</strong>
+        高額療養費の区分と金額は協会けんぽのものです。健康保険組合には独自の付加給付があることがあり、
+        国民健康保険では区分の判定のしかたが違います。自分の保険者に確認してください。
+      </p>
+      <p style="margin:0 0 10px">
+        <strong>自治体によって変わります。</strong>
+        重度心身障害者医療費助成のように、名前も対象も所得制限も市区町村ごとに違う制度があります。
+        このページでは金額を書かず、窓口だけ書いています。
+      </p>
+      <p style="margin:0">
+        このページは制度・お金・手続きだけを扱います。
+        症状や治療についての判断は書いていません。主治医に聞いてください。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html" target="_blank" rel="noopener">高額療養費制度を利用される皆さまへ</a>」</li>
+      <li>全国健康保険協会「<a href="https://www.kyoukaikenpo.or.jp/benefit/high_cost_medical_expenses/002/" target="_blank" rel="noopener">高額療養費</a>」／「<a href="https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/index.html" target="_blank" rel="noopener">傷病手当金</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/newpage_22308.html" target="_blank" rel="noopener">令和4年1月1日から健康保険の傷病手当金の支給期間が通算化されます</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150514.html" target="_blank" rel="noopener">障害基礎年金の受給要件・請求時期・年金額</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150401-02.html" target="_blank" rel="noopener">障害厚生年金の受給要件・請求時期・年金額</a>」／「<a href="https://www.nenkin.go.jp/service/pamphlet/kyufu.files/0326.pdf" target="_blank" rel="noopener">障害年金の初診日証明書類のご案内</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/kounen/hokenryo/menjo/index.html" target="_blank" rel="noopener">保険料の免除等（産休・育休関係）</a>」</li>
+      <li>ハローワークインターネットサービス「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_basicbenefit.html" target="_blank" rel="noopener">基本手当について</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000166858.html" target="_blank" rel="noopener">各労災保険給付の支給事由と内容</a>」／「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154476.html" target="_blank" rel="noopener">休業（補償）等給付の計算方法</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000115267.html" target="_blank" rel="noopener">治療と仕事の両立について</a>」／「<a href="https://chiryoutoshigoto.mhlw.go.jp/" target="_blank" rel="noopener">治療と仕事の両立支援ナビ</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/bunya/shougaihoken/jiritsu/gaiyo.html" target="_blank" rel="noopener">自立支援医療制度の概要</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/nanbyou/index.html" target="_blank" rel="noopener">難病対策</a>」／「<a href="https://www.mhlw.go.jp/stf/newpage_53881.html" target="_blank" rel="noopener">令和8年4月時点の指定難病（告示番号1〜348）</a>」</li>
+      <li>国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1120.htm" target="_blank" rel="noopener">No.1120 医療費を支払ったとき（医療費控除）</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1160.htm" target="_blank" rel="noopener">No.1160 障害者控除</a>」</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/211AC0000000070" target="_blank" rel="noopener">健康保険法</a>」（第193条・時効）／「<a href="https://laws.e-gov.go.jp/law/333AC0000000192" target="_blank" rel="noopener">国民健康保険法</a>」（第58条・傷病手当金）／「<a href="https://laws.e-gov.go.jp/law/325AC0000000226" target="_blank" rel="noopener">地方税法</a>」（第32条・第39条）／「<a href="https://laws.e-gov.go.jp/law/334AC0000000141" target="_blank" rel="noopener">国民年金法</a>」（第102条・時効）</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した日付とチェックは、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    実際の判断は、加入している健康保険（保険者）・年金事務所・市区町村・主治医の案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 官公庁の一次情報で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「段取りの提案」であって、制度の断定ではない）
+   ============================================================ */
+
+var S_KENPO_KOUGAKU = '全国健康保険協会「<a href="https://www.kyoukaikenpo.or.jp/benefit/high_cost_medical_expenses/002/" target="_blank" rel="noopener">高額療養費</a>」';
+var S_KENPO_SHOBYO  = '全国健康保険協会「<a href="https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/index.html" target="_blank" rel="noopener">傷病手当金</a>」';
+var S_MHLW_KOUGAKU  = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/juuyou/kougakuiryou/index.html" target="_blank" rel="noopener">高額療養費制度を利用される皆さまへ</a>」';
+var S_MHLW_TSUSAN   = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/newpage_22308.html" target="_blank" rel="noopener">令和4年1月1日から健康保険の傷病手当金の支給期間が通算化されます</a>」';
+var S_NK_KISO       = '日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150514.html" target="_blank" rel="noopener">障害基礎年金の受給要件・請求時期・年金額</a>」';
+var S_NK_KOUSEI     = '日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/shougainenkin/jukyu-yoken/20150401-02.html" target="_blank" rel="noopener">障害厚生年金の受給要件・請求時期・年金額</a>」';
+var S_NK_SHOSHIN    = '日本年金機構「<a href="https://www.nenkin.go.jp/service/pamphlet/kyufu.files/0326.pdf" target="_blank" rel="noopener">障害年金の初診日証明書類のご案内</a>」';
+var S_NK_MENJO      = '日本年金機構「<a href="https://www.nenkin.go.jp/service/kounen/hokenryo/menjo/index.html" target="_blank" rel="noopener">保険料の免除等（産休・育休関係）</a>」';
+var S_HW_KIHON      = 'ハローワークインターネットサービス「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_basicbenefit.html" target="_blank" rel="noopener">基本手当について</a>」';
+var S_MHLW_ROUSAI   = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000166858.html" target="_blank" rel="noopener">各労災保険給付の支給事由と内容</a>」';
+var S_MHLW_ROUSAI2  = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000154476.html" target="_blank" rel="noopener">休業（補償）等給付の計算方法</a>」';
+var S_MHLW_RYORITSU = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000115267.html" target="_blank" rel="noopener">治療と仕事の両立について</a>」';
+var S_MHLW_JIRITSU  = '厚生労働省「<a href="https://www.mhlw.go.jp/bunya/shougaihoken/jiritsu/gaiyo.html" target="_blank" rel="noopener">自立支援医療制度の概要</a>」';
+var S_MHLW_NANBYO   = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/nanbyou/index.html" target="_blank" rel="noopener">難病対策</a>」';
+var S_MHLW_NANBYO2  = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/newpage_53881.html" target="_blank" rel="noopener">令和8年4月時点の指定難病（告示番号1〜348）</a>」';
+var S_NTA_1120      = '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1120.htm" target="_blank" rel="noopener">No.1120 医療費を支払ったとき（医療費控除）</a>」';
+var S_NTA_1160      = '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1160.htm" target="_blank" rel="noopener">No.1160 障害者控除</a>」';
+var S_EG_KENPO      = 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/211AC0000000070" target="_blank" rel="noopener">健康保険法</a>」第193条';
+var S_EG_KOKUHO     = 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/333AC0000000192" target="_blank" rel="noopener">国民健康保険法</a>」第58条第2項';
+var S_EG_CHIHOZEI   = 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/325AC0000000226" target="_blank" rel="noopener">地方税法</a>」第32条第1項・第39条';
+var S_EG_KOKUNEN    = 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/334AC0000000141" target="_blank" rel="noopener">国民年金法</a>」第102条第1項';
+
+var STAGES = [
+
+  {
+    id: "b1", phase: "p1", chip: "まず", chipSub: "順番を決める",
+    tag: "はじめに",
+    title: "先に手をつけるもの、あとでいいもの",
+    lead: "働けなくなった直後は、調べることが一気に増えます。" +
+          "<strong>期限が短いものと、在職中にしか始められないものだけ、先に片づけてください。</strong>",
+    tasks: [
+      {
+        id: "b-junban", title: "この順で考える",
+        body: "<p>制度は多いですが、急ぐ順番は決まっています。</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>① 治療を続けられる形にする</strong>　通院の足、付き添い、入院の段取り</li>" +
+              "<li><strong>② 収入</strong>　会社員なら傷病手当金。仕事が原因なら労災保険</li>" +
+              "<li><strong>③ 医療費</strong>　高額療養費の事前手続き。窓口で払う額そのものを下げる</li>" +
+              "<li><strong>④ 仕事</strong>　休職の期間、会社との連絡の仕方、復職の条件</li>" +
+              "</ul>" +
+              "<p>①〜③がある程度片づくまで、<strong>退職を決めないでください。</strong>" +
+              "在職中にしか始められない手続きがあり、辞めたあとでは選べなくなります。</p>",
+        share: "家族で分けるなら、書類集め・電話・付き添いを別の人に割り振ると早く進みます。"
+      },
+      {
+        id: "b-kaisha", title: "会社に伝えること、もらうもの", due: "早いほうがよい", soft: true,
+        body: "<p>会社に伝えるのは、診断名よりも<strong>「どれくらい休むことになりそうか」</strong>です。" +
+              "そこから休職の扱いが決まります。</p>" +
+              "<p>会社から受け取っておくと、あとが楽になるもの：</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>就業規則の、休職に関する部分</strong>（期間、給与の扱い、期間が切れたときどうなるか）</li>" +
+              "<li>健康保険の保険者の名前と、問い合わせ先</li>" +
+              "<li>傷病手当金の申請書の出し方（会社経由か、自分で出すか）</li>" +
+              "<li>社会保険料と住民税を、休職中どうやって払うか</li>" +
+              "</ul>" +
+              "<p>最後の1つは見落とされがちです。給与が止まっても保険料と住民税は止まりません。" +
+              "「毎月いくら、いつまでに、どこへ払うのか」を先に聞いておいてください。</p>"
+      },
+      {
+        id: "b-rousai", title: "仕事や通勤が原因なら、健康保険ではなく労災",
+        body: "<p>健康保険の傷病手当金は<strong>業務外の事由による病気やケガ</strong>が対象で、" +
+              "<strong>業務上・通勤災害によるものは支給対象外（労災保険の給付対象）</strong>です。" +
+              "入口が別なので、最初にどちらかを見分けます。</p>" +
+              "<p>労災保険の休業（補償）等給付は、" +
+              "<strong>休業4日目から、休業1日につき給付基礎日額の60％</strong>。" +
+              "あわせて休業特別支給金が20％支給されるので、" +
+              "<strong>合計で給付基礎日額の80％</strong>になります。</p>" +
+              "<p>けがだけでなく、長時間労働やハラスメントによる精神障害も労災の対象になることがあります。" +
+              "迷ったら、判断する前に労働基準監督署に事実を話して聞いてください。</p>",
+        where: "<b>請求先</b>　勤務先を管轄する労働基準監督署<br>" +
+               "<b>ひとこと</b>　会社が労災だと認めなくても、請求できるのは本人です",
+        src: S_KENPO_SHOBYO + "／" + S_MHLW_ROUSAI + "／" + S_MHLW_ROUSAI2
+      }
+    ]
+  },
+
+  {
+    id: "b2", phase: "p1", chip: "医療費", chipSub: "窓口で下げる",
+    tag: "医療費",
+    title: "払ってから返してもらうより、先に下げる",
+    lead: "高額療養費は「あとで戻ってくる制度」だと思われがちですが、" +
+          "<strong>事前の手続きをしておけば、窓口で払う額そのものが上限までになります。</strong>" +
+          "立て替える現金が要らなくなるので、入院が決まったらここを最優先で。",
+    tasks: [
+      {
+        id: "b-gendogaku", title: "窓口の支払いを上限までにする", due: "受診・入院の前に", hard: true,
+        body: "<p>高額療養費制度は、ひと月の医療費の自己負担が上限額を超えたときに、超えた分が戻る制度です。" +
+              "ただし<strong>あとから返してもらう形だと、いったん全額を立て替えることになります。</strong></p>" +
+              "<p>窓口の支払いを最初から上限額までにする取扱いがあり、" +
+              "<strong>この取扱いを受けるには、マイナ保険証を利用するか、" +
+              "事前に「限度額適用認定証（認定証）」を入手する必要があります。</strong></p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>マイナ保険証</strong>　受付の機械で「限度額情報の提供」に同意すれば、申請は要りません</li>" +
+              "<li><strong>限度額適用認定証</strong>　加入している健康保険（保険者）に申請して交付を受け、" +
+              "医療機関の窓口に出します</li>" +
+              "</ul>" +
+              "<p>入院や手術が決まったら、<strong>入院の前に</strong>済ませてください。</p>",
+        where: "<b>申請先</b>　加入している健康保険（協会けんぽの都道府県支部、健康保険組合、市区町村の国保の窓口）",
+        src: S_MHLW_KOUGAKU
+      },
+      {
+        id: "b-kubun", title: "ひと月の上限はいくらか（協会けんぽ・70歳未満）",
+        body: "<p>上限額は所得で分かれます。下の表は<strong>協会けんぽの70歳未満の区分（令和8年8月〜令和9年7月）</strong>です。" +
+              "〈　〉内は多数回該当の場合の額です。</p>" +
+              '<table class="lim">' +
+              "<tr><th>区分（標準報酬月額）</th><th>ひと月の上限</th><th>年間上限</th></tr>" +
+              "<tr><td>ア<span class=\"cap\">83万円以上</span></td>" +
+              "<td class=\"num\">270,300円＋(総医療費－901,000円)×1％<span class=\"cap\">〈140,100円〉</span></td>" +
+              "<td class=\"num\">168万円</td></tr>" +
+              "<tr><td>イ<span class=\"cap\">53万〜79万円</span></td>" +
+              "<td class=\"num\">179,100円＋(総医療費－597,000円)×1％<span class=\"cap\">〈93,000円〉</span></td>" +
+              "<td class=\"num\">111万円</td></tr>" +
+              "<tr><td>ウ<span class=\"cap\">28万〜50万円</span></td>" +
+              "<td class=\"num\">85,800円＋(総医療費－286,000円)×1％<span class=\"cap\">〈44,400円〉</span></td>" +
+              "<td class=\"num\">53万円</td></tr>" +
+              "<tr><td>エ<span class=\"cap\">26万円以下</span></td>" +
+              "<td class=\"num\">61,500円<span class=\"cap\">〈44,400円〉</span></td>" +
+              "<td class=\"num\">53万円</td></tr>" +
+              "<tr><td>オ<span class=\"cap\">低所得者（住民税非課税）</span></td>" +
+              "<td class=\"num\">36,900円<span class=\"cap\">〈24,600円〉</span></td>" +
+              "<td class=\"num\">29万円</td></tr>" +
+              "</table>" +
+              "<p>「総医療費」とは、保険適用される診察費用の総額（10割）です。</p>" +
+              "<p><strong>年間上限</strong>は令和8年8月から設けられたもので、" +
+              "<strong>年間とは8月から翌年7月まで</strong>を指します。" +
+              "協会けんぽによれば、<strong>年間上限額の高額療養費の申請は令和9年8月から開始</strong>です。</p>" +
+              "<p><strong>この表は協会けんぽのものです。</strong>健康保険組合や国民健康保険では、" +
+              "区分の決め方が違います（国保は標準報酬月額ではなく所得で判定します）。" +
+              "自分がどの区分かは、必ず加入先に確認してください。" +
+              "また、<strong>健康保険組合には独自の付加給付があることがあり、" +
+              "上限がさらに下がる場合があります。</strong>これも加入先に聞かないとわかりません。</p>",
+        src: S_KENPO_KOUGAKU
+      },
+      {
+        id: "b-tasuukai", title: "4か月目から安くなる（多数回該当）と、世帯合算",
+        body: "<p>治療が長引く人ほど効く仕組みが2つあります。</p>" +
+              "<p><strong>多数回該当</strong>　療養を受けた月以前の1年間に、" +
+              "3か月以上の高額療養費の支給を受けた場合" +
+              "（限度額適用認定証を使用し、自己負担限度額を負担した場合も含みます）には、" +
+              "<strong>4か月目から自己負担限度額がさらに軽減されます。</strong>" +
+              "上の表の〈　〉内がその額です。</p>" +
+              "<p><strong>世帯合算</strong>　自己負担額は世帯で合算できます。" +
+              "<strong>70歳未満の方は、1つの医療機関の自己負担額が21,000円以上の場合のみ合算できます。</strong>" +
+              "70歳以上の方は自己負担額をすべて合算できます。</p>" +
+              "<p>自分では気づきにくいので、<strong>「多数回該当になっていませんか」と保険者に聞いてください。</strong></p>",
+        src: S_KENPO_KOUGAKU
+      },
+      {
+        id: "b-tokutei", title: "人工透析など、長く続く高額な治療",
+        body: "<p>長期高額疾病については、別枠の負担軽減があります" +
+              "（健康保険特定疾病療養受療証）。協会けんぽの場合の自己負担の限度額は次のとおりです。</p>" +
+              '<table class="cmp">' +
+              "<tr><td>人工透析を実施している慢性腎不全の方</td><td>10,000円</td></tr>" +
+              "<tr><td>うち、診療のある月の標準報酬月額が53万円以上である70歳未満の被保険者またはその被扶養者</td><td>20,000円</td></tr>" +
+              "<tr><td>血友病、抗ウイルス剤を投与している後天性免疫不全症候群の方</td><td>10,000円</td></tr>" +
+              "</table>" +
+              "<p>医師の意見書等を添えて保険者に申請し、受療証の交付を受けます。" +
+              "マイナ保険証で受診するときも、受療証は窓口に出してください。</p>",
+        where: "<b>申請先</b>　加入している健康保険（協会けんぽなら都道府県支部）",
+        src: S_KENPO_KOUGAKU
+      },
+      {
+        id: "b-jikou", title: "請求できる期間は2年で切れる", due: "2年", hard: true,
+        body: "<p>健康保険法は、<strong>「保険給付を受ける権利は、これらを行使することができる時から" +
+              "二年を経過したときは、時効によって消滅する」</strong>と定めています。" +
+              "高額療養費も傷病手当金も、この2年です。</p>" +
+              "<p>入院が続いて後回しにしているうちに、古い月の分から順に消えていきます。" +
+              "<strong>治療が落ち着いてからまとめて、ではなく、月ごとに片づけてください。</strong></p>" +
+              "<p>起算点は給付の種類で違います。自分の分がいつまでかは、保険者に確認するのが確実です。</p>",
+        src: S_EG_KENPO,
+        share: "受診した月・医療機関・窓口で払った額を1枚の表にしておくと、請求漏れが見つかります。"
+      }
+    ]
+  },
+
+  {
+    id: "b3", phase: "p2", chip: "収入", chipSub: "傷病手当金",
+    tag: "収入",
+    title: "休んでいる間の生活費",
+    lead: "会社員が使えるのは<strong>健康保険の傷病手当金</strong>です。" +
+          "ここは金額も期間も要件も全国共通で決まっています。" +
+          "<strong>自営業・国民健康保険の人には、原則としてありません。</strong>",
+    tasks: [
+      {
+        id: "b-youken", title: "傷病手当金がもらえる4つの条件",
+        body: "<p>協会けんぽは、次の(1)〜(4)を満たす場合にのみ給付の対象になるとしています。</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>(1) 業務外の事由による病気やケガの療養のための休業であること</strong>　" +
+              "自費で診療を受けた場合でも、仕事に就くことができないことについての証明があれば対象です。" +
+              "自宅療養の期間も対象になります</li>" +
+              "<li><strong>(2) 仕事に就くことができないこと</strong>　" +
+              "判定は、療養担当者の意見等を基に、本人の仕事の内容を考慮して行われます</li>" +
+              "<li><strong>(3) 連続する3日間を含み4日以上仕事に就けなかったこと</strong></li>" +
+              "<li><strong>(4) 休業した期間について給与の支払いがないこと</strong>　" +
+              "給与の支払いがあっても傷病手当金の額より少ない場合は、その差額が支給されます</li>" +
+              "</ul>" +
+              "<p>(2)がいちばん大事です。<strong>「働けない」は本人の申告ではなく、" +
+              "医師の証明と仕事の内容から判断されます。</strong>" +
+              "申請書には療養担当者（医師）が記入する欄があるので、受診のときに持っていってください。</p>",
+        where: "<b>出す先</b>　加入している健康保険（協会けんぽなら都道府県支部）。" +
+               "会社が記入する欄もあるので、会社経由で出すことが多いです",
+        src: S_KENPO_SHOBYO
+      },
+      {
+        id: "b-taiki", title: "最初の3日は出ない（待期3日）", due: "4日目から", hard: true,
+        body: "<p>仕事を休んだ日から<strong>連続して3日間（待期）の後、" +
+              "4日目以降の仕事に就けなかった日</strong>に対して支給されます。</p>" +
+              "<p><strong>待期には、有給休暇、土日・祝日等の公休日も含まれます。</strong>" +
+              "給与の支払いがあったかどうかは関係ありません。" +
+              "就労時間中に業務外の事由で発生した病気やケガで働けない状態になった場合は、" +
+              "その日が待期の初日になります。</p>" +
+              "<p>気をつけたいのは<strong>「連続」であること</strong>です。" +
+              "連続して2日間休んだ後、3日目に仕事をした場合には、待期3日間は成立しません。" +
+              "「少しだけ出社してみる」を繰り返すと、いつまでも待期が完成しないことがあります。</p>",
+        src: S_KENPO_SHOBYO
+      },
+      {
+        id: "b-gaku", title: "いくら出るか",
+        body: "<p>1日あたりの支給額は、こう計算します。</p>" +
+              "<ul class=\"tight\">" +
+              "<li>支給開始日の属する月以前の直近の継続した各月の<strong>標準報酬月額を平均</strong>する</li>" +
+              "<li>その額の<strong>30分の1</strong>に相当する額を出す（10円未満四捨五入）</li>" +
+              "<li>それに<strong>3分の2</strong>を掛ける（1円未満四捨五入）</li>" +
+              "</ul>" +
+              "<p>協会けんぽの例：標準報酬月額の平均が17万円なら、" +
+              "17万円÷30＝5,670円、5,670円×2/3＝<strong>1日あたり3,780円</strong>。</p>" +
+              "<p><strong>支給開始日以前の期間が12か月に満たない場合</strong>は、" +
+              "上の平均額と、全被保険者の標準報酬月額の平均額（支給開始日が令和7年4月1日以降の方は30万円ではなく" +
+              "<strong>32万円</strong>）のうち、<strong>低いほうの額</strong>を使って計算します。</p>" +
+              "<p>ざっくり言えば<strong>手取りではなく、月給のおよそ3分の2</strong>です。" +
+              "残りの3分の1と、止まらない支出（社会保険料・住民税・家賃）をどう埋めるかを、早めに数えてください。</p>",
+        src: S_KENPO_SHOBYO
+      },
+      {
+        id: "b-kikan", title: "通算して1年6か月まで", due: "通算1年6か月", hard: true,
+        body: "<p><strong>傷病手当金の支給期間は、支給を開始した日から通算して1年6か月です。</strong></p>" +
+              "<p>令和4年1月1日から通算化されました。それまでは「支給を始めた日から最長1年6か月」で、" +
+              "途中で働いた期間も含めて数えていました。いまは" +
+              "<strong>支給期間中に途中で就労するなど、傷病手当金が支給されない期間がある場合には、" +
+              "支給開始日から起算して1年6か月を超えても、繰り越して支給可能</strong>です。</p>" +
+              "<p>つまり、<strong>途中で復職してみて、だめだったらまた休む、という使い方ができます。</strong>" +
+              "「一度復職したら権利が終わる」わけではありません。</p>" +
+              "<p>1年6か月は、あとから振り返ると短いです。" +
+              "<strong>受給を始めた時点で、終わりの見当をつけておいてください。</strong>" +
+              "終わりが見えてきたら、次の段の障害年金を調べ始める時期です。</p>",
+        src: S_KENPO_SHOBYO + "／" + S_MHLW_TSUSAN
+      },
+      {
+        id: "b-keizoku", title: "退職しても続けて受けられる場合がある", due: "退職日の前日が分かれ目", hard: true,
+        body: "<p>協会けんぽの資格喪失後の継続給付は、次の両方を満たすときに受けられます。</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>資格喪失の日の前日（退職日等）までに被保険者期間が継続して1年以上あること</strong>" +
+              "（任意継続被保険者、共済組合の組合員である被保険者、国民健康保険に加入していた期間は除きます）</li>" +
+              "<li><strong>被保険者資格喪失日の前日に、現に傷病手当金を受けているか、受けられる状態であること</strong></li>" +
+              "</ul>" +
+              "<p><strong>ここが最大の落とし穴です。</strong>" +
+              "退職日に出社して挨拶した、という形になると「受けられる状態」ではなくなることがあります。" +
+              "退職日の扱いは、先に保険者に確認してください。</p>" +
+              "<p>もうひとつ。<strong>いったん仕事に就くことができる状態になった場合、" +
+              "その後さらに仕事に就くことができない状態になっても、傷病手当金は支給されません。</strong>" +
+              "在職中の通算1年6か月とは扱いが違います。</p>" +
+              "<p>退職後の健康保険の選び方そのものは<strong><a href=\"%%NOTE:leaving%%\">退職のノート</a></strong>に" +
+              "まとめてあります（任意継続の20日、国保の14日）。</p>",
+        src: S_KENPO_SHOBYO
+      },
+      {
+        id: "b-nini", title: "任意継続では、新しい病気の傷病手当金は出ない",
+        body: "<p>退職後に健康保険の任意継続を選んだ場合、" +
+              "<strong>任意継続被保険者である期間中に発生した病気・ケガについては、傷病手当金は支給されません。</strong></p>" +
+              "<p>上の「資格喪失後の継続給付」は、在職中から続いている傷病についての話です。" +
+              "任意継続を選んだから傷病手当金が続く、という意味ではありません。混同されやすいところです。</p>",
+        src: S_KENPO_SHOBYO
+      },
+      {
+        id: "b-kokuho", title: "自営業・国民健康保険の人には、原則ない",
+        body: "<p>国民健康保険法は、市町村及び組合は<strong>「条例又は規約の定めるところにより、" +
+              "傷病手当金の支給その他の保険給付を行うことができる」</strong>と定めています。" +
+              "<strong>「行うものとする」ではなく「行うことができる」</strong>——つまり任意です。</p>" +
+              "<p>実際には、国民健康保険で傷病手当金を出しているところはほとんどありません。" +
+              "<strong>自営業・フリーランスの人は、働けなくなったときに公的な所得補償がない前提で" +
+              "備えを考える必要があります。</strong></p>" +
+              "<p>ただし、国民健康保険組合（建設業、医師、理美容など職種ごとの国保組合）には" +
+              "独自の給付があることがあります。自分の加入先の規約を確認してください。</p>" +
+              "<p>収入が落ちたときの国民健康保険料・国民年金保険料の減免は、" +
+              "市区町村の窓口に「収入が減ったので相談したい」と伝えるところから始まります。</p>",
+        where: "<b>聞く先</b>　市区町村の国保の窓口、または加入している国民健康保険組合",
+        src: S_EG_KOKUHO
+      }
+    ]
+  },
+
+  {
+    id: "b4", phase: "p2", chip: "仕事", chipSub: "休職と復職",
+    tag: "仕事",
+    title: "休職、復職、辞めるかどうか",
+    lead: "休職の期間や条件は<strong>会社の就業規則で決まっていて、法律で一律ではありません。</strong>" +
+          "だからこそ、自分の会社の規則を読むところから始めます。",
+    tasks: [
+      {
+        id: "b-kyushoku", title: "就業規則の休職の条項を、先に読む",
+        body: "<p>私傷病による休職は、法律に定められた制度ではなく、" +
+              "会社ごとの制度です。確認したいのは次の4点です。</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>休職できる期間</strong>（勤続年数で変わることが多い）</li>" +
+              "<li><strong>休職中の給与の扱い</strong>（無給か、一部支給か）</li>" +
+              "<li><strong>期間が満了したらどうなるか</strong>（復職できない場合の扱い）</li>" +
+              "<li><strong>復職の条件と手続き</strong>（誰の判断で、どんな書類が要るか）</li>" +
+              "</ul>" +
+              "<p>いちばん重くのしかかるのは3つ目です。" +
+              "<strong>休職期間の満了日を、いま把握しておいてください。</strong>" +
+              "傷病手当金の1年6か月より休職期間のほうが短いことがよくあります。</p>"
+      },
+      {
+        id: "b-shibyou", title: "会社独自の私傷病手当・見舞金がないか聞く",
+        body: "<p>会社や健康保険組合によっては、傷病手当金に上乗せする給付があります。" +
+              "呼び名は「私傷病手当」「休業見舞金」「延長傷病手当金付加金」などさまざまです。</p>" +
+              "<p><strong>制度はあるのに、申し出ないともらえないことがあります。</strong>" +
+              "人事に「傷病手当金以外に、会社や健保組合から出るものはありますか」と一度聞いてください。" +
+              "団体長期障害所得補償保険（GLTD）に会社が入っていることもあります。</p>"
+      },
+      {
+        id: "b-ryouritsu", title: "治療しながら働き続けるための仕組み",
+        body: "<p>辞めるか続けるかの二択にする前に、" +
+              "<strong>働き方を変えて続ける</strong>という選択肢があります。" +
+              "厚生労働省は、事業場における治療と仕事の両立支援のためのガイドラインを出していて、" +
+              "会社と本人と主治医が情報をやりとりするための様式例も公開されています。</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>勤務情報提供書</strong>　自分の仕事の内容や職場環境を主治医に伝える書式。" +
+              "これがあると、主治医が「この仕事なら続けられる」「この作業は避けたい」と具体的に書けます</li>" +
+              "<li><strong>主治医意見書</strong>　治療の状況と、就業上の配慮についての意見</li>" +
+              "<li><strong>両立支援プラン／職場復帰支援プラン</strong>　いつから、どの業務を、どの時間で</li>" +
+              "</ul>" +
+              "<p>様式は厚生労働省のサイトからダウンロードできます。" +
+              "会社に制度がなくても、この書式を持っていって話を始めることはできます。</p>",
+        where: "<b>相談先</b>　会社の産業医・人事、病院の相談支援センター、" +
+               "都道府県の産業保健総合支援センター（両立支援の相談窓口があります）",
+        src: S_MHLW_RYORITSU
+      },
+      {
+        id: "b-shitsugyou", title: "傷病手当金と失業給付は、同時には受けられない",
+        body: "<p>理由は、それぞれの要件が正反対だからです。</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>傷病手当金</strong>は「<strong>仕事に就くことができないこと</strong>」が要件</li>" +
+              "<li><strong>雇用保険の基本手当（失業給付）</strong>は" +
+              "「<strong>いつでも就職できる能力があるにもかかわらず、職業に就くことができない</strong>" +
+              "『失業の状態』にあること」が要件。" +
+              "ハローワークは<strong>「病気やけがのため、すぐには就職できないとき」は" +
+              "基本手当を受けることができない</strong>と明記しています</li>" +
+              "</ul>" +
+              "<p>つまり、働けないうちは失業給付は受けられません。" +
+              "<strong>受けられないまま1年が過ぎると、権利そのものが消えます。</strong>" +
+              "それを防ぐのが、次の受給期間の延長です。</p>",
+        src: S_KENPO_SHOBYO + "／" + S_HW_KIHON
+      },
+      {
+        id: "b-encho", title: "失業給付の受給期間を延長しておく", due: "30日を過ぎたら早めに", hard: true,
+        body: "<p>雇用保険の受給期間は、原則として<strong>離職した日の翌日から1年間</strong>です" +
+              "（所定給付日数330日の方は1年と30日、360日の方は1年と60日）。" +
+              "その間に病気、けが、妊娠、出産、育児等の理由により" +
+              "<strong>引き続き30日以上働くことができなくなったときは、" +
+              "その働くことのできなくなった日数だけ、受給期間を延長することができます。" +
+              "ただし、延長できる期間は最長で3年間です。</strong></p>" +
+              "<p>申請は、<strong>30日以上職業に就くことができなくなった日の翌日以降、" +
+              "早期に申請していただくことが原則</strong>ですが、" +
+              "<strong>延長後の受給期間の最後の日までの間であれば、申請は可能</strong>です。" +
+              "住所又は居所を管轄するハローワークに申請します。代理人又は郵送でもかまいません。</p>" +
+              "<p>治ってから求職活動を始めたいなら、<strong>先に延長だけ出しておいてください。</strong>" +
+              "手続き自体は短時間で終わります。</p>",
+        where: "<b>申請先</b>　住所又は居所を管轄するハローワーク（代理人・郵送も可）",
+        src: S_HW_KIHON
+      },
+      {
+        id: "b-koyou-shoubyou", title: "退職後、求職の申込みをしたあとに動けなくなったら",
+        body: "<p>雇用保険には、健康保険の傷病手当金とは別の<strong>「傷病手当」</strong>があります。" +
+              "受給資格者が離職後、ハローワークに来所し、" +
+              "<strong>求職の申込みをした後に15日以上引き続いて疾病又は負傷のために職業に就くことができない場合</strong>に" +
+              "支給されるもので、<strong>日額は基本手当の日額と同額</strong>です。</p>" +
+              "<p>名前が健康保険の傷病手当金とよく似ていますが、別の制度です。" +
+              "<strong>30日以上引き続いて職業に就くことができないときは、" +
+              "申出によって受給期間を延長することもできます。</strong>" +
+              "どちらが得かはハローワークで相談してください。</p>",
+        src: S_HW_KIHON
+      }
+    ]
+  },
+
+  {
+    id: "b5", phase: "p3", chip: "長引いたら", chipSub: "障害年金",
+    tag: "長期化",
+    title: "1年6か月を超えるとき、障害年金",
+    lead: "傷病手当金が終わったあとを支えるのが障害年金です。" +
+          "<strong>手足の障害だけの制度ではありません。</strong>がん、心疾患、腎疾患、精神疾患、" +
+          "呼吸器疾患なども対象になり得ます。" +
+          "<strong>そして、いちばん重要なのは初診日の証明です。</strong>",
+    tasks: [
+      {
+        id: "b-3youken", title: "障害年金の3つの要件",
+        body: "<p>日本年金機構は、次の3つをすべて満たすときに支給されるとしています" +
+              "（障害基礎年金の場合）。</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>① 初診日の要件</strong>　障害の原因となった病気やけがの初診日が、" +
+              "国民年金加入期間、または20歳前もしくは日本国内に住んでいる60歳以上65歳未満で" +
+              "年金制度に加入していない期間にあること</li>" +
+              "<li><strong>② 障害の程度</strong>　障害認定日に、障害等級表に定める1級または2級に該当していること</li>" +
+              "<li><strong>③ 保険料納付要件</strong>　次の項目に書きます</li>" +
+              "</ul>" +
+              "<p><strong>初診日に厚生年金保険の被保険者だった場合は、障害厚生年金になります。</strong>" +
+              "こちらは<strong>1級から3級</strong>までが対象で、" +
+              "2級以上なら障害基礎年金もあわせて受けられます。" +
+              "会社員として働いている間に発症した病気なら、" +
+              "<strong>障害厚生年金のほうが対象範囲が広い</strong>ということです。</p>",
+        where: "<b>相談・請求先</b>　年金事務所、街角の年金相談センター。" +
+               "障害基礎年金だけの請求は、市区町村の国民年金の窓口でも受け付けています",
+        src: S_NK_KISO + "／" + S_NK_KOUSEI
+      },
+      {
+        id: "b-ninteibi", title: "障害認定日は、初診日から1年6か月", due: "初診日から1年6か月", hard: true,
+        body: "<p>障害認定日とは、<strong>その障害の原因となった病気やけがについての" +
+              "初診日から1年6か月を過ぎた日</strong>、または" +
+              "<strong>1年6か月以内にその病気やけがが治った場合（症状が固定した場合）はその日</strong>をいいます。</p>" +
+              "<p>また、<strong>初診日から1年6か月以内に人工透析療法を行っている場合は、" +
+              "透析を初めて受けた日から起算して3か月を経過した日</strong>など、" +
+              "特定の日が障害認定日となる場合もあります。</p>" +
+              "<p>障害認定日に障害の状態にあるときは、<strong>障害認定日の翌月分から</strong>年金を受給できます。" +
+              "請求書は障害認定日以降いつでも提出できますが、" +
+              "<strong>遡及して受けられる年金は、時効により5年分が限度</strong>です。</p>" +
+              "<p>傷病手当金の通算1年6か月と、障害認定日の1年6か月は、" +
+              "<strong>数え始める日が違います</strong>（前者は支給開始日から、後者は初診日から）。" +
+              "だいたい同じ時期に来ますが、ずれることがあります。</p>",
+        src: S_NK_KISO + "／" + S_EG_KOKUNEN
+      },
+      {
+        id: "b-jigo", title: "認定日に該当しなくても、あとから請求できる（事後重症）",
+        body: "<p><strong>障害認定日に法令に定める障害の状態に該当しなかった方でも、" +
+              "その後症状が悪化し、法令に定める障害の状態になったときには、" +
+              "請求日の翌月から障害年金を受給できます。</strong></p>" +
+              "<p>ここには締切があります。" +
+              "<strong>請求書は65歳の誕生日の前々日までに提出する必要があります。</strong></p>" +
+              "<p>事後重症は<strong>請求日の翌月から</strong>なので、遡って受け取ることはできません。" +
+              "「もう少し様子を見てから」と先延ばしにすると、その分だけ受け取れる額が減ります。" +
+              "<strong>該当しそうだと思った時点で請求してください。</strong></p>",
+        src: S_NK_KISO
+      },
+      {
+        id: "b-nouhu", title: "保険料をきちんと納めていたか（納付要件）",
+        body: "<p>日本年金機構はこう定めています。</p>" +
+              "<p><strong>初診日の前日に、初診日がある月の前々月までの被保険者期間で、" +
+              "国民年金の保険料納付済期間（厚生年金保険の被保険者期間、共済組合の組合員期間を含む）と" +
+              "保険料免除期間をあわせた期間が3分の2以上あること。</strong></p>" +
+              "<p>ただし、<strong>初診日が令和18年3月末日までのときは、初診日において65歳未満であれば、" +
+              "初診日の前日において、初診日がある月の前々月までの直近1年間に" +
+              "保険料の未納がなければよい</strong>ことになっています。" +
+              "また、20歳前の年金制度に加入していない期間に初診日がある場合は、納付要件は不要です。</p>" +
+              "<p><strong>「初診日の前日に」という言い方に注意してください。</strong>" +
+              "初診日より後になってから未納分をまとめて納めても、この要件には間に合いません。" +
+              "保険料を払うのが苦しいときは、未納のまま放置せず、" +
+              "市区町村の国民年金の窓口で免除・納付猶予の手続きをしておいてください。" +
+              "<strong>免除期間は納付要件に算入されます。</strong></p>",
+        where: "<b>納付記録の確認</b>　ねんきんネット、年金事務所",
+        src: S_NK_KISO
+      },
+      {
+        id: "b-shoshinbi", title: "初診日の証明が、実務ではいちばんの山",
+        body: "<p>障害年金の請求でつまずくところは、ほとんどここです。</p>" +
+              "<p>初診日は、<strong>受給できるかどうか（納付要件）も、" +
+              "障害基礎年金か障害厚生年金か（どちらの制度か）も、" +
+              "いつから受け取れるか（障害認定日）も決める、起点そのもの</strong>です。" +
+              "そして、初診が何年も前だと、</p>" +
+              "<ul class=\"tight\">" +
+              "<li>当時の病院が廃院している</li>" +
+              "<li>カルテの保存期間（5年）が過ぎていて記録がない</li>" +
+              "<li>最初にかかったのが別の科・別の病名だった</li>" +
+              "</ul>" +
+              "<p>といったことが普通に起きます。" +
+              "日本年金機構は<strong>初診時の医療機関の証明を得ることが難しい場合の" +
+              "証明書類の取扱いを案内しています。</strong>" +
+              "「証明が取れないから無理だ」と自分で結論を出す前に、必ず年金事務所に相談してください。</p>" +
+              "<p>いまできる備えは1つです。<strong>受診した医療機関と受診日を、記録に残しておくこと。</strong>" +
+              "診察券、お薬手帳、領収書、健康保険の医療費のお知らせ、紹介状の控え——" +
+              "どれも後で初診日の手がかりになります。捨てないでください。</p>",
+        src: S_NK_SHOSHIN,
+        share: "受診した病院名と日付の一覧を、家族が共有できる場所に作っておくと、請求のときそのまま使えます。"
+      },
+      {
+        id: "b-kingaku", title: "障害基礎年金はいくらか",
+        body: "<p>日本年金機構が示している<strong>令和8年4月分から</strong>の額です。</p>" +
+              '<table class="cmp">' +
+              "<tr><th>等級</th><th>年額</th></tr>" +
+              "<tr><td>1級</td><td>1,059,125円＋子の加算額<span class=\"cap\">（昭和31年4月1日以前生まれの方は1,056,125円）</span></td></tr>" +
+              "<tr><td>2級</td><td>847,300円＋子の加算額<span class=\"cap\">（昭和31年4月1日以前生まれの方は844,900円）</span></td></tr>" +
+              "</table>" +
+              "<p><strong>子の加算額</strong>は、2人まで1人につき243,800円、3人目以降は1人につき81,300円。" +
+              "生計を維持されている子がいるときに加算されます。" +
+              "ここでいう子とは、<strong>18歳になった後の最初の3月31日までの子</strong>、" +
+              "または<strong>20歳未満で障害等級1級または2級の状態にある子</strong>です。</p>" +
+              "<p>障害厚生年金の額は、加入期間と報酬によって一人ひとり違うので、ここには書けません。" +
+              "<strong>年金事務所で見込額を出してもらってください。</strong></p>",
+        src: S_NK_KISO
+      }
+    ]
+  },
+
+  {
+    id: "b6", phase: "p3", chip: "助成", chipSub: "医療費の軽減",
+    tag: "公費負担",
+    title: "病気の種類で使える、別の医療費助成",
+    lead: "高額療養費とは別に、<strong>病気や障害の種類ごとの公費負担医療</strong>があります。" +
+          "自分から申請しないと始まりません。" +
+          "<strong>対象になるかどうかは、窓口でしか確定しません。</strong>",
+    tasks: [
+      {
+        id: "b-jiritsu", title: "自立支援医療",
+        body: "<p>自立支援医療制度は、<strong>心身の障害を除去・軽減するための医療について、" +
+              "医療費の自己負担額を軽減する公費負担医療制度</strong>です。3つに分かれています。</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>精神通院医療</strong>　精神保健福祉法第5条に規定する統合失調症などの精神疾患を有する者で、" +
+              "通院による精神医療を継続的に要する者</li>" +
+              "<li><strong>更生医療</strong>　身体障害者福祉法に基づき身体障害者手帳の交付を受けた者で、" +
+              "その障害を除去・軽減する手術等の治療により確実に効果が期待できる者（18歳以上）</li>" +
+              "<li><strong>育成医療</strong>　身体に障害を有する児童で、その障害を除去・軽減する手術等の治療により" +
+              "確実に効果が期待できる者（18歳未満）</li>" +
+              "</ul>" +
+              "<p>厚生労働省が挙げている治療の例は、精神疾患に対する向精神薬・精神科デイケア等、" +
+              "心臓機能障害に対する弁置換術・ペースメーカー埋込術、" +
+              "腎臓機能障害に対する腎移植・人工透析などです。</p>" +
+              "<p><strong>自己負担の割合と、世帯の所得に応じた月額の上限額が決まっています。</strong>" +
+              "区分の判定は世帯の課税状況によるので、具体的な額は窓口で確認してください。" +
+              "通院先や薬局を指定して登録する仕組みなので、<strong>申請の前に主治医に相談してください。</strong></p>",
+        where: "<b>申請先</b>　お住まいの市区町村の障害福祉担当課",
+        src: S_MHLW_JIRITSU
+      },
+      {
+        id: "b-nanbyou", title: "指定難病の医療費助成",
+        body: "<p>難病の患者に対する医療等に関する法律に基づき、" +
+              "<strong>指定難病</strong>について医療費助成があります。" +
+              "対象の疾病は<strong>令和8年4月時点で告示番号1〜348の348疾病</strong>です。</p>" +
+              "<p>申請には、<strong>難病指定医が記載した臨床調査個人票</strong>が要ります。" +
+              "診断基準と重症度分類は疾病ごとに決まっていて、厚生労働省のサイトで公開されています。" +
+              "<strong>診断がついていても、重症度によって対象になるかどうかが分かれます。</strong>" +
+              "自己負担の上限月額も所得や治療の状況で変わるので、" +
+              "<strong>ここは窓口で判定してもらってください。</strong></p>" +
+              "<p>厚生労働省は、相談・申請先として" +
+              "<strong>現在お住まいの都道府県・指定都市の相談窓口（保健所等）</strong>を案内しています。" +
+              "各都道府県には難病相談・支援センターもあります。</p>",
+        where: "<b>相談・申請先</b>　お住まいの都道府県・指定都市の相談窓口（保健所等）",
+        src: S_MHLW_NANBYO + "／" + S_MHLW_NANBYO2
+      },
+      {
+        id: "b-judo", title: "重度心身障害者医療費助成（自治体の制度）",
+        body: "<p>一定の障害がある方の医療費の自己負担を、都道府県や市区町村が助成する制度です。" +
+              "「重度心身障害者医療費助成」「心身障害者医療費助成」「マル障」など、" +
+              "<strong>名前も、対象になる手帳の等級も、所得制限も、助成の範囲も、自治体ごとに違います。</strong></p>" +
+              "<p>全国共通の基準がないので、<strong>このページには金額も条件も書きません。</strong>" +
+              "お住まいの市区町村の障害福祉担当課に、" +
+              "「障害者手帳を取ったのですが、医療費の助成はありますか」と聞いてください。</p>" +
+              "<p>同じ理由で、自治体独自の難病見舞金、通院交通費の助成、" +
+              "国民健康保険料の減免なども、窓口で聞くしかありません。" +
+              "<strong>一度の相談でまとめて聞いてしまうのが効率的です。</strong></p>",
+        where: "<b>聞く先</b>　お住まいの市区町村の障害福祉担当課"
+      },
+      {
+        id: "b-techou", title: "障害者手帳",
+        body: "<p>手帳は3種類あります。身体障害者手帳、精神障害者保健福祉手帳、療育手帳。" +
+              "申請の窓口は<strong>お住まいの市区町村</strong>です。</p>" +
+              "<p>手帳があると使えるものは自治体ごとに幅がありますが、" +
+              "<strong>所得税・住民税の障害者控除の判定にも使われます</strong>（次の段に書きます）。</p>" +
+              "<p><strong>障害者手帳と障害年金は、別の制度です。</strong>" +
+              "等級も別々に判定されるので、手帳が何級だから年金も何級、とはなりません。" +
+              "片方だけ該当することもあります。両方とも申請してみる価値があります。</p>",
+        where: "<b>申請先</b>　お住まいの市区町村の障害福祉担当課"
+      }
+    ]
+  },
+
+  {
+    id: "b7", phase: "p4", chip: "税と固定費", chipSub: "止まらない支出",
+    tag: "お金の後始末",
+    title: "税で取り戻すもの、止まらないもの",
+    lead: "収入が減っても、<strong>社会保険料と住民税は止まりません。</strong>" +
+          "一方で、かかった医療費は確定申告で取り戻せる部分があります。" +
+          "この2つを、同じ時期に整理しておいてください。",
+    tasks: [
+      {
+        id: "b-iryouhikoujo", title: "医療費控除",
+        body: "<p>その年の1月1日から12月31日までの間に、自分または自分と生計を一にする配偶者や" +
+              "その他の親族のために医療費を支払った場合、一定額を超える分が所得控除になります。</p>" +
+              "<p><strong>計算式</strong>　" +
+              "（実際に支払った医療費の合計額－保険金などで補てんされる金額）－10万円。" +
+              "ただし<strong>その年の総所得金額等が200万円未満の人は、総所得金額等の5パーセントの金額</strong>を" +
+              "差し引きます。<strong>控除額は最高で200万円</strong>です。</p>" +
+              "<p><strong>「保険金などで補てんされる金額」には、" +
+              "生命保険契約などで支給される入院費給付金や、" +
+              "健康保険などで支給される高額療養費・家族療養費・出産育児一時金などが含まれます。</strong>" +
+              "高額療養費で戻った分は差し引く、ということです。" +
+              "なお、補てんされる金額は<strong>その給付の目的となった医療費の金額を限度として</strong>差し引くので、" +
+              "引ききれない金額が生じても、他の医療費からは差し引きません。</p>" +
+              "<p>申告には、医療費の領収書から<strong>「医療費控除の明細書」</strong>を作成して確定申告書に添付します。" +
+              "医療保険者から交付を受けた医療費通知があれば、明細書の記載を簡略化できます。" +
+              "領収書は<strong>確定申告期限等から5年を経過する日まで</strong>、提示または提出を求められることがあります。</p>" +
+              "<p>やり方そのものは<strong><a href=\"%%NOTE:tax%%\">確定申告ノート</a></strong>にまとめてあります。</p>",
+        src: S_NTA_1120,
+        share: "医療費の領収書を封筒1つにまとめる係を決めておくと、申告のときに探さずに済みます。"
+      },
+      {
+        id: "b-shougaisha", title: "障害者控除",
+        body: "<p>納税者本人、同一生計配偶者または扶養親族が所得税法上の障害者に当てはまる場合、" +
+              "所得控除を受けられます。</p>" +
+              '<table class="cmp">' +
+              "<tr><td>障害者</td><td>27万円</td></tr>" +
+              "<tr><td>特別障害者</td><td>40万円</td></tr>" +
+              "<tr><td>同居特別障害者</td><td>75万円</td></tr>" +
+              "</table>" +
+              "<p>対象には、<strong>精神障害者保健福祉手帳の交付を受けている人</strong>（1級は特別障害者）、" +
+              "<strong>身体障害者手帳に身体上の障害がある人として記載されている人</strong>（1級・2級は特別障害者）、" +
+              "児童相談所等により知的障害者と判定された人などが含まれます。</p>" +
+              "<p><strong>手帳を取った年から使えます。</strong>年末調整でも申告できますし、" +
+              "忘れていた年があれば、確定申告（還付申告）でさかのぼれることがあります。</p>",
+        src: S_NTA_1160
+      },
+      {
+        id: "b-shakaihoken", title: "休んでいても、社会保険料はかかり続ける",
+        body: "<p>日本年金機構が健康保険・厚生年金保険の保険料の免除として定めているのは、" +
+              "<strong>産前産後休業期間中</strong>と<strong>育児休業等期間中</strong>です。" +
+              "<strong>私傷病による休職は、この免除の対象として定められていません。</strong></p>" +
+              "<p>つまり、休職して給与が止まっても、" +
+              "<strong>健康保険料も厚生年金保険料も、これまでと同じようにかかります。</strong>" +
+              "給与から天引きできないので、会社に振り込むなどの形で自分で払うことになります。" +
+              "<strong>月の手取りが0円で、保険料の請求だけ来る</strong>という月が生まれます。</p>" +
+              "<p>傷病手当金が入るまでに時間がかかるので、" +
+              "ここで資金繰りが詰まる人が多いところです。" +
+              "<strong>休み始める前に、会社に「毎月いくら、いつまでに、どこへ払うのか」を確認してください。</strong></p>",
+        src: S_NK_MENJO
+      },
+      {
+        id: "b-juuminzei", title: "住民税は、去年の所得にかかってくる",
+        body: "<p>地方税法は、<strong>「所得割の課税標準は、前年の所得について算定した総所得金額、" +
+              "退職所得金額及び山林所得金額とする」</strong>と定めています。" +
+              "賦課期日は<strong>当該年度の初日の属する年の1月1日</strong>です。</p>" +
+              "<p>つまり、<strong>いま働けなくて収入がなくても、" +
+              "去年しっかり働いていた分の住民税が今年かかります。</strong>" +
+              "収入が減った年ではなく、その翌年がいちばん重くなる、という形になります。</p>" +
+              "<p>給与から天引き（特別徴収）されていた人が休職すると、" +
+              "天引きできなくなって自分で納める形（普通徴収）に切り替わり、" +
+              "<strong>まとまった額の納付書が届いて驚く</strong>ことがあります。</p>" +
+              "<p>払うのが難しいときは、放置せず<strong>市区町村の税の窓口に相談してください。</strong>" +
+              "徴収の猶予や分割の相談ができます。督促が来てから動くより、先に相談したほうが選択肢が残ります。</p>",
+        where: "<b>相談先</b>　お住まいの市区町村の住民税・納税の担当課",
+        src: S_EG_CHIHOZEI
+      },
+      {
+        id: "b-seikatsu", title: "それでも足りないとき",
+        body: "<p>制度を全部使っても足りないことはあります。" +
+              "その場合に相談できる先も、公的な窓口があります。</p>" +
+              "<ul class=\"tight\">" +
+              "<li><strong>生活困窮者自立支援の相談窓口</strong>　" +
+              "市区町村（またはその委託先）に設置されています。" +
+              "家賃の相談、家計の立て直し、就労の相談をまとめて受けてくれます</li>" +
+              "<li><strong>社会福祉協議会</strong>　生活福祉資金の貸付の相談</li>" +
+              "<li><strong>市区町村の福祉事務所</strong>　生活保護の相談</li>" +
+              "</ul>" +
+              "<p>どこに行けばいいかわからないときは、" +
+              "<strong>市区町村の代表番号に電話して「生活の相談をしたい」と伝えれば、つないでもらえます。</strong>" +
+              "病院に相談支援の窓口があるなら、そこからつないでもらうのがいちばん早いです。</p>"
+      }
+    ]
+  }
+];
+
+/* 期限の一覧。g1=医療費 g2=収入 g3=障害年金 g4=仕事・税 */
+var DEADLINES = [
+  { g: "g1", w: "受診の前", t: "限度額適用認定証／マイナ保険証", s: "窓口の支払いを上限額までにする事前の手続き" },
+  { g: "g1", w: "4か月目", t: "多数回該当", s: "直近1年に3か月以上の支給があると、4か月目から上限が下がります" },
+  { g: "g1", w: "2年", t: "高額療養費の請求", s: "健康保険の給付を受ける権利は2年で時効消滅します" },
+  { g: "g2", w: "4日目", t: "傷病手当金の支給対象になる日", s: "連続3日の待期のあと、4日目以降の働けなかった日から" },
+  { g: "g2", w: "通算1年6か月", t: "傷病手当金の支給期間", s: "支給を開始した日から通算。支給されない期間は繰り越せます" },
+  { g: "g2", w: "退職日", t: "資格喪失後の継続給付", s: "被保険者期間1年以上＋退職日の前日に受けている／受けられる状態" },
+  { g: "g2", w: "2年", t: "傷病手当金の請求", s: "こちらも2年。月ごとに片づけておくこと" },
+  { g: "g3", w: "1年6か月", t: "障害認定日", s: "初診日から1年6か月。治った（症状が固定した）ときはその日" },
+  { g: "g3", w: "5年", t: "障害年金の遡及", s: "認定日請求でさかのぼれるのは、時効により5年分が限度" },
+  { g: "g3", w: "65歳", t: "事後重症の請求", s: "請求書は65歳の誕生日の前々日までに提出する必要があります" },
+  { g: "g4", w: "30日", t: "失業給付の受給期間の延長", s: "引き続き30日以上働けなくなった日の翌日以降、早期に" },
+  { g: "g4", w: "1年＋3年", t: "延長後の受給期間", s: "原則1年に、働けなかった日数を最長3年まで加えられます" },
+  { g: "g4", w: "翌年", t: "医療費控除の確定申告", s: "その年の翌年2月16日から3月15日まで" }
+];
+
+/* 「つぎに来る節目」に出すもの。
+   day = 起点からの日数、mon = 起点からの暦月（1年6か月などは暦で数える） */
+var MILESTONES = [
+  { day: 3,  t: "待期の3日が終わる",
+    s: "連続して3日休むと待期が成立し、4日目から傷病手当金の対象になります" },
+  { day: 30, t: "傷病手当金の最初の申請を考える時期",
+    s: "申請書には医師と会社が書く欄があります。給与の締めに合わせて月ごとに出すのが進めやすい形です" },
+  { mon: 12, t: "障害年金の下調べを始める目安",
+    s: "初診日の証明をどう取るかを、この頃から年金事務所に相談しておくと間に合います" },
+  { mon: 18, t: "1年6か月の節目",
+    s: "傷病手当金は支給開始日から通算1年6か月まで。障害認定日は初診日から1年6か月です" },
+  { mon: 24, t: "健康保険の給付の時効（2年）",
+    s: "高額療養費・傷病手当金の請求権は2年で消えます。未請求の月がないか確かめてください" }
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_DATE = "byouki.date.v1";
+var KEY_CHK  = "byouki.checks.v1";
+var KEY_TH   = "kurashi.theme.v1";
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+var state = {
+  date: load(KEY_DATE, ""),
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+function fmtJP(d) {
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+}
+function addDays(d, n) {
+  var x = new Date(d.getTime());
+  x.setDate(x.getDate() + n);
+  return x;
+}
+/* 暦どおりに月を足す。月末の繰り上がりを起こさない（1月31日＋1か月＝2月28日） */
+function addMonths(d, n) {
+  var y = d.getFullYear();
+  var m = d.getMonth() + n;
+  var day = d.getDate();
+  var last = new Date(y, m + 1, 0).getDate();
+  return new Date(y, m, day > last ? last : day);
+}
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* 節目の到達日 */
+function msDate(from, ms) {
+  return ms.mon ? addMonths(from, ms.mon) : addDays(from, ms.day);
+}
+
+/* 経過の言い換え。年・月は日数の割り算ではなく暦どおりに数える */
+function elapsedLabel(n, from) {
+  if (n < 0)   return "まだ先の日付です";
+  if (n === 0) return "きょうが起点です";
+  if (n < 31)  return n + "日目";
+
+  var t = today0();
+  var months = (t.getFullYear() - from.getFullYear()) * 12 + (t.getMonth() - from.getMonth());
+  if (t.getDate() < from.getDate()) months--;
+  if (months < 0) months = 0;
+
+  if (months < 12) return months + "か月ごろ（" + n + "日目）";
+  var y = Math.floor(months / 12);
+  var rm = months % 12;
+  return y + "年" + (rm > 0 ? rm + "か月" : "") + "ごろ（" + n + "日目）";
+}
+
+/* ============================================================
+   描画
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         "<b>" + esc(s.chip) + "</b>" + esc(s.chipSub) + "</button>";
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(t) {
+  var done = !!state.checks[t.id];
+  var due = t.due ? '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>" : "";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + t.id + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + t.id + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  if (t.share) h += '<div class="share"><b>家族で分けられること</b>' + esc(t.share) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+/* ---- 期限の一覧 ---- */
+function renderDeadlines() {
+  var host = document.getElementById("deadlineTable");
+  if (!host) return;
+  var h = "";
+  for (var i = 0; i < DEADLINES.length; i++) {
+    var r = DEADLINES[i];
+    h += '<div class="row ' + r.g + '"><div class="w">' + esc(r.w) + "</div>" +
+         '<div class="t">' + esc(r.t) + "<span>" + esc(r.s) + "</span></div></div>";
+  }
+  host.innerHTML = h;
+}
+
+/* ---- きょうの位置 ---- */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var dateIn   = document.getElementById("dateIn");
+var clearBtn = document.getElementById("clearBtn");
+var hint     = document.getElementById("hint");
+var nextup   = document.getElementById("nextup");
+var nextList = document.getElementById("nextList");
+
+/* テストから呼べるように、描画用のデータ作りだけ切り出しておく */
+function nextRows(from, now) {
+  var n = daysBetween(from, now);
+  var rows = [], overdue = null;
+  for (var m = 0; m < MILESTONES.length; m++) {
+    var ms = MILESTONES[m];
+    var on = msDate(from, ms);
+    var left = daysBetween(now, on);
+    if (left < 0) {
+      if (left >= -60) overdue = { ms: ms, left: left, on: on };
+      continue;
+    }
+    if (rows.length < 3) rows.push({ ms: ms, left: left, on: on });
+  }
+  if (overdue) rows.unshift(overdue);
+  return { days: n, rows: rows };
+}
+
+function renderToday() {
+  var d = parseDate(state.date);
+  if (!d) {
+    dayBig.textContent = "日付を入れてください";
+    daySub.textContent = "";
+    clearBtn.hidden = true;
+    nextup.classList.remove("on");
+    hint.innerHTML = "入れるのは<strong>働けなくなった日</strong>（仕事を休み始めた日）か、" +
+                     "<strong>初診日</strong>（その病気・けがで最初に医師にかかった日）です。" +
+                     "日付はこの端末のブラウザにだけ保存され、サーバーには送られません。";
+    return;
+  }
+
+  var r = nextRows(d, today0());
+  dayBig.textContent = elapsedLabel(r.days, d);
+  daySub.textContent = fmtJP(d) + " から";
+  clearBtn.hidden = false;
+  hint.textContent = "この日付はこの端末のブラウザにだけ保存されています。";
+
+  if (!r.rows.length) {
+    nextList.innerHTML = '<p class="nx-none">この起点から数える節目は、すべて過ぎています。' +
+                         '未請求のものがないか、加入している健康保険と年金事務所に一度確認してください。</p>';
+    nextup.classList.add("on");
+    return;
+  }
+
+  var h = "";
+  for (var i = 0; i < r.rows.length; i++) {
+    var row = r.rows[i];
+    var cls = row.left < 0 ? "over" : (row.left <= 30 ? "soon" : "far");
+    var when = row.left < 0
+      ? "<b>" + Math.abs(row.left) + "</b>日すぎ"
+      : (row.left === 0 ? "<b>きょう</b>" : "あと<b>" + row.left + "</b>日");
+    h += '<div class="nx ' + cls + '">' +
+         '<div class="nx-when">' + when + "</div>" +
+         '<div class="nx-what">' + esc(row.ms.t) +
+         "<span>" + fmtJP(row.on) + "ごろ　" + esc(row.ms.s) + "</span></div></div>";
+  }
+  nextList.innerHTML = h;
+  nextup.classList.add("on");
+}
+
+/* ---- 進捗 ---- */
+function renderProgress() {
+  var total = 0, done = 0;
+  for (var i = 0; i < STAGES.length; i++) {
+    for (var j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = +b.dataset.i;
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  var id = b.dataset.chk;
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest(".task");
+  if (card) card.classList.toggle("done", !!state.checks[id]);
+  renderProgress();
+});
+
+document.getElementById("setBtn").addEventListener("click", function () {
+  var v = dateIn.value;
+  var d = parseDate(v);
+  if (!d) { hint.textContent = "日付を選んでください。"; return; }
+  if (daysBetween(d, today0()) < 0) { hint.textContent = "未来の日付は入れられません。"; return; }
+  state.date = v;
+  save(KEY_DATE, v);
+  renderToday();
+});
+
+clearBtn.addEventListener("click", function () {
+  state.date = "";
+  dateIn.value = "";
+  save(KEY_DATE, "");
+  renderToday();
+});
+
+dateIn.addEventListener("change", function () {
+  if (parseDate(dateIn.value)) document.getElementById("setBtn").click();
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化
+   ============================================================ */
+
+buildRail();
+renderStage();
+renderDeadlines();
+
+/* 進捗バーを、レールのすぐ下に足す */
+(function () {
+  var host = document.getElementById("stageHost");
+  var p = document.createElement("div");
+  p.className = "prog";
+  p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                '<span class="prog-bar"><i id="progFill"></i></span>';
+  host.parentNode.appendChild(p);
+})();
+
+if (state.date) dateIn.value = state.date;
+renderToday();
+renderProgress();
+</script>

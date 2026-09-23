@@ -1,0 +1,1553 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="生年月日を入れると受け取れる年齢が出ます。請求の段取り、繰上げ・繰下げ、税。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="年金を受け取るノート">
+<meta property="og:type" content="website">
+<meta property="og:title" content="年金を受け取るノート">
+<meta property="og:description" content="生年月日を入れると受け取れる年齢が出ます。請求の段取り、繰上げ・繰下げ、税。">
+<title>年金を受け取るノート</title>
+<style>
+html{color-scheme:light dark;background:#F3F3F0}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"]){background:#161917}}
+html[data-theme="dark"]{color-scheme:dark;background:#161917}
+html[data-theme="light"]{color-scheme:light;background:#F3F3F0}
+</style>
+<script>(function(){try{var t=localStorage.getItem('kurashi.theme.v1');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"></noscript>
+</head>
+<body>
+<style>
+html{color-scheme:light dark}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+:root{
+  --ground:#F3F3F0;
+  --surface:#FFFFFF;
+  --surface-2:#FAFAF8;
+  --ink:#242826;
+  --ink-2:#4D5451;
+  --muted:#7E8683;
+  --line:#E3E5E1;
+  --line-2:#EEEFEC;
+  --p1:#4A6A88;
+  --p2:#43806B;
+  --p3:#96703A;
+  --p4:#6E6386;
+  --p1-bg:#E7EDF3;
+  --p2-bg:#E3EEE9;
+  --p3-bg:#F3EBDC;
+  --p4-bg:#EBE8F0;
+  --alert:#A9503F;
+  --alert-bg:#F6E8E4;
+  --ok:#3D7C5B;
+  --share:#4A6A88;
+  --share-bg:#E8EEF4;
+  --shadow:0 1px 2px rgba(36,40,38,.05), 0 8px 24px -16px rgba(36,40,38,.25);
+  --display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho","Yu Gothic UI",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#161917; --surface:#1F2321; --surface-2:#262B29;
+    --ink:#E8EAE6; --ink-2:#BBC2BE; --muted:#8C9490;
+    --line:#343A37; --line-2:#2B302E;
+    --p1:#93B4D0; --p2:#71BB9F; --p3:#CFA463; --p4:#A99DC2;
+    --p1-bg:#22303C; --p2-bg:#1F3730; --p3-bg:#352D1C; --p4-bg:#2C2739;
+    --alert:#DE8371; --alert-bg:#3A2622; --ok:#79C79C;
+    --share:#93B4D0; --share-bg:#22303C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#161917; --surface:#1F2321; --surface-2:#262B29;
+  --ink:#E8EAE6; --ink-2:#BBC2BE; --muted:#8C9490;
+  --line:#343A37; --line-2:#2B302E;
+  --p1:#93B4D0; --p2:#71BB9F; --p3:#CFA463; --p4:#A99DC2;
+  --p1-bg:#22303C; --p2-bg:#1F3730; --p3-bg:#352D1C; --p4-bg:#2C2739;
+  --alert:#DE8371; --alert-bg:#3A2622; --ok:#79C79C;
+  --share:#93B4D0; --share-bg:#22303C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--body);font-size:15px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;font-weight:700}
+a{color:inherit}
+
+/* ---------- header ---------- */
+.bar{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:30;
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+}
+.bar-in{max-width:560px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.mark{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.mark svg{display:block;flex:none}
+.bar .spacer{flex:1}
+.ghost{
+  font:inherit;font-size:12.5px;font-family:var(--body);
+  background:var(--surface);color:var(--ink-2);
+  border:1px solid var(--line);border-radius:999px;
+  padding:5px 12px;cursor:pointer;white-space:nowrap;
+}
+.ghost:hover{border-color:var(--muted)}
+
+/* ---------- 冒頭 ---------- */
+.lede{margin-top:18px;font-size:14px;color:var(--ink-2);line-height:1.85}
+.lede strong{font-weight:700;color:var(--ink)}
+
+/* ---------- 今日 ---------- */
+.today{
+  margin-top:16px;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:16px;box-shadow:var(--shadow);
+}
+.eyebrow{font-size:11.5px;letter-spacing:.14em;color:var(--muted);font-weight:500}
+.today-main{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:2px}
+.today-day{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+.today-sub{font-size:13px;color:var(--ink-2)}
+.setup{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+input[type="date"]{
+  font:inherit;font-size:14px;font-family:var(--body);
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0;max-width:100%;
+}
+.solid{
+  font:inherit;font-size:13px;font-family:var(--body);font-weight:500;
+  background:var(--ink);color:var(--ground);
+  border:0;border-radius:999px;padding:7px 14px;cursor:pointer;
+}
+.solid:hover{opacity:.88}
+.hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+
+/* 次の期限 */
+.nextup{margin-top:14px;border-top:1px solid var(--line-2);padding-top:12px;display:none}
+.nextup.on{display:block}
+.nextup h4{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:500;font-family:var(--body)}
+.nx{display:flex;gap:10px;align-items:flex-start;margin-top:8px}
+.nx-when{
+  flex:none;min-width:64px;text-align:center;border-radius:10px;padding:5px 6px;
+  font-size:11px;line-height:1.35;font-weight:700;font-variant-numeric:tabular-nums;
+}
+.nx-when b{display:block;font-size:17px;font-family:var(--display)}
+.nx-what{font-size:13.5px;line-height:1.6}
+.nx-what span{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.nx.over .nx-when{background:var(--alert-bg);color:var(--alert)}
+.nx.soon .nx-when{background:var(--p1-bg);color:var(--p1)}
+.nx.far .nx-when{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+
+/* ---------- 時間の帯 ---------- */
+.track{margin-top:16px}
+.track-bar{position:relative;height:10px;border-radius:999px;background:var(--line-2);display:flex;overflow:hidden}
+.track-seg{flex:1;border-right:1px solid var(--ground)}
+.track-seg:last-child{border-right:0}
+.track-pin{position:absolute;top:-4px;width:2px;height:18px;background:var(--alert);border-radius:2px;transition:left .3s}
+.track-scale{display:flex;font-size:10px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+.track-scale span{flex:1;text-align:center}
+
+/* ---------- レール ---------- */
+.rail-wrap{margin-top:24px}
+.rail-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.rail-head h2{font-size:17px}
+.rail-head .eyebrow{margin-left:auto}
+.rail{
+  display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-bottom:8px;margin-inline:-16px;padding-inline:16px;
+  scrollbar-width:none;
+}
+.rail::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;scroll-snap-align:center;cursor:pointer;font:inherit;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:9px 13px;min-width:106px;text-align:center;font-size:12px;color:var(--ink-2);
+}
+.chip b{display:block;font-family:var(--display);font-size:14.5px;color:var(--ink);font-weight:700}
+.chip[aria-current="true"]{box-shadow:var(--shadow)}
+.chip.p1[aria-current="true"]{border-color:var(--p1);background:var(--p1-bg)}
+.chip.p2[aria-current="true"]{border-color:var(--p2);background:var(--p2-bg)}
+.chip.p3[aria-current="true"]{border-color:var(--p3);background:var(--p3-bg)}
+.chip.p4[aria-current="true"]{border-color:var(--p4);background:var(--p4-bg)}
+.chip .here{display:none;font-size:10px;color:var(--alert);font-weight:700;margin-top:2px}
+.chip.now .here{display:block}
+
+/* ---------- ステージ本体 ---------- */
+.stage{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:18px 16px;box-shadow:var(--shadow);
+}
+.stage-tag{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;
+  border-radius:999px;padding:3px 10px;
+}
+.stage.p1 .stage-tag{background:var(--p1-bg);color:var(--p1)}
+.stage.p2 .stage-tag{background:var(--p2-bg);color:var(--p2)}
+.stage.p3 .stage-tag{background:var(--p3-bg);color:var(--p3)}
+.stage.p4 .stage-tag{background:var(--p4-bg);color:var(--p4)}
+.stage h3{font-size:20px;margin-top:8px;line-height:1.45}
+.stage .lead{font-size:13.5px;color:var(--ink-2);margin-top:8px;line-height:1.85}
+
+/* 手続きカード */
+.task{border-top:1px solid var(--line-2);padding-top:13px;margin-top:13px}
+.task-head{display:flex;gap:10px;align-items:flex-start}
+.chk{
+  flex:none;width:22px;height:22px;margin-top:3px;border-radius:7px;
+  border:1.5px solid var(--line);background:var(--surface-2);cursor:pointer;
+  display:grid;place-items:center;padding:0;
+}
+.chk svg{width:13px;height:13px;opacity:0;stroke:var(--ok);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.chk[aria-pressed="true"]{border-color:var(--ok);background:transparent}
+.chk[aria-pressed="true"] svg{opacity:1}
+.task-title{flex:1;font-size:15px;font-weight:700;line-height:1.55;font-family:var(--display)}
+.task.done .task-title{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.due{
+  display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;
+  padding:1px 8px;white-space:nowrap;vertical-align:1.5px;margin-left:2px;
+  background:var(--alert-bg);color:var(--alert);font-family:var(--body);
+}
+.due.soft{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.task-body{margin-left:32px;font-size:13.5px;color:var(--ink-2);line-height:1.85;margin-top:5px}
+.task-body p{margin:0 0 7px}
+.task-body p:last-child{margin-bottom:0}
+.task-body ul{margin:4px 0 7px;padding-left:1.15em}
+.task-body li{margin-bottom:3px}
+.where{
+  display:block;margin-top:7px;font-size:12.5px;color:var(--ink-2);
+  background:var(--surface-2);border:1px solid var(--line-2);border-radius:9px;padding:7px 10px;
+}
+.where b{font-family:var(--body);font-weight:700;color:var(--ink)}
+
+/* 出典 */
+.src{display:block;margin-top:7px;font-size:11.5px;color:var(--muted);line-height:1.65}
+.src a{color:var(--p1);text-underline-offset:2px}
+.src::before{content:"出典 ";letter-spacing:.06em}
+
+/* 分担カード */
+.share{
+  margin:10px 0 0 32px;background:var(--share-bg);border-radius:11px;padding:9px 12px;
+  font-size:12.5px;color:var(--ink-2);line-height:1.8;
+}
+.share b{display:block;font-size:11px;letter-spacing:.08em;color:var(--share);font-weight:700;margin-bottom:2px}
+
+/* たたむ */
+details.more{margin-left:32px;margin-top:6px}
+details.more>summary{
+  list-style:none;cursor:pointer;font-size:12.5px;color:var(--p1);
+  display:inline-flex;align-items:center;gap:4px;
+}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"くわしく"}
+details.more[open]>summary::before{content:"閉じる"}
+details.more>summary::after{content:"\25BE";font-size:10px;transition:transform .2s}
+details.more[open]>summary::after{transform:rotate(180deg)}
+
+/* ---------- 注意帯 ---------- */
+.warn{
+  margin-top:16px;background:var(--alert-bg);border-radius:14px;padding:14px 15px;
+  font-size:13px;line-height:1.85;color:var(--ink-2);
+}
+.warn b{color:var(--alert);font-family:var(--display);font-size:14px;display:block;margin-bottom:3px}
+
+/* ---------- セクション ---------- */
+.sec{margin-top:32px}
+.sec>h2{font-size:17px}
+.sec>p.note{font-size:13px;color:var(--ink-2);margin:6px 0 0;line-height:1.85}
+.table{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;box-shadow:var(--shadow);
+}
+.row{display:flex;gap:10px;padding:11px 14px;border-top:1px solid var(--line-2);align-items:flex-start}
+.row:first-child{border-top:0}
+.row .w{flex:none;width:78px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.5}
+.row .t{flex:1;font-size:13.5px;line-height:1.6}
+.row .t span{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.row.g1 .w{color:var(--p1)} .row.g2 .w{color:var(--p2)}
+.row.g3 .w{color:var(--p3)} .row.g4 .w{color:var(--p4)}
+
+/* 進捗 */
+.prog{margin-top:14px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:10px}
+.prog-bar{flex:1;height:6px;border-radius:999px;background:var(--line-2);overflow:hidden}
+.prog-bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+
+/* ---------- 相談先 ---------- */
+.help{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:16px;box-shadow:var(--shadow);font-size:13.5px;line-height:1.85;
+}
+.help dl{margin:0}
+.help dt{font-weight:700;font-family:var(--display);margin-top:12px}
+.help dt:first-child{margin-top:0}
+.help dd{margin:2px 0 0;color:var(--ink-2);font-size:13px}
+
+/* ---------- 出典一覧 ---------- */
+.sources{margin-top:32px;font-size:12.5px;color:var(--ink-2);line-height:1.9}
+.sources h2{font-size:15px;margin-bottom:8px}
+.sources ul{margin:0;padding-left:1.1em}
+.sources li{margin-bottom:5px}
+.sources a{color:var(--p1)}
+
+footer{
+  margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted);line-height:1.9;
+}
+footer a{color:var(--p1)}
+
+/* ---------- このノート固有 ---------- */
+
+/* 生年月日から出る節目の日付 */
+.ages{margin-top:14px;border-top:1px solid var(--line-2);padding-top:12px;display:none}
+.ages.on{display:block}
+.ages h4{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:500;font-family:var(--body);margin:0}
+
+/* 節目1件 */
+.age-row{display:flex;gap:10px;align-items:flex-start;margin-top:9px}
+.age-when{
+  flex:none;min-width:74px;text-align:center;padding:5px 7px;border-radius:9px;
+  font-size:11.5px;line-height:1.35;font-variant-numeric:tabular-nums;
+  background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)
+}
+.age-when b{display:block;font-size:16px;font-family:var(--display)}
+.age-row.now .age-when{background:var(--p1-bg);color:var(--p1);border-color:var(--p1)}
+.age-row.past .age-when{background:var(--surface-2);color:var(--muted)}
+.age-what{font-size:13.5px;line-height:1.6}
+.age-what span{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+.age-row.past .age-what{color:var(--muted)}
+
+/* 断定を避ける但し書き */
+.uncertain{
+  margin-top:12px;padding:10px 12px;border-radius:10px;
+  background:var(--surface-2);border:1px solid var(--line);
+  font-size:12.5px;line-height:1.75;color:var(--ink-2)
+}
+.uncertain b{display:block;font-family:var(--display);font-size:13px;color:var(--ink);margin-bottom:2px}
+
+/* 本文中の「数字を書かない」リンク囲み */
+.lookup{
+  display:block;margin-top:7px;padding:8px 10px;border-radius:9px;
+  background:var(--surface-2);border:1px solid var(--line);
+  font-size:12.5px;line-height:1.7
+}
+.lookup a{color:var(--p1)}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <circle cx="9" cy="9" r="6.2" fill="none" stroke="currentColor" stroke-width="1.35" opacity=".75"/>
+        <path d="M6.2 7.4h5.6M6.2 10.2h5.6M9 5.4v7.2" fill="none" stroke="currentColor"
+              stroke-width="1.2" stroke-linecap="round" opacity=".75"/>
+      </svg>
+      年金のノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="../index.html" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">
+    年金を受け取りはじめるときの<strong>段取りと、期限のあるもの</strong>を並べたノートです。
+    生年月日を入れると、60歳・65歳・繰下げの上限が<strong>日付</strong>で出ます。
+    <strong>受け取れる額は、このページではわかりません。</strong>
+    納めた記録で人ごとにまったく変わるので、ねんきんネットか年金事務所で確かめてください。
+    広告も関連記事もありません。入れた日付とチェックは、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- 今日 -->
+  <section class="today">
+    <div class="eyebrow">いまの年齢と、節目の日</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">生年月日を入れてください</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <input type="date" id="dateIn" aria-label="生年月日">
+      <button class="solid" id="setBtn" type="button">生年月日</button>
+      <button class="ghost" id="clearBtn" type="button" hidden>消す</button>
+    </div>
+    <p class="hint" id="hint">
+      生年月日はこの端末にだけ保存されます。どこにも送られません。
+    </p>
+
+    <div class="ages" id="ages">
+      <h4>この生年月日から決まる日</h4>
+      <div id="ageList"></div>
+      <div id="ageNote"></div>
+    </div>
+  </section>
+
+  <!-- 最初に読む -->
+  <div class="warn">
+    <b>年金は、請求しないと支給されません</b>
+    年齢になれば自動で振り込まれる、という仕組みではありません。
+    <strong>自分で年金請求書を出して、はじめて支払いが始まります。</strong>
+    しかも、<strong>年金を受ける権利は、権利が発生してから5年を経過したときは、時効によって消滅します。</strong>
+    手続きをしないまま置いておくと、受け取れたはずの年金が戻らなくなります。
+    請求書が届いたら、封を開けてください。届かない場合も、年金事務所に問い合わせれば請求できます。
+  </div>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>順番にすること</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="段階"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>迷ったときの相談先</h2>
+    <p class="note">年金は、自分の記録を見ないと何も決められません。まず記録を見るところへ。</p>
+    <div class="help">
+      <dl>
+        <dt>年金事務所（予約して行く）</dt>
+        <dd>請求や受け取りの窓口相談は、予約ができます。
+          予約受付専用電話は<strong>0570-05-4890</strong>（一般電話は03-6631-7521）、
+          受付は月曜日から金曜日の午前8時30分から午後5時15分です。
+          相談する方の<strong>基礎年金番号</strong>か、通知書に書かれた照会番号を手元に。</dd>
+        <dt>ねんきんダイヤル</dt>
+        <dd>年金の受け取りについての一般的な問い合わせは<strong>0570-05-1165</strong>。
+          年金振込通知書や源泉徴収票のことも、ここで聞けます。</dd>
+        <dt>ねんきんネット</dt>
+        <dd>自分の年金記録と、将来受け取る老齢年金の見込額の試算。
+          条件を変えて何度でも試算できるので、繰上げ・繰下げを考えるときはここが出発点です。</dd>
+        <dt>ねんきん定期便</dt>
+        <dd>毎年、誕生月に届きます。捨てずに、いちばん新しいものを取っておいてください。</dd>
+        <dt>会社の人事・総務</dt>
+        <dd>在職中に受け取り始めるとき、厚生年金の加入記録や給与の届出はここが窓口です。</dd>
+        <dt>市区町村</dt>
+        <dd>介護保険料・国民健康保険料・後期高齢者医療保険料。年金からの天引きの相談先です。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        <strong>受け取れる額は書いていません。</strong>
+        年金額は、いつ・いくら・何か月納めたかで人ごとにまったく変わります。
+        目安の表を載せても、自分の額とは違います。
+        額は<strong>ねんきんネットの試算</strong>か、<strong>年金事務所</strong>で確かめてください。
+      </p>
+      <p style="margin:0 0 10px">
+        <strong>繰上げ・繰下げの損得も書いていません。</strong>
+        減額率・増額率は制度で決まっているので出典つきで出していますが、
+        「何歳まで生きれば得か」は、働き方・健康・税・配偶者の年金で変わります。
+        このページは、<strong>決めるための材料</strong>までにしています。
+      </p>
+      <p style="margin:0 0 10px">
+        <strong>毎年改定される額は、数字を書かずにリンクにしています。</strong>
+        年金額そのもの、在職老齢年金の支給停止の基準額などは、年度ごとに変わります。
+        古い数字を覚えてしまうほうが危ないので、その都度、日本年金機構のページで見てください。
+      </p>
+      <p style="margin:0">
+        制度・率・期限は<strong>日本年金機構・国税庁</strong>で確認して書き、その項目に出典リンクを置いています。
+        出典のない記述は、進め方の提案です。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/jukyu-yoken/20150401-01.html" target="_blank" rel="noopener">老齢基礎年金の受給要件・支給開始時期・年金額</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/jukyu-yoken/20140421-01.html" target="_blank" rel="noopener">老齢厚生年金の受給要件・支給開始時期・年金額</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/jukyu-yoken/20140421-02.html" target="_blank" rel="noopener">特別支給の老齢厚生年金</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/jizensofu.html" target="_blank" rel="noopener">老齢年金請求書の事前送付</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/gaiyou.html" target="_blank" rel="noopener">老齢年金の請求手続きの流れ</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/20141128.html" target="_blank" rel="noopener">特別支給の老齢厚生年金を受給するときの手続き</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/20140421-26.html" target="_blank" rel="noopener">65歳時の年金の手続き</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/kyotsu/shikyu/20140421-01.html" target="_blank" rel="noopener">年金の時効</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kuriage-kurisage/20140421-01.html" target="_blank" rel="noopener">年金の繰上げ受給</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kuriage-kurisage/20140421-02.html" target="_blank" rel="noopener">年金の繰下げ受給</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/zaishoku/20140421.html" target="_blank" rel="noopener">在職中の年金（在職老齢年金制度）</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/zaishoku/20150401-01.html" target="_blank" rel="noopener">在職老齢年金の計算方法</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kakyu-hurikae/20150401.html" target="_blank" rel="noopener">加給年金額と振替加算</a>」</li>
+      <li>国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm" target="_blank" rel="noopener">No.1600 公的年金等の課税関係</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/jukyu/shotokuzeikojo.html" target="_blank" rel="noopener">老齢年金から源泉徴収される所得税の控除を受けるとき</a>」／「<a href="https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/jukyu/fuyo/index.html" target="_blank" rel="noopener">公的年金等の受給者の扶養親族等申告書の提出方法</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/seido/kyotsu/shikyu/20140421-03.html" target="_blank" rel="noopener">年金からの介護保険料、国民健康保険料（税）、後期高齢者医療保険料、住民税および森林環境税の特別徴収</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/tetsuduki/kyotsu/jukyu/20140421-13.html" target="_blank" rel="noopener">年金を受けている方が年金の受取機関や住所を変更するとき</a>」／「<a href="https://www.nenkin.go.jp/section/faq/seidozenpan/mynumber/myna_shoryaku.html" target="_blank" rel="noopener">マイナンバーが収録されている場合に省略できる届出</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/jukyu/tetsuduki/kyotsu/jukyu/20140731-01.html" target="_blank" rel="noopener">年金を受けている方が亡くなったとき</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/oshirase/gochui/notice.html" target="_blank" rel="noopener">日本年金機構を装った不審な電話やメール・SMS、偽サイトや偽のSNSアカウントにご注意ください</a>」／「<a href="https://www.nenkin.go.jp/oshirase/gochui/20140129.html" target="_blank" rel="noopener">現金を詐取する「不審な電話や訪問」にご注意ください</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/section/tel/yoyaku.html" target="_blank" rel="noopener">予約受付専用電話</a>」／「<a href="https://www.nenkin.go.jp/section/tel/toiawase_ippan.html" target="_blank" rel="noopener">ねんきんダイヤル</a>」／「<a href="https://www.nenkin.go.jp/service/nenkinkiroku/torikumi/teikibin/20150331-05.html" target="_blank" rel="noopener">ねんきん定期便</a>」／「<a href="https://www.nenkin.go.jp/denshibenri_kojin/n_net/index.html" target="_blank" rel="noopener">ねんきんネット</a>」</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した生年月日とチェックは、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    実際の判断は、日本年金機構・年金事務所・税務署の案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 一次情報（日本年金機構・国税庁）で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「進め方の提案」であって、制度の断定ではない）
+
+   このノートでは、次の2つを意識的に書いていない。
+     ・受け取れる年金額（納付記録で人ごとに変わるため）
+     ・繰上げ／繰下げの損得（前提で変わるため）
+     ・毎年改定される額（年金額、在職老齢年金の基準額など）はリンクにする
+   ============================================================ */
+
+var NENKIN_URL = {
+  kiso:      "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/jukyu-yoken/20150401-01.html",
+  kousei:    "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/jukyu-yoken/20140421-01.html",
+  tokubetsu: "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/jukyu-yoken/20140421-02.html",
+  kuriage:   "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kuriage-kurisage/20140421-01.html",
+  kurisage:  "https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kuriage-kurisage/20140421-02.html"
+};
+
+function link(url, text) {
+  return '<a href="' + url + '" target="_blank" rel="noopener">' + text + "</a>";
+}
+function srcNenkin(url, title) {
+  return '日本年金機構「' + link(url, title) + "」";
+}
+
+var STAGES = [
+
+  /* ---------------- 1. まず自分の記録を見る ---------------- */
+  {
+    id: "n1", phase: "p1", chip: "記録を見る", chipSub: "出発点",
+    tag: "はじめに",
+    title: "まず、自分の記録を見る",
+    lead: "年金の話は、<strong>自分の加入記録を見ないと何ひとつ決められません。</strong>" +
+          "いくら受け取れるか、いつから受け取れるか、繰下げる余裕があるか。" +
+          "すべて記録から出ます。まずそこからです。",
+    tasks: [
+      {
+        id: "n-teikibin", title: "ねんきん定期便を、いちばん新しいものだけ取っておく",
+        body: "<p>毎年<strong>誕生月</strong>に、自分の年金記録を書いた「ねんきん定期便」が届きます。" +
+              "加入期間、これまでの保険料納付額、年金見込額などが載っています。</p>" +
+              "<p>厚い封筒ではないので、よその郵便に紛れて捨てられがちです。" +
+              "<strong>いちばん新しい1通だけ</strong>、置き場所を決めて残しておいてください。" +
+              "年金事務所に相談に行くとき、そのまま持っていけます。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/nenkinkiroku/torikumi/teikibin/20150331-05.html",
+                       "大切なお知らせ、「ねんきん定期便」をお届けしています"),
+        share: "親の年金の話をするとき、この1通があるかどうかで話の進み方が変わります。"
+      },
+      {
+        id: "n-net", title: "ねんきんネットで、自分の見込額を試算する",
+        body: "<p>「ねんきんネット」では、インターネットを通じて、" +
+              "パソコンやスマートフォンから自分の年金記録を確認できます。" +
+              "さらに、<strong>自分でさまざまな条件を設定して、将来受け取る老齢年金の見込額を試算できます。</strong></p>" +
+              "<p>これが大事なところです。<strong>何歳から受け取るか、いつまで働くかを変えて、" +
+              "自分の数字で何度でも試せます。</strong>" +
+              "このページでは金額を一切書いていませんが、それはここで出るからです。</p>" +
+              "<p>マイナポータルから使えます。うまく入れないときは、" +
+              "ねんきん定期便・ねんきんネット専用番号か、年金事務所で聞いてください。</p>",
+        where: "<b>入口</b>　" + link("https://www.nenkin.go.jp/denshibenri_kojin/n_net/index.html", "日本年金機構「ねんきんネット」"),
+        src: srcNenkin("https://www.nenkin.go.jp/denshibenri_kojin/n_net/index.html", "ねんきんネット")
+      },
+      {
+        id: "n-10nen", title: "受給資格期間は10年",
+        body: "<p>老齢基礎年金は、<strong>保険料納付済期間と保険料免除期間などを合算した" +
+              "受給資格期間が10年以上ある場合に、65歳から受け取ることができます。</strong></p>" +
+              "<p>ここに入るのは、納めた期間だけではありません。" +
+              "<strong>保険料の免除を受けた期間</strong>や、" +
+              "<strong>合算対象期間（いわゆるカラ期間）</strong>も、受給資格期間としては数えられます。</p>" +
+              "<p>「自分は足りないはずだ」と思い込んで請求していない人がいます。" +
+              "数え方は自分では判断しにくいので、<strong>足りないと思っても、一度は年金事務所で確認してください。</strong></p>",
+        src: srcNenkin(NENKIN_URL.kiso, "老齢基礎年金の受給要件・支給開始時期・年金額")
+      },
+      {
+        id: "n-soudan", title: "年金事務所は、予約して行く", due: "予約制", soft: true,
+        body: "<p>年金の請求や受け取りについての<strong>窓口相談は予約ができます。</strong>" +
+              "予約なしで行くと、混んでいる日は長く待つことになります。</p>" +
+              "<p>予約受付専用電話は<strong>ナビダイヤル 0570-05-4890</strong>、" +
+              "一般電話は<strong>03-6631-7521</strong>。" +
+              "受付時間は<strong>月曜日から金曜日の午前8時30分から午後5時15分</strong>です" +
+              "（土日祝日と12月29日から1月3日は休みです）。</p>" +
+              "<p>電話のときに、相談する方・請求する方・配偶者の方などの" +
+              "<strong>基礎年金番号</strong>、または通知書に書かれた<strong>照会番号</strong>を聞かれます。" +
+              "手元に用意してからかけてください。</p>",
+        where: "<b>持ちもの</b>　年金手帳や基礎年金番号通知書、いちばん新しいねんきん定期便、本人確認書類",
+        src: srcNenkin("https://www.nenkin.go.jp/section/tel/yoyaku.html", "予約受付専用電話"),
+        share: "本人が行けないときは代理人でも相談できます。本人と代理人の両方の基礎年金番号が要ります。"
+      },
+      {
+        id: "n-gaku", title: "受け取れる額は、ここには書けません",
+        body: "<p>このノートには金額の早見表を置いていません。" +
+              "年金額は、<strong>いつ・いくら・何か月納めたか</strong>で人ごとにまったく変わるからです。" +
+              "平均額や目安を見ても、自分の額とは違います。</p>" +
+              "<p>また、年金額は<strong>毎年度改定されます。</strong>" +
+              "去年の数字を覚えてしまうほうが、かえって危ないところです。</p>" +
+              "<p>自分の額は、ねんきんネットの試算か、年金事務所で確かめてください。" +
+              "制度としての計算の考え方は、下のリンクにあります。</p>",
+        where: '<span class="lookup">今年度の年金額は　' +
+               link(NENKIN_URL.kiso, "老齢基礎年金の受給要件・支給開始時期・年金額") + "　／　" +
+               link(NENKIN_URL.kousei, "老齢厚生年金の受給要件・支給開始時期・年金額") + "</span>",
+        src: srcNenkin(NENKIN_URL.kiso, "老齢基礎年金の受給要件・支給開始時期・年金額")
+      }
+    ]
+  },
+
+  /* ---------------- 2. 請求の段取り ---------------- */
+  {
+    id: "n2", phase: "p1", chip: "請求する", chipSub: "3か月前から",
+    tag: "手続き",
+    title: "年金請求書を出す",
+    lead: "年金は、<strong>請求して、はじめて支払いが始まります。</strong>" +
+          "黙っていても振り込まれません。ここが、いちばんつまずくところです。",
+    tasks: [
+      {
+        id: "n-jizen", title: "年金請求書は、受給開始年齢の3か月前に届く", due: "3か月前", soft: true,
+        body: "<p>受給開始年齢に達して老齢年金の受給権が発生する方には、" +
+              "<strong>受給開始年齢に到達する3か月前に</strong>、" +
+              "基礎年金番号、氏名、生年月日、性別、住所および年金加入記録をあらかじめ印字した" +
+              "<strong>「年金請求書（事前送付用）」</strong>と、案内のリーフレットが本人あてに送られます。</p>" +
+              "<p>事務的な封筒に見えますが、<strong>これが本体です。</strong>開けずに置かないでください。</p>" +
+              "<p>届かないこともあります。記録に不明な点がある場合などです。" +
+              "その場合も請求はできますので、年金事務所に問い合わせてください。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/jizensofu.html",
+                       "老齢年金請求書の事前送付")
+      },
+      {
+        id: "n-dasu", title: "出せるのは、誕生日の前日から", due: "誕生日の前日以降", hard: true,
+        body: "<p>請求書は3か月前に届きますが、<strong>提出できるのはもう少しあとです。</strong></p>" +
+              "<p>紙の請求書を出す方は、年金請求書に必要事項を記入し、" +
+              "<strong>受給開始年齢の誕生日の前日以降に</strong>、添付書類とともに年金事務所へ提出します。</p>" +
+              "<p>年金の世界では「65歳に達する日」は<strong>65歳の誕生日の前日</strong>を指します。" +
+              "1日ずれて見えるのはそのためです。上の日付欄にも、その日を出しています。</p>" +
+              "<p>届いたらすぐ書いて、日付が来たら出す。この順番が早くて確実です。</p>",
+        where: "<b>出す先</b>　年金事務所<br>" +
+               "ただし、年金記録が共済組合等の加入期間のみである場合は、原則、加入していた共済組合等へ",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/gaiyou.html",
+                       "老齢年金の請求手続きの流れ")
+      },
+      {
+        id: "n-shorui", title: "添付する書類",
+        body: "<p>全員に必要なものは、大きく2つです。</p>" +
+              "<ul>" +
+              "<li><strong>生年月日を明らかにできる書類</strong>　" +
+              "戸籍謄本、戸籍抄本、戸籍の記載事項証明、住民票のいずれか。" +
+              "<strong>受給権発生日以降に交付され、提出日から6か月以内のもの。</strong>" +
+              "マイナンバーが収録されている単身の方は、添付を省略できます</li>" +
+              "<li><strong>受取先の金融機関の通帳またはキャッシュカード</strong>（コピーでも可）。" +
+              "口座名義人のカナ氏名、金融機関名、支店番号、口座番号が写っている部分</li>" +
+              "</ul>" +
+              "<p>配偶者や18歳未満の子がいて、厚生年金の加入期間が20年以上ある方は、" +
+              "戸籍謄本、世帯全員の住民票の写し、配偶者や子の収入を確かめる書類" +
+              "（所得証明書、課税証明書、源泉徴収票、在学証明書など）も要ります。</p>" +
+              "<p>このほか、年金手帳、雇用保険被保険者証、年金加入期間確認通知書などが" +
+              "必要になる場合があります。<strong>マイナンバーを書くことで省略できる書類があります。</strong></p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/20141128.html",
+                       "特別支給の老齢厚生年金を受給するときの手続き"),
+        share: "戸籍や住民票を取りに行く役は、家族で代われます。取る時期を間違えないように、上の条件だけ共有を。"
+      },
+      {
+        id: "n-jikou", title: "請求しないまま5年たつと、時効で消える", due: "時効5年", hard: true,
+        body: "<p><strong>年金を受ける権利（基本権）は、権利が発生してから5年を経過したときは、" +
+              "時効によって消滅します。</strong></p>" +
+              "<p>「あとでまとめて請求すればいい」と思って置いておくと、" +
+              "古い分から順に受け取れなくなります。</p>" +
+              "<p>やむを得ない事情により時効完成前に請求できなかった場合は、" +
+              "その旨を書面で申し立てることにより、時効消滅を防げる取扱いがあります。" +
+              "心当たりがあれば、あきらめる前に年金事務所に相談してください。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/seido/kyotsu/shikyu/20140421-01.html",
+                       "年金の時効")
+      },
+      {
+        id: "n-shousho", title: "出したあと、いつ振り込まれるか",
+        body: "<p>年金請求書の提出から<strong>約1〜2か月後</strong>に、" +
+              "「年金証書・年金決定通知書」が届きます。</p>" +
+              "<p>その証書が届いてから、さらに<strong>1〜2か月後</strong>に、" +
+              "年金の支払いの案内が届き、受け取りが始まります。</p>" +
+              "<p>つまり、出してから最初の振込まで<strong>数か月かかります。</strong>" +
+              "その間の生活費を見込んでおいてください。" +
+              "音沙汰がないまま3か月以上たつときは、年金事務所に問い合わせてかまいません。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/gaiyou.html",
+                       "老齢年金の請求手続きの流れ")
+      },
+      {
+        id: "n-65hagaki", title: "特別支給を受けている人は、65歳でもう一度", due: "誕生月の末日", hard: true,
+        body: "<p>特別支給の老齢厚生年金をすでに受けている方には、" +
+              "<strong>65歳になる誕生月の初め頃</strong>（1日生まれの方は前月の初め頃）に、" +
+              "日本年金機構本部からハガキ様式の「年金請求書」が届きます。</p>" +
+              "<p><strong>誕生月の末日</strong>（1日生まれの方は前月末日）までに、必ず提出してください。" +
+              "<strong>届出が遅れると、年金の支払いが一時保留されることがあります。</strong></p>" +
+              "<p>老齢基礎年金と老齢厚生年金の<strong>両方を繰下げたい方は、" +
+              "65歳時の請求手続きは不要</strong>です。" +
+              "どちらか一方だけ受け取りたい場合は、請求書の受取方法欄で選んで提出します。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/20140421-26.html",
+                       "65歳時の年金の手続き（特別支給の老齢厚生年金を受給している方）")
+      },
+      {
+        id: "n-taishoku", title: "退職の手続きと重なるとき",
+        body: "<p>受け取り始める時期は、たいてい退職の時期と重なります。" +
+              "健康保険の切り替えには20日という短い期限があり、" +
+              "雇用保険の基本手当と老齢厚生年金には調整があります。</p>" +
+              "<p>退職の側の段取りは、" +
+              "<strong><a href=\"../leaving/index.html\">退職のノート</a></strong>にまとめてあります。</p>"
+      }
+    ]
+  },
+
+  /* ---------------- 3. 繰上げ・繰下げ ---------------- */
+  {
+    id: "n3", phase: "p2", chip: "早く・遅く", chipSub: "60〜75歳",
+    tag: "受け取る時期",
+    title: "繰上げ受給と繰下げ受給",
+    lead: "受け取り始める時期は、動かせます。" +
+          "<strong>ただし、率は一生変わりません。</strong>" +
+          "ここでは、制度として決まっている数字だけを書きます。" +
+          "どちらが得かは、前提で変わるので書きません。",
+    tasks: [
+      {
+        id: "n-kuriage", title: "繰上げ受給（60歳から）",
+        body: "<p>老齢基礎年金・老齢厚生年金は、原則として65歳から受け取りますが、" +
+              "希望すれば<strong>60歳から65歳になるまでの間に繰り上げて</strong>受け取れます。</p>" +
+              "<p>繰り上げると、年金は減額されます。</p>" +
+              "<ul>" +
+              "<li><strong>昭和37年4月2日以降に生まれた方</strong>　" +
+              "減額率＝<strong>0.4％×繰上げ請求月から65歳に達する日の前月までの月数</strong>" +
+              "（<strong>最大24％</strong>）</li>" +
+              "<li><strong>昭和37年4月1日以前に生まれた方</strong>　" +
+              "減額率は<strong>0.5％</strong>で計算されます（<strong>最大30％</strong>）</li>" +
+              "</ul>" +
+              "<p>昭和37年4月2日以降生まれの方の早見では、" +
+              "60歳で24.0％、61歳で19.2％、62歳で14.4％、63歳で9.6％、64歳で4.8％の減額です。</p>" +
+              "<p><strong>この減額は一生続きます。</strong>65歳になっても元には戻りません。</p>",
+        src: srcNenkin(NENKIN_URL.kuriage, "年金の繰上げ受給")
+      },
+      {
+        id: "n-kuriage-chui", title: "繰上げで、取り消せなくなること", due: "取消不可", hard: true,
+        body: "<p>減額よりも、こちらのほうが重いことがあります。" +
+              "<strong>繰上げ請求した後は、繰上げ請求を取消しすることはできません。</strong>" +
+              "そのうえで、次のことが起こります。</p>" +
+              "<ul>" +
+              "<li><strong>障害年金</strong>　繰上げ後は、" +
+              "事後重症による障害基礎年金・障害厚生年金を請求できなくなります。" +
+              "いま健康でも、この先に重い病気やけがをする可能性は誰にでもあります</li>" +
+              "<li><strong>寡婦年金</strong>　" +
+              "繰上げ請求した日以後は、国民年金の寡婦年金は支給されません" +
+              "（すでに受けている場合は権利がなくなります）</li>" +
+              "<li><strong>国民年金の任意加入・追納</strong>　" +
+              "繰上げ後は、国民年金に任意加入することも、保険料を追納することもできなくなります。" +
+              "<strong>納付月数を増やして年金を増やす道が閉じます</strong></li>" +
+              "<li><strong>遺族厚生年金との併給</strong>　" +
+              "65歳になるまでは、遺族厚生年金などと併せて受け取ることができません" +
+              "（どちらか一方を選びます）</li>" +
+              "<li><strong>雇用保険の基本手当</strong>　" +
+              "基本手当を受けている間は、老齢厚生年金の一部または全部が支給停止になります</li>" +
+              "</ul>" +
+              "<p>繰上げを考えるときは、減額率よりもまず、" +
+              "<strong>この一覧のどれが自分に当たるか</strong>を年金事務所で確認してください。</p>",
+        src: srcNenkin(NENKIN_URL.kuriage, "年金の繰上げ受給"),
+        share: "配偶者がいる場合は、ひとりで決めずに。遺族年金の受け取り方まで変わります。"
+      },
+      {
+        id: "n-kurisage", title: "繰下げ受給（75歳まで）",
+        body: "<p>老齢基礎年金・老齢厚生年金は、65歳で受け取らずに、" +
+              "<strong>66歳以後75歳までの間で繰り下げて</strong>、増額した年金を受け取れます。</p>" +
+              "<p>増額率＝<strong>0.7％×65歳到達月から繰下げ申出月の前月までの月数</strong>。" +
+              "75歳まで繰り下げると<strong>最大84％</strong>の増額です。" +
+              "<strong>増額された率は一生変わりません。</strong></p>" +
+              "<p><strong>上限年齢は生年月日で違います。</strong>" +
+              "<strong>昭和27年4月1日以前に生まれた方</strong>、または" +
+              "<strong>平成29年3月31日以前に受給権が発生した方</strong>は、" +
+              "繰下げの上限が<strong>70歳</strong>（増額率は最大42％）です。</p>" +
+              "<p>老齢基礎年金と老齢厚生年金は、<strong>別々に繰り下げられます。</strong>" +
+              "片方だけ受け取り、もう片方を繰り下げることもできます。</p>",
+        src: srcNenkin(NENKIN_URL.kurisage, "年金の繰下げ受給")
+      },
+      {
+        id: "n-kurisage-chui", title: "繰下げで、気をつけること",
+        body: "<p>増額の対象にならないものがあります。</p>" +
+              "<ul>" +
+              "<li><strong>加給年金額・振替加算は増額されません。</strong>" +
+              "しかも<strong>繰下げの待機中は支給されません。</strong>" +
+              "配偶者の加給年金がつく方は、ここが大きく効きます</li>" +
+              "<li>65歳以後に厚生年金保険に加入していた期間がある場合、" +
+              "<strong>在職老齢年金の仕組みで支給停止される額は、増額の対象になりません</strong></li>" +
+              "</ul>" +
+              "<p>また、<strong>75歳に達した月を過ぎて請求しても、増額率は増えません。</strong>" +
+              "増額された年金が75歳までさかのぼって決定され、支払われます。</p>" +
+              "<p>70歳到達後に、65歳からの年金をさかのぼって請求した場合は、" +
+              "<strong>請求の5年前に繰下げの申出があったものとみなして</strong>増額する" +
+              "取扱いがあります（特例的な繰下げみなし増額制度）。" +
+              "ただし、80歳以後に請求する場合や、請求の5年前の時点で障害年金・遺族年金を" +
+              "受け取る権利があった場合は、この取扱いになりません。</p>",
+        src: srcNenkin(NENKIN_URL.kurisage, "年金の繰下げ受給")
+      },
+      {
+        id: "n-erabu", title: "どちらがよいかは、ここでは決められません",
+        body: "<p>「何歳まで生きれば得か」という計算をよく見かけますが、" +
+              "このノートには載せません。前提で答えが変わるからです。</p>" +
+              "<ul>" +
+              "<li>いつまで働くか（在職老齢年金で止まる分は、繰り下げても増えません）</li>" +
+              "<li>配偶者の年金と、加給年金・振替加算がつくかどうか</li>" +
+              "<li>増えた年金にかかる税と、介護保険料・国民健康保険料</li>" +
+              "<li>いま手元にいくらあり、生活費がいくらか</li>" +
+              "<li>健康の状態と、家族の状況</li>" +
+              "</ul>" +
+              "<p>やり方としては、<strong>ねんきんネットで自分の条件をいくつか試算して、" +
+              "その紙を持って年金事務所で相談する</strong>のが確実です。" +
+              "電話ではなく、予約して窓口で。</p>" +
+              "<p>なお、<strong>繰下げは「待つ」だけなので、途中で気が変わってもやり直せます</strong>" +
+              "（待機をやめて請求すれば、その時点の増額率になります）。" +
+              "一方、<strong>繰上げは請求した時点で取り消せません。</strong>" +
+              "この非対称は、判断の材料になります。</p>"
+      }
+    ]
+  },
+
+  /* ---------------- 4. 働きながら受け取る ---------------- */
+  {
+    id: "n4", phase: "p3", chip: "働きながら", chipSub: "在職老齢年金",
+    tag: "就労",
+    title: "働きながら受け取る",
+    lead: "働きながら年金を受け取ることはできます。" +
+          "ただし、<strong>厚生年金に入って働いていると、給与の額によっては年金の一部または全部が止まります。</strong>" +
+          "止まるのは老齢厚生年金で、老齢基礎年金は止まりません。",
+    tasks: [
+      {
+        id: "n-zaishoku", title: "在職老齢年金の仕組み",
+        body: "<p>70歳未満の方が会社に就職して厚生年金保険に加入した場合や、" +
+              "70歳以上の方が厚生年金保険の適用事業所に勤めた場合には、" +
+              "<strong>老齢厚生年金の額と給与や賞与の額（総報酬月額相当額）に応じて、" +
+              "年金の一部または全額が支給停止となる場合があります。</strong>" +
+              "これを<strong>在職老齢年金</strong>といいます。</p>" +
+              "<p>判定に使う2つの額は、こう決まっています。</p>" +
+              "<ul>" +
+              "<li><strong>基本月額</strong>　加給年金額を除いた老齢厚生（退職共済）年金" +
+              "（報酬比例部分）の月額</li>" +
+              "<li><strong>総報酬月額相当額</strong>　その月の標準報酬月額＋" +
+              "その月以前1年間の標準賞与額の合計÷12</li>" +
+              "</ul>" +
+              "<p>この2つの合計が基準額を超えると、超えた分の半分が止まります。" +
+              "<strong>基準額は毎年度、賃金の変動に応じて改定されます。</strong>" +
+              "ここに数字を書くと古くなるので、その都度、下のリンクで確かめてください。</p>",
+        where: '<span class="lookup">今年度の支給停止の基準額と計算式は　' +
+               link("https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/zaishoku/20150401-01.html",
+                    "在職老齢年金の計算方法") + "</span>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/zaishoku/20140421.html",
+                       "在職中の年金（在職老齢年金制度）")
+      },
+      {
+        id: "n-teiji", title: "在職定時改定（65歳から70歳になるまで）",
+        body: "<p>厚生年金に加入しながら老齢厚生年金を受けている<strong>65歳以上70歳未満</strong>の方は、" +
+              "<strong>基準日である9月1日に被保険者であるとき、" +
+              "その翌月の10月分の年金額から見直されます。</strong>" +
+              "これを<strong>在職定時改定</strong>といいます。</p>" +
+              "<p>前年9月から当年8月までの加入期間が反映されます。" +
+              "10月分は12月の振込から反映されます。</p>" +
+              "<p><strong>働いた分が、退職を待たずに毎年年金に反映される</strong>ということです。" +
+              "手続きは要りません。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/zaishoku/20150401-01.html",
+                       "在職老齢年金の計算方法")
+      },
+      {
+        id: "n-taishoku-kaitei", title: "退職したとき（退職改定）",
+        body: "<p>退職して厚生年金の被保険者でなくなり、" +
+              "<strong>そのまま1か月が経過したとき</strong>、" +
+              "退職した月までの加入期間を入れて年金額が計算し直され、" +
+              "<strong>その翌月分から改定されます。</strong></p>" +
+              "<p>在職中に支給停止されていた分も、被保険者でなくなれば止まらなくなります。</p>" +
+              "<p>「1か月」を待つ必要があるので、<strong>退職した翌月にすぐ満額になるわけではありません。</strong>" +
+              "ここは生活費の見込みに関わるので、覚えておいてください。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/zaishoku/20150401-01.html",
+                       "在職老齢年金の計算方法")
+      },
+      {
+        id: "n-70", title: "70歳以降に働くとき",
+        body: "<p>厚生年金保険の被保険者になるのは<strong>70歳まで</strong>です。" +
+              "70歳を過ぎると保険料を納めなくなるので、その分で年金が増えることもありません。</p>" +
+              "<p>ただし、<strong>70歳以上の方が厚生年金保険の適用事業所に勤めた場合も、" +
+              "在職老齢年金による支給停止の対象になります。</strong>" +
+              "保険料は納めていないのに、給与が高いと年金は止まる、という形です。</p>" +
+              "<p>在職定時改定は65歳以上70歳未満が対象なので、70歳以降には行われません。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/zaishoku/20140421.html",
+                       "在職中の年金（在職老齢年金制度）")
+      }
+    ]
+  },
+
+  /* ---------------- 5. 加給年金・振替加算 ---------------- */
+  {
+    id: "n5", phase: "p3", chip: "家族の加算", chipSub: "加給・振替",
+    tag: "加算",
+    title: "加給年金額と振替加算",
+    lead: "配偶者や子がいる場合に、年金に上乗せされることがあります。" +
+          "<strong>要件が細かく、年下の配偶者がいる方は繰下げの判断にも関わります。</strong>",
+    tasks: [
+      {
+        id: "n-kakyu", title: "加給年金額（配偶者や子がいるとき）",
+        body: "<p><strong>厚生年金保険の被保険者期間が20年以上ある方</strong>が、" +
+              "<strong>65歳到達時点</strong>（または定額部分の支給開始年齢に到達した時点）で、" +
+              "<strong>その方に生計を維持されている配偶者または子</strong>がいるときに加算されます。</p>" +
+              "<p>配偶者は<strong>65歳未満</strong>であることが要件です。" +
+              "子は、18歳到達年度の末日までの間の子、または20歳未満で障害等級1級・2級の状態にある子です。</p>" +
+              "<p>次の場合には、配偶者の加給年金額は支給停止になり、または加算されなくなります。</p>" +
+              "<ul>" +
+              "<li>配偶者が<strong>厚生年金保険の被保険者期間が20年以上ある老齢厚生年金</strong>や、" +
+              "障害年金を受けられるとき</li>" +
+              "<li>配偶者が65歳になったとき（ここで打ち切られます）</li>" +
+              "<li>離婚したとき、亡くなったとき、生計維持の関係がなくなったとき</li>" +
+              "</ul>" +
+              "<p><strong>額は年度ごとに改定されます。</strong>今年度の額は下のリンクで確かめてください。</p>",
+        where: '<span class="lookup">今年度の加給年金額は　' +
+               link("https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kakyu-hurikae/20150401.html",
+                    "加給年金額と振替加算") + "</span>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kakyu-hurikae/20150401.html",
+                       "加給年金額と振替加算")
+      },
+      {
+        id: "n-furikae", title: "振替加算（配偶者が65歳になったあと）",
+        body: "<p>配偶者が65歳になると、自分の老齢基礎年金を受けられるようになるため、" +
+              "<strong>加給年金額は打ち切られます。</strong>" +
+              "そのとき、加給年金額の代わりに" +
+              "<strong>配偶者自身の老齢基礎年金に加算されるのが振替加算</strong>です。</p>" +
+              "<p>受けられるのは、<strong>大正15年4月2日から昭和41年4月1日までの間に生まれた方</strong>です。" +
+              "<strong>昭和41年4月2日以降に生まれた方は、振替加算はありません。</strong>" +
+              "額は生年月日に応じて段階的に少なくなります。</p>" +
+              "<p>原則として手続きは要りませんが、" +
+              "<strong>配偶者が65歳になった後に、相手方が厚生年金の加入期間240月を満たした" +
+              "老齢（退職）年金を受けられるようになった場合</strong>などは、" +
+              "<strong>「国民年金 老齢基礎年金額加算開始事由該当届」の提出が必要</strong>です。</p>" +
+              "<p>振替加算がつくはずなのについていない、という相談は実際にあります。" +
+              "夫婦の生年月日と加入期間を持って、年金事務所で一度確認してください。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/seido/roureinenkin/kakyu-hurikae/20150401.html",
+                       "加給年金額と振替加算"),
+        share: "夫婦それぞれのねんきん定期便を並べて見ると、どちらに何がつくかが見えます。"
+      },
+      {
+        id: "n-kakyu-kurisage", title: "年下の配偶者がいる方が、繰下げを考えるとき",
+        body: "<p>繰下げの待機中は、<strong>加給年金額・振替加算は支給されません。</strong>" +
+              "そして、繰り下げても<strong>これらの額は増額されません。</strong></p>" +
+              "<p>つまり、配偶者が65歳になるまでの間に受け取れるはずだった加給年金は、" +
+              "繰り下げて待っているあいだ、受け取れないことになります。</p>" +
+              "<p>どちらが有利かはここでは書きません（前提で変わります）。" +
+              "ただ、<strong>年下の配偶者がいる方は、繰下げを決める前に" +
+              "この点を年金事務所で必ず確認してください。</strong>" +
+              "知らずに繰り下げて、あとで気づく方がいます。</p>",
+        src: srcNenkin(NENKIN_URL.kurisage, "年金の繰下げ受給")
+      }
+    ]
+  },
+
+  /* ---------------- 6. 税と保険料 ---------------- */
+  {
+    id: "n6", phase: "p3", chip: "税と保険料", chipSub: "手取り",
+    tag: "お金",
+    title: "税と、天引きされるもの",
+    lead: "<strong>年金は、そのまま全額が手元に入るわけではありません。</strong>" +
+          "所得税が源泉徴収され、介護保険料などが天引きされます。" +
+          "振り込まれる額と、年金額の通知の額が違うのはそのためです。",
+    tasks: [
+      {
+        id: "n-zatsu", title: "公的年金は、雑所得として課税される",
+        body: "<p>国民年金・厚生年金などの公的年金等は、<strong>所得税法上、雑所得</strong>として" +
+              "所得税および復興特別所得税の課税の対象になります。</p>" +
+              "<p>所得の計算は、<strong>年金の収入金額から公的年金等控除額を差し引いて</strong>行います。" +
+              "控除額は、年齢（65歳未満か65歳以上か）と収入額によって変わります。</p>" +
+              "<p>なお、<strong>障害年金と遺族年金は課税されません。</strong>" +
+              "老齢年金だけが課税の対象です。</p>",
+        src: '国税庁「' + link("https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm",
+                             "No.1600 公的年金等の課税関係") + "」"
+      },
+      {
+        id: "n-fuyo", title: "扶養親族等申告書は、出す", due: "毎年", hard: true,
+        body: "<p>年金から所得税が源泉徴収される方には、毎年、" +
+              "<strong>「公的年金等の受給者の扶養親族等申告書」</strong>が送られてきます。</p>" +
+              "<p>これを出すと、<strong>各種の控除を受けたうえで源泉徴収の額が計算されます。</strong>" +
+              "配偶者控除、扶養控除、障害者控除などです。" +
+              "<strong>出さないと控除が反映されず、源泉徴収される額が多くなります。</strong></p>" +
+              "<p>（出さなかった場合でも、確定申告をすれば精算はできます。" +
+              "ただ、最初から出しておくほうが手間がかかりません。）</p>" +
+              "<p>マイナポータルを使っている方は、" +
+              "<strong>スマートフォンやパソコンから電子申請で出すこともできます。</strong></p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/jukyu/fuyo/index.html",
+                       "公的年金等の受給者の扶養親族等申告書の提出方法"),
+        share: "毎年来ます。家族が同居していれば、届いた時点で声をかけると出し忘れが減ります。"
+      },
+      {
+        id: "n-kakutei", title: "確定申告不要制度（両方に当てはまるとき）",
+        body: "<p>次の<strong>両方に当てはまる方</strong>は、所得税等の確定申告をする必要がありません。</p>" +
+              "<ul>" +
+              "<li><strong>公的年金等の収入金額が400万円以下</strong></li>" +
+              "<li><strong>その年分の公的年金等に係る雑所得以外の所得金額が20万円以下</strong></li>" +
+              "</ul>" +
+              "<p>ただしこれは「しなくてよい」であって、「してはいけない」ではありません。" +
+              "<strong>医療費控除や生命保険料控除などで税が戻る場合は、還付申告ができます。</strong></p>" +
+              "<p>とくに、<strong>医療費が多くかかった年</strong>や、" +
+              "<strong>扶養親族等申告書を出し忘れた年</strong>は、申告すると戻ることがあります。</p>" +
+              "<p>年金以外に収入があるときや、申告のしかたは、" +
+              "<strong><a href=\"../tax/index.html\">確定申告ノート</a></strong>にまとめてあります。</p>",
+        src: '国税庁「' + link("https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1600.htm",
+                             "No.1600 公的年金等の課税関係") + "」"
+      },
+      {
+        id: "n-tenbiki", title: "介護保険料などが、年金から天引きされる",
+        body: "<p>市区町村からの依頼に基づいて、次のものが年金から<strong>特別徴収（天引き）</strong>されます。</p>" +
+              "<ul>" +
+              "<li>介護保険料</li>" +
+              "<li>国民健康保険料（税）、後期高齢者医療保険料</li>" +
+              "<li>個人住民税および森林環境税</li>" +
+              "</ul>" +
+              "<p>対象になるのは、<strong>65歳以上の方</strong>のうち、" +
+              "老齢もしくは退職、障害または死亡を支給事由とする年金を受けていて、" +
+              "<strong>年間の受給額が18万円以上の方</strong>です。" +
+              "国民健康保険料（税）や後期高齢者医療保険料の特別徴収は、" +
+              "<strong>介護保険料が特別徴収されていることが前提</strong>になります。</p>" +
+              "<p><strong>介護保険料、個人住民税および森林環境税については、" +
+              "本人の希望で天引きをやめることはできません。</strong>" +
+              "後期高齢者医療保険料と国民健康保険料（税）については、市区町村に相談してください。</p>" +
+              "<p>手取りが思ったより少ないと感じる原因は、たいていここです。" +
+              "天引きの内訳は、年金振込通知書に載っています。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/seido/kyotsu/shikyu/20140421-03.html",
+                       "年金からの介護保険料、国民健康保険料（税）、後期高齢者医療保険料、住民税および森林環境税の特別徴収")
+      }
+    ]
+  },
+
+  /* ---------------- 7. 受け取り方・変わったとき ---------------- */
+  {
+    id: "n7", phase: "p4", chip: "受け取る", chipSub: "偶数月15日",
+    tag: "受け取り",
+    title: "受け取り方と、変わったときの届出",
+    lead: "受け取りが始まったあとのことです。" +
+          "<strong>振り込まれる日と、住所・口座が変わったときの扱い</strong>だけ知っておけば足ります。",
+    tasks: [
+      {
+        id: "n-shiharaibi", title: "偶数月の15日に、前の2か月分",
+        body: "<p><strong>原則、偶数月の15日に、前月および前々月の年金が振り込まれます。</strong>" +
+              "つまり2月・4月・6月・8月・10月・12月の年6回、それぞれ2か月分ずつです。</p>" +
+              "<p><strong>15日が土曜日、日曜日または祝日のときは、その直前の平日</strong>になります。</p>" +
+              "<p>「毎月入る」のではありません。<strong>2か月に一度、2か月分</strong>です。" +
+              "受け取り始めの月の家計は、ここで狂いやすいところです。</p>" +
+              "<p>また、初回は請求から数か月あとになります。" +
+              "初回の振込だけは、偶数月以外になることもあります。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/rourei/seikyu/gaiyou.html",
+                       "老齢年金の請求手続きの流れ")
+      },
+      {
+        id: "n-jusho", title: "住所や氏名が変わったとき",
+        body: "<p><strong>日本年金機構にマイナンバー（個人番号）が収録されている方は、" +
+              "住所変更届と氏名変更届を省略できます。</strong>" +
+              "住民票の異動をすれば、原則としてそれだけで足ります。</p>" +
+              "<p>収録されていない方や、住民票を移さずに住む場所を変える方は、" +
+              "届出が必要になります。</p>" +
+              "<p>迷ったら、ねんきんダイヤルか年金事務所に" +
+              "「マイナンバーは収録されていますか」と聞いてください。" +
+              "<strong>届いていた通知書が来なくなったときは、住所の問題であることが多い</strong>です。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/section/faq/seidozenpan/mynumber/myna_shoryaku.html",
+                       "マイナンバーが収録されている場合に省略できる届出は何ですか。")
+      },
+      {
+        id: "n-kouza", title: "口座を変えるときは、届出が要る", due: "届出が必要", hard: true,
+        body: "<p><strong>口座の変更は、マイナンバーが収録されていても省略できません。</strong>" +
+              "住所と同じ扱いだと思って放っておくと、振り込まれなくなります。</p>" +
+              "<p>年金を受け取る金融機関やゆうちょ銀行を変えるときは、" +
+              "<strong>「年金受給権者 受取機関変更届」</strong>を、" +
+              "年金事務所または街角の年金相談センターに出します。</p>" +
+              "<p>届書には金融機関の証明欄がありますが、" +
+              "<strong>年金事務所等の窓口に預金通帳を直接持参する場合や、" +
+              "預金通帳のコピーを添付する場合は、金融機関等の証明は要りません。</strong></p>" +
+              "<p>公金受取口座に変更する場合に限り、" +
+              "マイナポータルからねんきんネットを使った電子申請もできます。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/kyotsu/jukyu/20140421-13.html",
+                       "年金を受けている方が年金の受取機関や住所を変更するとき"),
+        share: "銀行の統廃合で支店名が変わったときも届出が要ることがあります。通知書が来たら中を見てください。"
+      },
+      {
+        id: "n-tsuuchi", title: "届く通知は、捨てずに置いておく",
+        body: "<p>受け取り始めると、いくつかの通知が届くようになります。</p>" +
+              "<ul>" +
+              "<li><strong>年金証書・年金決定通知書</strong>　最初に一度。" +
+              "基礎年金番号と年金コードが載っています。なくさないように</li>" +
+              "<li><strong>年金振込通知書</strong>　振込額と、天引きされる介護保険料などの内訳</li>" +
+              "<li><strong>年金額改定通知書</strong>　年度が変わって年金額が改定されたとき</li>" +
+              "<li><strong>公的年金等の源泉徴収票</strong>　確定申告や還付申告で使います</li>" +
+              "<li><strong>扶養親族等申告書</strong>　毎年。出す書類です</li>" +
+              "</ul>" +
+              "<p><strong>源泉徴収票と年金振込通知書は、1年分まとめて1か所に。</strong>" +
+              "医療費が多かった年に還付申告をするとき、探す手間がなくなります。</p>"
+      }
+    ]
+  },
+
+  /* ---------------- 8. そのあと ---------------- */
+  {
+    id: "n8", phase: "p4", chip: "そのあと", chipSub: "死亡・詐欺",
+    tag: "備え",
+    title: "亡くなったときと、詐欺への備え",
+    lead: "最後に2つ。<strong>家族に伝えておくと助かること</strong>と、" +
+          "<strong>年金を装った電話への備え</strong>です。",
+    tasks: [
+      {
+        id: "n-shibou", title: "本人が亡くなったとき（死亡の届出）",
+        body: "<p>年金を受けている方が亡くなったときは、死亡の手続きが必要です。" +
+              "ただし、<strong>日本年金機構にマイナンバーが収録されている方が亡くなったときは、" +
+              "原則として「年金受給権者死亡届（報告書）」を省略できます。</strong></p>" +
+              "<p><strong>届出が遅れると、年金を多く受け取りすぎることになり、" +
+              "後で返してもらうことになる場合があります。</strong>" +
+              "亡くなった月の分までが受け取れる年金です。</p>" +
+              "<p>未支給年金を受け取れる遺族がいる場合は、" +
+              "<strong>「年金受給権者死亡届（報告書）兼 未支給年金・未支払給付金請求書」</strong>を出すことで、" +
+              "死亡の手続きと未支給年金の請求を一度にできます。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/kyotsu/jukyu/20140731-01.html",
+                       "年金を受けている方が亡くなったとき")
+      },
+      {
+        id: "n-mishikyu", title: "未支給年金は、請求しないと出ない",
+        body: "<p>年金を受けている方が亡くなったとき、" +
+              "<strong>まだ受け取っていない年金や、亡くなった日より後に振り込まれた年金のうち、" +
+              "亡くなった月分までの年金</strong>は、" +
+              "<strong>その方と生計を同じくしていた遺族</strong>が受け取れます。" +
+              "これを<strong>未支給年金</strong>といいます。</p>" +
+              "<p>年金は偶数月に「前の2か月分」が後払いされるので、" +
+              "<strong>亡くなった時点でほぼ必ず未支給の分があります。</strong>" +
+              "知らずに請求しない方がいます。</p>" +
+              "<p>受け取れる遺族の順位は、" +
+              "<strong>配偶者 → 子 → 父母 → 孫 → 祖父母 → 兄弟姉妹 → " +
+              "それ以外の3親等内の親族</strong>です。" +
+              "<strong>先順位の方がいる場合、後順位の方は受け取れません。</strong></p>" +
+              "<p><strong>未支給年金を受ける権利も、5年を経過したときは時効によって消滅します。</strong></p>",
+        src: srcNenkin("https://www.nenkin.go.jp/service/jukyu/tetsuduki/kyotsu/jukyu/20140731-01.html",
+                       "年金を受けている方が亡くなったとき"),
+        share: "生計を同じくしていたことを示す書類が要ります。同居でない家族が請求するときは早めに相談を。"
+      },
+      {
+        id: "n-okuyami", title: "そのあとに続く手続き",
+        body: "<p>年金の手続きは、亡くなったあとに続く手続きの一部にすぎません。" +
+              "死亡届の7日、健康保険の14日、相続放棄の3か月、相続税の10か月と、期限が並びます。</p>" +
+              "<p>同じ作りの<strong><a href=\"../inheritance/index.html\">おくやみノート</a></strong>に" +
+              "期限順でまとめてあります。そのときが来たら開いてください。</p>"
+      },
+      {
+        id: "n-sagi", title: "年金を装った電話に注意", due: "手口を知る", soft: true,
+        body: "<p>日本年金機構やその役職員を装った<strong>不審な電話、メール・SMS、" +
+              "偽サイトや偽のSNSアカウント</strong>が確認されています。</p>" +
+              "<p>確認されている手口です。</p>" +
+              "<ul>" +
+              "<li><strong>「保険料の納めすぎによる還付金があります」</strong>と言って、" +
+              "近くのATMに行くよう指示し、現金を振り込ませる</li>" +
+              "<li>自動音声で「書類の提出が確認できないため年金の支給が止まる」と案内し、" +
+              "折り返させて、年齢・預貯金額・家族構成などを聞き出す</li>" +
+              "<li>年金の支払いに必要だとして、<strong>口座番号などの個人情報を答えさせる</strong></li>" +
+              "<li>「代わりに手続きをしてあげる」と言って手数料を要求する</li>" +
+              "<li><strong>「国民年金機構」「日本年金機構特別窓口」「保険年金事務所」" +
+              "「国民年金センター」「給付センター」</strong>など、実在しない名前を名乗る</li>" +
+              "<li>自宅の固定電話に、<strong>+1や+44などから始まる国際電話</strong>からかかってくる</li>" +
+              "</ul>" +
+              "<p><strong>日本年金機構が、電話や訪問で個人情報を尋ねたり、" +
+              "ATMの操作を指示したり、手続きの手数料を求めたりすることはありません。</strong></p>" +
+              "<p>怪しいと感じたら、相手の名前と電話番号を確認していったん電話を切り、" +
+              "<strong>自分から最寄りの年金事務所に問い合わせてください。</strong>" +
+              "口座番号を話さない、現金を払わない、振り込まない。この3つです。</p>",
+        src: srcNenkin("https://www.nenkin.go.jp/oshirase/gochui/notice.html",
+                       "日本年金機構を装った不審な電話やメール・SMS、偽サイトや偽のSNSアカウントにご注意ください") +
+             "／" +
+             srcNenkin("https://www.nenkin.go.jp/oshirase/gochui/20140129.html",
+                       "現金を詐取する「不審な電話や訪問」にご注意ください"),
+        share: "高齢の家族には「年金の話でATMに行けと言われたら必ず電話して」とだけ伝えておく。それで防げます。"
+      }
+    ]
+  }
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_BIRTH = "nenkin.birth.v1";
+var KEY_CHK   = "nenkin.checks.v1";
+var KEY_TH    = "kurashi.theme.v1";
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+var state = {
+  birth: load(KEY_BIRTH, ""),
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+/* ============================================================
+   日付のユーティリティ
+
+   年金では「〇歳に達する日」＝誕生日の前日。1日ずれるのはそのため。
+   2月29日生まれの場合、うるう年でない年の誕生日は3月1日にあたるので、
+   new Date(y+n, 1, 29) の繰り上がり（→3月1日）をそのまま使う。
+   その前日は2月28日で、これが「〇歳に達する日」になる。
+   ============================================================ */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
+function fmtJP(d) { return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日"; }
+function addDays(d, n) { var x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+function addMonths(d, n) {
+  var y = d.getFullYear(), m = d.getMonth() + n, day = d.getDate();
+  var dim = daysInMonth(y, m);
+  return new Date(y, m, Math.min(day, dim));
+}
+function daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); }
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* n歳の誕生日。2/29生まれはうるう年でない年に3/1へ繰り上がる */
+function birthdayAt(birth, n) {
+  return new Date(birth.getFullYear() + n, birth.getMonth(), birth.getDate());
+}
+/* n歳に達する日（誕生日の前日） */
+function reachAt(birth, n) {
+  return addDays(birthdayAt(birth, n), -1);
+}
+
+/* a から b までの満月数。月末生まれを取りこぼさないよう、
+   その月に存在しない日は月末を応当日とみなす */
+function monthsBetween(a, b) {
+  var m = (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+  var anchor = Math.min(a.getDate(), daysInMonth(b.getFullYear(), b.getMonth()));
+  if (b.getDate() < anchor) m--;
+  return m;
+}
+
+/* 「〇歳〇か月」 */
+function ymLabel(months) {
+  if (months < 0) months = 0;
+  var y = Math.floor(months / 12);
+  var m = months % 12;
+  return y + "歳" + m + "か月";
+}
+/* 「あと〇年〇か月」 */
+function leftLabel(months) {
+  if (months <= 0) return "";
+  var y = Math.floor(months / 12);
+  var m = months % 12;
+  if (y === 0) return "あと" + m + "か月";
+  if (m === 0) return "あと" + y + "年";
+  return "あと" + y + "年" + m + "か月";
+}
+
+/* ============================================================
+   生年月日から決まること（制度上はっきりしているものだけ）
+   ============================================================ */
+
+var D_1952_04_01 = new Date(1952, 3, 1);  /* 昭和27年4月1日 繰下げ上限70歳の境 */
+var D_1962_04_01 = new Date(1962, 3, 1);  /* 昭和37年4月1日 繰上げ減額率0.5％の境 */
+var D_1966_04_01 = new Date(1966, 3, 1);  /* 昭和41年4月1日 特別支給がありうる上限 */
+
+/* 繰下げの上限年齢。昭和27年4月1日以前生まれは70歳 */
+function kurisageMaxAge(birth) {
+  return birth <= D_1952_04_01 ? 70 : 75;
+}
+/* 繰上げの減額率。昭和37年4月1日以前生まれは0.5％ */
+function kuriageRate(birth) {
+  return birth <= D_1962_04_01 ? { per: "0.5％", max: "30％" } : { per: "0.4％", max: "24％" };
+}
+/* 65歳より前に特別支給の老齢厚生年金がありうるか。
+   男性・女性で境が違い、加入期間にもよるので「ありうる／ない」までしか言わない */
+function maybeTokubetsu(birth) {
+  return birth <= D_1966_04_01;
+}
+
+/* ============================================================
+   描画
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         "<b>" + esc(s.chip) + "</b>" + esc(s.chipSub) + "</button>";
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(t) {
+  var done = !!state.checks[t.id];
+  var due = t.due ? '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>" : "";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + t.id + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + t.id + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  if (t.share) h += '<div class="share"><b>家族で分けられること</b>' + esc(t.share) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+/* ---- いまの年齢と、節目の日 ---- */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var dateIn   = document.getElementById("dateIn");
+var clearBtn = document.getElementById("clearBtn");
+var hint     = document.getElementById("hint");
+var agesBox  = document.getElementById("ages");
+var ageList  = document.getElementById("ageList");
+var ageNote  = document.getElementById("ageNote");
+
+/* 節目1件分のHTML。date は「その日」、label は説明 */
+function ageRowHTML(date, title, note) {
+  var t = today0();
+  var days = daysBetween(t, date);
+  var cls, when;
+  if (days < 0) {
+    cls = "past";
+    when = "<b>済</b>" + fmtJP(date);
+  } else if (days === 0) {
+    cls = "now";
+    when = "<b>きょう</b>" + fmtJP(date);
+  } else {
+    var mo = monthsBetween(t, date);
+    var big;
+    if (days <= 90) big = days + "日";
+    else if (mo < 24) big = leftLabel(mo).replace("あと", "");
+    else big = Math.floor(mo / 12) + "年";
+    cls = mo < 12 ? "now" : "";
+    when = "<b>" + big + "</b>" + fmtJP(date);
+  }
+  return '<div class="age-row ' + cls + '">' +
+         '<div class="age-when">' + when + "</div>" +
+         '<div class="age-what">' + title + "<span>" + note + "</span></div></div>";
+}
+
+function renderAges() {
+  var b = parseDate(state.birth);
+  if (!b) {
+    dayBig.textContent = "生年月日を入れてください";
+    daySub.textContent = "";
+    clearBtn.hidden = true;
+    agesBox.classList.remove("on");
+    ageList.innerHTML = "";
+    ageNote.innerHTML = "";
+    hint.textContent = "生年月日はこの端末にだけ保存されます。どこにも送られません。";
+    return;
+  }
+
+  var t = today0();
+  var months = monthsBetween(b, t);
+  dayBig.textContent = ymLabel(months);
+  daySub.textContent = fmtJP(b) + " 生まれ";
+  clearBtn.hidden = false;
+  hint.textContent = "この生年月日は、この端末のブラウザにだけ保存されています。";
+
+  var h = "";
+
+  /* 60歳 — 繰上げ請求ができる最も早い時期 */
+  var rate = kuriageRate(b);
+  h += ageRowHTML(birthdayAt(b, 60), "60歳の誕生日",
+                  "繰上げ請求ができる最も早い時期（60歳に達する日は前日の " +
+                  fmtJP(reachAt(b, 60)) + "）。減額率は1か月あたり" + rate.per +
+                  "、60歳まで繰り上げると最大" + rate.max + "（一生変わりません）");
+
+  /* 年金請求書が届くころ — 65歳到達の3か月前 */
+  var sofu = addMonths(birthdayAt(b, 65), -3);
+  if (daysBetween(t, sofu) >= -370) {
+    h += ageRowHTML(sofu, "年金請求書が届くころ",
+                    "受給開始年齢に到達する3か月前に、事前送付用の年金請求書が届きます");
+  }
+
+  /* 65歳 */
+  h += ageRowHTML(birthdayAt(b, 65), "65歳の誕生日",
+                  "本来の受給開始年齢。請求書を出せるのは前日の " +
+                  fmtJP(reachAt(b, 65)) + "（65歳に達する日）から");
+
+  /* 繰下げの上限 */
+  var maxAge = kurisageMaxAge(b);
+  h += ageRowHTML(birthdayAt(b, maxAge), maxAge + "歳の誕生日",
+                  "繰下げの上限（" + maxAge + "歳に達する日は前日の " +
+                  fmtJP(reachAt(b, maxAge)) + "）。" +
+                  (maxAge === 75
+                    ? "増額率は1か月あたり0.7％、75歳まで繰り下げると最大84％"
+                    : "昭和27年4月1日以前生まれの方は上限が70歳で、増額率は最大42％") +
+                  "。これを過ぎても増額率は増えません");
+
+  ageList.innerHTML = h;
+
+  /* 断定できないところは、断定しない */
+  var n = "";
+  if (maybeTokubetsu(b)) {
+    n += '<div class="uncertain"><b>65歳より前に受け取れる可能性があります</b>' +
+         "昭和36年4月1日以前に生まれた男性、昭和41年4月1日以前に生まれた女性で、" +
+         "厚生年金保険または共済組合等の加入期間が1年以上ある方は、" +
+         "生年月日に応じた年齢（60歳〜64歳）から<strong>特別支給の老齢厚生年金</strong>を" +
+         "受け取れる場合があります。" +
+         "<strong>その年齢は生年月日と性別で細かく分かれていて、このページでは断定できません。</strong>" +
+         "誤った年齢を出すより、確かめていただくほうが安全です。" +
+         link(NENKIN_URL.tokubetsu, "日本年金機構「特別支給の老齢厚生年金」") +
+         "で表を見るか、年金事務所で確認してください。</div>";
+  }
+  n += '<div class="uncertain"><b>ここに出しているのは日付だけです</b>' +
+       "受け取れる<strong>金額</strong>は、納めた記録で人ごとにまったく変わります。" +
+       "このページでは計算していません。" +
+       link("https://www.nenkin.go.jp/denshibenri_kojin/n_net/index.html", "ねんきんネット") +
+       "の試算か、年金事務所で確かめてください。</div>";
+  ageNote.innerHTML = n;
+
+  agesBox.classList.add("on");
+}
+
+/* ---- 進捗 ---- */
+function renderProgress() {
+  var total = 0, done = 0;
+  for (var i = 0; i < STAGES.length; i++) {
+    for (var j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = +b.dataset.i;
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  var id = b.dataset.chk;
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest(".task");
+  if (card) card.classList.toggle("done", !!state.checks[id]);
+  renderProgress();
+});
+
+document.getElementById("setBtn").addEventListener("click", function () {
+  var v = dateIn.value;
+  var d = parseDate(v);
+  if (!d) { hint.textContent = "生年月日を選んでください。"; return; }
+  if (daysBetween(d, today0()) < 0) { hint.textContent = "未来の日付は入れられません。"; return; }
+  if (d.getFullYear() < 1900) { hint.textContent = "西暦で入れてください。"; return; }
+  state.birth = v;
+  save(KEY_BIRTH, v);
+  renderAges();
+});
+
+clearBtn.addEventListener("click", function () {
+  state.birth = "";
+  dateIn.value = "";
+  save(KEY_BIRTH, "");
+  renderAges();
+});
+
+dateIn.addEventListener("change", function () {
+  if (parseDate(dateIn.value)) document.getElementById("setBtn").click();
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化
+   ============================================================ */
+
+buildRail();
+renderStage();
+
+/* 進捗バーをレールの下に足す */
+(function () {
+  var host = document.getElementById("stageHost");
+  var p = document.createElement("div");
+  p.className = "prog";
+  p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                '<span class="prog-bar"><i id="progFill"></i></span>';
+  host.parentNode.appendChild(p);
+})();
+
+if (state.birth) dateIn.value = state.birth;
+renderAges();
+renderProgress();
+</script>
+</body>
+</html>

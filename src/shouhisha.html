@@ -1,0 +1,1237 @@
+<title>消費者トラブルのノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+%%CSS%%
+
+/* ---------- このノート固有 ---------- */
+
+/* 取引の種類を選ぶ */
+select{
+  appearance:none;-webkit-appearance:none;
+  font-family:var(--body);font-size:14px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:7px 28px 7px 10px;line-height:1.5;max-width:100%;
+  background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 15px) 52%,calc(100% - 10px) 52%;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;
+}
+.setup select{flex:1 1 100%}
+
+/* 日数の一覧表 */
+.co{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:13px}
+.co th,.co td{padding:6px 8px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
+.co th{font-weight:500;color:var(--muted);font-size:11.5px;letter-spacing:.06em}
+.co td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.co td span{display:block;font-size:11.5px;color:var(--muted);font-weight:400;margin-top:1px}
+.co tr:last-child td{border-bottom:0}
+.co tr.no td:last-child{color:var(--alert)}
+
+/* 通知書の雛形 */
+.tmpl{
+  margin-top:12px;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:10px;padding:14px 16px;
+}
+.tmpl pre{
+  margin:0;font-family:var(--body);font-size:13px;line-height:1.95;
+  white-space:pre-wrap;word-break:break-word;color:var(--ink);
+}
+.tmpl-foot{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.tmpl-foot .msg{font-size:12px;color:var(--muted)}
+
+/* 期限の注記 */
+.deadnote{font-size:12px;color:var(--muted);line-height:1.7;margin-top:8px}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M9 2.4l5.2 2v4.2c0 3.5-2.2 6.1-5.2 7-3-0.9-5.2-3.5-5.2-7V4.4L9 2.4z"
+              fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round" opacity=".75"/>
+      </svg>
+      消費者トラブルのノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="%%HOME%%" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">
+    契約してしまった、払ってしまった、催促が来ている。
+    そういうときに<strong>どこに電話して、いつまでに何をすればいいか</strong>だけを並べたノートです。
+    広告も関連記事もありません。入れた日付とチェックは、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- 最初に読む -->
+  <div class="warn">
+    <b>最初にすること、ひとつだけ</b>
+    <strong>188（いやや）に電話する。</strong>局番なしの3桁です。
+    住んでいる場所の消費生活センターにつながります。
+    <strong>相談は無料です。契約してしまったあとでも、払ってしまったあとでも相談できます。</strong>
+    家族が代わりにかけてもかまいません。
+    自分が悪かったのかを考えるのは、電話のあとで大丈夫です。
+  </div>
+
+  <!-- 期限の計算 -->
+  <section class="today">
+    <div class="eyebrow">クーリング・オフの期限</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">取引の種類を選んでください</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <select id="typeIn" aria-label="取引の種類">
+        <option value="">取引の種類を選ぶ</option>
+      </select>
+      <input type="date" id="dateIn" aria-label="契約書面を受け取った日">
+      <button class="solid" id="setBtn" type="button">書面を受け取った日</button>
+      <button class="ghost" id="clearBtn" type="button" hidden>消す</button>
+    </div>
+    <p class="hint" id="hint">
+      契約書面（それより前に申込書面を受け取っていれば、その書面）を受け取った日を入れてください。
+      日付はこの端末にだけ保存されます。
+    </p>
+
+    <div class="nextup" id="nextup">
+      <h4>期限</h4>
+      <div id="nextList"></div>
+      <p class="deadnote" id="deadNote"></p>
+    </div>
+  </section>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>順番に見るところ</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="段階"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 通知書の雛形 -->
+  <section class="sec">
+    <h2>クーリング・オフの通知書（雛形）</h2>
+    <p class="note">
+      消費者庁が示している「契約解除通知書」の記載例をもとにしたものです。
+      はがきに書いても、メールやフォームに同じことを書いてもかまいません。
+      <strong>出す前に控え（はがきなら両面のコピー、メールなら送信メール）を必ず残してください。</strong>
+    </p>
+
+    <div class="tmpl">
+      <pre id="tmplText"></pre>
+      <div class="tmpl-foot">
+        <button class="solid" id="copyBtn" type="button">文面をコピー</button>
+        <span class="msg" id="copyMsg"></span>
+      </div>
+    </div>
+
+    <div class="help" style="margin-top:14px">
+      <dl>
+        <dt>クレジット契約をしているとき</dt>
+        <dd>販売会社とクレジット会社に<strong>同時に</strong>通知します。同じ内容のものを2通出してください。</dd>
+        <dt>出し方</dt>
+        <dd>はがきの場合は、出す前に両面をコピーし、<strong>特定記録郵便または簡易書留など、発信の記録が残る方法</strong>で
+          代表者あてに送ります。コピーと送付の記録は一緒に保管します。</dd>
+        <dt>メールやフォームで出すとき</dt>
+        <dd>2022年6月1日から、書面のほか電磁的記録でも通知できます。
+          電子メールなら送信メールを保存し、事業者のフォームなら画面のスクリーンショットを残します。</dd>
+        <dt>払ったお金を返してほしいとき</dt>
+        <dd>「支払った代金○○円を返金し、商品を引き取ってください。」という一文を足す書き方が示されています。</dd>
+      </dl>
+    </div>
+    <span class="src" style="margin-top:10px">
+      消費者庁「<a href="https://www.caa.go.jp/publication/pamphlet/pdf/info_pamphlet_171115_0001.pdf" target="_blank" rel="noopener">知って安心、契約トラブル防止・解決のために</a>」／
+      国民生活センター「<a href="https://www.kokusen.go.jp/soudan_now/data/coolingoff.html" target="_blank" rel="noopener">クーリング・オフ</a>」／
+      消費者庁「<a href="https://www.no-trouble.caa.go.jp/qa/coolingoff.html" target="_blank" rel="noopener">電磁的記録によるクーリング・オフに関するQ&amp;A</a>」
+    </span>
+  </section>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>相談先の一覧</h2>
+    <p class="note">どこに聞けばいいかわからない、が一番よくあるつまずきです。迷ったら188です。</p>
+    <div class="help">
+      <dl>
+        <dt>消費者ホットライン 188（局番なし）</dt>
+        <dd>地方公共団体が設置している身近な消費生活センターや消費生活相談窓口を案内する、全国共通の番号です。
+          施設点検日や年末年始を除いて原則毎日利用できます。<strong>相談は無料</strong>です
+          （窓口につながった時点から通話料がかかります）。</dd>
+        <dt>国民生活センター 平日バックアップ相談　03-3446-0999</dt>
+        <dd>平日10時〜16時。市区町村や都道府県の窓口につながらないときの補完です。</dd>
+        <dt>警察相談専用電話 #9110</dt>
+        <dd>生活の安全に関わる、緊急でない相談の窓口です。悪質商法に関する相談も受け付けています。
+          受付時間は各都道府県警察で異なります。<strong>急を要する事件のときは110番です。</strong></dd>
+        <dt>金融庁 金融サービス利用者相談室　0570-016811</dt>
+        <dd>平日10時〜17時。預金・融資、保険、投資商品、貸金、暗号資産などの相談。
+          ただし<strong>あっせん・仲介・調停は行いません。</strong></dd>
+        <dt>法テラス（日本司法支援センター）　0570-078374</dt>
+        <dd>平日9時〜21時、土曜9時〜17時。法制度や相談窓口の情報提供のほか、
+          資力が一定以下の場合に弁護士・司法書士による無料法律相談や費用の立替えを行う民事法律扶助があります。</dd>
+        <dt>預金保険機構「振り込め詐欺救済法に基づく公告」</dt>
+        <dd>振り込んでしまった口座について手続が始まっているか、申請期間がいつまでかを調べられます。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        書いてあるのは<strong>制度がどうなっているか</strong>だけです。
+        <strong>「あなたはこうすべきだ」という助言はしていません。</strong>
+        あなたの契約がどの取引類型に当たるのか、期間が始まっているのかいないのかは、
+        契約書の書き方や勧誘のされ方で変わります。<strong>そこを見分けるのが188の仕事です。</strong>
+      </p>
+      <p style="margin:0 0 10px">
+        期限の計算は、法律の条文の数え方どおりに出していますが、
+        <strong>書面に不備があれば、そもそも期間が始まっていないことがあります。</strong>
+        このページで「期限をすぎています」と出ても、あきらめる前に188に電話してください。
+      </p>
+      <p style="margin:0">
+        制度・日数・期限は<strong>消費者庁・国民生活センター・警察庁・金融庁・e-Gov法令検索</strong>で
+        確認して書き、その項目に出典リンクを置いています。
+        出典のない記述は、進め方の提案です。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>消費者庁「特定商取引法ガイド」
+        <a href="https://www.no-trouble.caa.go.jp/what/" target="_blank" rel="noopener">特定商取引法とは</a>／
+        <a href="https://www.no-trouble.caa.go.jp/what/doortodoorsales/" target="_blank" rel="noopener">訪問販売</a>／
+        <a href="https://www.no-trouble.caa.go.jp/what/telemarketing/" target="_blank" rel="noopener">電話勧誘販売</a>／
+        <a href="https://www.no-trouble.caa.go.jp/what/continuousservices/" target="_blank" rel="noopener">特定継続的役務提供</a>／
+        <a href="https://www.no-trouble.caa.go.jp/what/multilevelmarketing/" target="_blank" rel="noopener">連鎖販売取引</a>／
+        <a href="https://www.no-trouble.caa.go.jp/what/businessopportunity/" target="_blank" rel="noopener">業務提供誘引販売取引</a>／
+        <a href="https://www.no-trouble.caa.go.jp/what/doortodoorpurchases/" target="_blank" rel="noopener">訪問購入</a>／
+        <a href="https://www.no-trouble.caa.go.jp/what/mailorder/" target="_blank" rel="noopener">通信販売</a>／
+        <a href="https://www.no-trouble.caa.go.jp/qa/coolingoff.html" target="_blank" rel="noopener">電磁的記録によるクーリング・オフに関するQ&amp;A</a></li>
+      <li>e-Gov法令検索
+        <a href="https://laws.e-gov.go.jp/law/351AC0000000057" target="_blank" rel="noopener">特定商取引に関する法律</a>／
+        <a href="https://laws.e-gov.go.jp/law/412AC0000000061" target="_blank" rel="noopener">消費者契約法</a>／
+        <a href="https://laws.e-gov.go.jp/law/336AC0000000159" target="_blank" rel="noopener">割賦販売法</a>／
+        <a href="https://laws.e-gov.go.jp/law/336CO0000000341" target="_blank" rel="noopener">割賦販売法施行令</a></li>
+      <li>消費者庁「<a href="https://www.caa.go.jp/publication/pamphlet/pdf/info_pamphlet_171115_0001.pdf" target="_blank" rel="noopener">知って安心、契約トラブル防止・解決のために</a>」／
+        「<a href="https://www.caa.go.jp/publication/pamphlet/assets/consumer_transaction_cms101_230608_01.pdf" target="_blank" rel="noopener">特定商取引法上のクーリング・オフ</a>」</li>
+      <li>消費者庁「<a href="https://www.caa.go.jp/policies/policy/local_cooperation/local_consumer_administration/hotline/" target="_blank" rel="noopener">消費者ホットライン</a>」／
+        「<a href="https://www.caa.go.jp/policies/policy/consumer_transaction/amendment/2021/notice03/" target="_blank" rel="noopener">インターネット通販の定期購入トラブルには御注意を!</a>」</li>
+      <li>国民生活センター「<a href="https://www.kokusen.go.jp/soudan_now/data/coolingoff.html" target="_blank" rel="noopener">クーリング・オフ</a>」／
+        「<a href="https://www.kokusen.go.jp/news/data/n-20231011_1.html" target="_blank" rel="noopener">屋根工事の点検商法のトラブルが増えています</a>」／
+        「<a href="https://www.kokusen.go.jp/news/data/n-20240424_2.html" target="_blank" rel="noopener">覚えのない未納料金を請求する詐欺に注意！</a>」／
+        「<a href="https://www.kokusen.go.jp/mimamori/" target="_blank" rel="noopener">見守り情報</a>」</li>
+      <li>警察庁「<a href="https://www.npa.go.jp/bureau/safetylife/sos47/case/sns-romance/investment/" target="_blank" rel="noopener">SNS型投資詐欺</a>」／
+        「<a href="https://www.npa.go.jp/bureau/soumu/soudan/soudanmadoguti.pdf" target="_blank" rel="noopener">警察相談専用電話「#9110」</a>」</li>
+      <li>金融庁「<a href="https://www.fsa.go.jp/policy/kyuusai/furikome/index.html" target="_blank" rel="noopener">振り込め詐欺等の被害にあわれた方へ</a>」／
+        「<a href="https://www.fsa.go.jp/receipt/soudansitu/index.html" target="_blank" rel="noopener">金融サービス利用者相談室</a>」／
+        「<a href="https://www.fsa.go.jp/ordinary/chuui/highrisk.html" target="_blank" rel="noopener">無登録業者との取引は要注意！！</a>」</li>
+      <li>預金保険機構「<a href="https://furikomesagi.dic.go.jp/" target="_blank" rel="noopener">振り込め詐欺救済法に基づく公告</a>」</li>
+      <li>法テラス「<a href="https://www.houterasu.or.jp/" target="_blank" rel="noopener">日本司法支援センター</a>」</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した日付と選んだ取引の種類は、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    ここに書いてあるのは制度の説明です。法的な助言ではありません。実際の判断は、188（消費生活センター）の案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 一次情報で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「進め方の提案」であって、制度の断定ではない）
+   ============================================================ */
+
+var SRC_LAW  = '<a href="https://laws.e-gov.go.jp/law/351AC0000000057" target="_blank" rel="noopener">特定商取引に関する法律</a>（e-Gov法令検索）';
+var SRC_GUIDE = '<a href="https://www.no-trouble.caa.go.jp/what/" target="_blank" rel="noopener">特定商取引法とは</a>';
+
+/* 取引類型ごとのクーリング・オフ
+   days: 0 は「制度がない」（通信販売）
+   すべて特定商取引法の条文と消費者庁「特定商取引法ガイド」の両方で確認した */
+var TYPES = [
+  {
+    id: "houmon", label: "訪問販売", days: 8,
+    sub: "家に来た／路上で呼び止められた／電話で呼び出されて店に行った",
+    art: "第9条第1項",
+    start: "契約書面を受け取った日。それより前に申込書面を受け取っていれば、その書面を受け取った日",
+    src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/doortodoorsales/" target="_blank" rel="noopener">訪問販売</a>／' + SRC_LAW + '第9条第1項'
+  },
+  {
+    id: "denwa", label: "電話勧誘販売", days: 8,
+    sub: "電話で勧誘されて申し込んだ",
+    art: "第24条第1項",
+    start: "契約書面を受け取った日。それより前に申込書面を受け取っていれば、その書面を受け取った日",
+    src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/telemarketing/" target="_blank" rel="noopener">電話勧誘販売</a>／' + SRC_LAW + '第24条第1項'
+  },
+  {
+    id: "keizoku", label: "特定継続的役務提供", days: 8,
+    sub: "エステ・美容医療・語学教室・家庭教師・学習塾・パソコン教室・結婚相手紹介サービス",
+    art: "第48条第1項",
+    start: "法律で決められた契約書面を受け取った日",
+    src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/continuousservices/" target="_blank" rel="noopener">特定継続的役務提供</a>／' + SRC_LAW + '第48条第1項'
+  },
+  {
+    id: "rensa", label: "連鎖販売取引", days: 20,
+    sub: "いわゆるマルチ商法。人を紹介すると利益が得られるという仕組み",
+    art: "第40条第1項",
+    start: "契約書面を受け取った日。ただし、再販売する商品を買う契約で、その商品の最初の引渡しが書面より後なら、引渡しを受けた日",
+    src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/multilevelmarketing/" target="_blank" rel="noopener">連鎖販売取引</a>／' + SRC_LAW + '第40条第1項'
+  },
+  {
+    id: "gyomu", label: "業務提供誘引販売取引", days: 20,
+    sub: "内職商法・副業商法。「仕事を紹介するので収入が得られる」と言われて、仕事に必要だとして買わされた",
+    art: "第58条第1項",
+    start: "法律で決められた契約書面を受け取った日",
+    src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/businessopportunity/" target="_blank" rel="noopener">業務提供誘引販売取引</a>／' + SRC_LAW + '第58条第1項'
+  },
+  {
+    id: "koubai", label: "訪問購入", days: 8,
+    sub: "自宅に来て、貴金属や着物などを買い取っていく",
+    art: "第58条の14第1項",
+    start: "契約書面を受け取った日。それより前に申込書面を受け取っていれば、その書面を受け取った日",
+    src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/doortodoorpurchases/" target="_blank" rel="noopener">訪問購入</a>／' + SRC_LAW + '第58条の14第1項'
+  },
+  {
+    id: "tsuhan", label: "通信販売", days: 0,
+    sub: "ネット通販・テレビ・カタログ・新聞広告など",
+    start: "",
+    src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/mailorder/" target="_blank" rel="noopener">通信販売</a>／' + SRC_GUIDE
+  }
+];
+
+var STAGES = [
+  {
+    id: "s1", phase: "p1", chip: "まず188", chipSub: "いやや",
+    tag: "はじめに",
+    title: "188に電話する",
+    lead: "調べれば調べるほど、自分の契約がどれに当たるのかわからなくなります。" +
+          "<strong>見分けるのは、あなたの仕事ではありません。</strong>",
+    tasks: [
+      {
+        id: "sh-188", title: "消費者ホットライン188",
+        body: "<p><strong>局番なしの188</strong>にかけると、" +
+              "地方公共団体が設置している身近な消費生活センターや消費生活相談窓口を案内してくれます。" +
+              "施設点検日や年末年始を除いて<strong>原則毎日</strong>利用できます。</p>" +
+              "<p>土日祝日に市区町村・都道府県の窓口が開いていないときは、国民生活センターが補完します。</p>" +
+              "<p><strong>相談は無料です。</strong>窓口につながった時点から通話料はかかります。</p>",
+        where: "<b>番号</b>　消費者ホットライン <strong>188</strong>（局番なし）<br>" +
+               "<b>つながらないとき</b>　国民生活センター 平日バックアップ相談 03-3446-0999（平日10時〜16時）",
+        src: '消費者庁「<a href="https://www.caa.go.jp/policies/policy/local_cooperation/local_consumer_administration/hotline/" target="_blank" rel="noopener">消費者ホットライン</a>」'
+      },
+      {
+        id: "sh-junbi", title: "電話の前に、手元に置くもの",
+        body: "<p>うまく説明できなくて大丈夫です。順番は向こうが聞き出してくれます。" +
+              "あるものだけ並べておけば早く進みます。</p>" +
+              "<ul>" +
+              "<li>契約書・申込書・注文確認のメール・<strong>最終確認画面のスクリーンショット</strong></li>" +
+              "<li><strong>契約した日</strong>と、<strong>書面を受け取った日</strong>（この2つは別のことがあります）</li>" +
+              "<li>払った金額と、払い方（現金・振込・クレジットカード・コード決済・電子マネー・暗号資産）</li>" +
+              "<li>相手の会社名・担当者名・電話番号・サイトのURL</li>" +
+              "<li>言われたことのメモ（「必ずもうかる」「今日だけ」など、覚えている言葉をそのまま）</li>" +
+              "</ul>" +
+              "<p>全部そろっていなくてもかまいません。<strong>そろえてから、と思っているうちに期限が来ます。</strong></p>",
+        share: "高齢の家族の代わりにかけてかまいません。本人が横にいられると、そのまま代わってもらえます。"
+      },
+      {
+        id: "sh-dochira", title: "188と#9110、どちらにかけるか",
+        body: "<p>おおまかな分かれ目です。</p>" +
+              "<ul>" +
+              "<li><strong>188（消費生活センター）</strong>　契約や取引のトラブル。" +
+              "クーリング・オフできるか、取り消せるか、といった話</li>" +
+              "<li><strong>#9110（警察相談専用電話）</strong>　生活の安全に関わる、緊急でない相談。" +
+              "悪質商法に関する相談も受け付けています。受付時間は各都道府県警察で異なります</li>" +
+              "<li><strong>110番</strong>　いま脅されている、押しかけられている、といった急を要するとき</li>" +
+              "</ul>" +
+              "<p><strong>判断がつかなければ、どちらにかけてもかまいません。</strong>案内してもらえます。</p>",
+        src: '警察庁「<a href="https://www.npa.go.jp/bureau/soumu/soudan/soudanmadoguti.pdf" target="_blank" rel="noopener">警察相談専用電話「#9110」</a>」'
+      },
+      {
+        id: "sh-semenai", title: "自分を責める前に、電話する",
+        body: "<p>この手口は、<strong>断りにくい状況をつくるところまで含めて設計されています。</strong>" +
+              "不安にさせる、急がせる、二人きりにする、少額から始める、信頼できる人のふりをする。" +
+              "そこに引っかかるのは、判断力の問題ではありません。</p>" +
+              "<p>相談の現場には、同じ手口の相談が積み上がっています。" +
+              "<strong>あなたが最初の一人ではありません。</strong></p>" +
+              "<p>いちばん損をするのは、恥ずかしくて黙っている時間です。" +
+              "期限のある制度がいくつもあって、黙っている間に一つずつ閉じていきます。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "s2", phase: "p1", chip: "クーリング・オフ", chipSub: "8日／20日",
+    tag: "解約する",
+    title: "クーリング・オフ",
+    lead: "理由はいりません。違約金も払いません。" +
+          "<strong>期間内に「出す」だけで成立します。</strong>",
+    tasks: [
+      {
+        id: "sh-toha", title: "クーリング・オフとは",
+        body: "<p>契約の申込み又は締結の後に、<strong>法律で決められた書面を受け取ってから一定の期間内に、" +
+              "無条件で解約すること</strong>です。</p>" +
+              "<p><strong>すべての買い物に付いている制度ではありません。</strong>" +
+              "特定商取引法が定めた取引の種類に限られていて、種類ごとに日数が違います。" +
+              "店に行って買ったものや、通信販売には、この制度はありません。</p>",
+        src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/" target="_blank" rel="noopener">特定商取引法とは</a>'
+      },
+      {
+        id: "sh-nissu", title: "取引の種類ごとの日数", due: "種類で違う", hard: true,
+        body: "<p><strong>まとめて「8日」ではありません。</strong>自分の契約がどれかを確かめてください。</p>" +
+              '<table class="co"><tr><th>取引の種類</th><th>期間</th></tr>' +
+              "<tr><td>訪問販売<span>家に来た／路上で呼び止められた</span></td><td>8日</td></tr>" +
+              "<tr><td>電話勧誘販売<span>電話で勧誘された</span></td><td>8日</td></tr>" +
+              "<tr><td>特定継続的役務提供<span>エステ・美容医療・語学教室・家庭教師・学習塾・パソコン教室・結婚相手紹介</span></td><td>8日</td></tr>" +
+              "<tr><td>訪問購入<span>家に来て買い取っていく</span></td><td>8日</td></tr>" +
+              "<tr><td>連鎖販売取引<span>いわゆるマルチ商法</span></td><td>20日</td></tr>" +
+              "<tr><td>業務提供誘引販売取引<span>内職商法・副業商法</span></td><td>20日</td></tr>" +
+              '<tr class="no"><td>通信販売<span>ネット通販・テレビ・カタログ</span></td><td>制度なし</td></tr>' +
+              "</table>" +
+              "<p><strong>起算点はどれも「法律で決められた書面を受け取った日」です。</strong>" +
+              "契約した日ではありません。訪問販売・電話勧誘販売・訪問購入では、" +
+              "契約書面より前に申込書面を受け取っていれば、そちらが起算点になります。" +
+              "連鎖販売取引だけは、再販売する商品の引渡しが書面より後なら、引渡しを受けた日から数えます。</p>" +
+              "<p><strong>そして、受け取った日が1日目です。</strong>" +
+              "条文が「受領した日から起算して八日」と書いているためで、" +
+              "消費者庁も「受け取った日から数えて8日以内」と説明しています。" +
+              "9月1日に受け取ったなら、9月8日までです。</p>",
+        src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/" target="_blank" rel="noopener">特定商取引法とは</a>／' +
+             SRC_LAW + '第9条・第24条・第40条・第48条・第58条・第58条の14'
+      },
+      {
+        id: "sh-fubi", title: "書面に不備があれば、期間はまだ始まっていない",
+        body: "<p>消費者庁は、クーリング・オフの起算点を" +
+              "<strong>「正しく記載された書面（申込書面または契約書面）を受け取ってから」</strong>と説明し、" +
+              "<strong>「書面に不備がある場合、書面を受け取っていないものとみなされます」</strong>としています。</p>" +
+              "<p>つまり、日付の上では過ぎているように見えても、" +
+              "<strong>期間そのものが始まっていない</strong>ことがあります。" +
+              "書面に何が書いてあるべきかは法律で決まっていて、そこを見るのは専門の窓口の仕事です。</p>" +
+              "<p><strong>期限をすぎたと思っても、契約書を捨てずに188に電話してください。</strong></p>",
+        src: '消費者庁「<a href="https://www.caa.go.jp/publication/pamphlet/assets/consumer_transaction_cms101_230608_01.pdf" target="_blank" rel="noopener">特定商取引法上のクーリング・オフ</a>」'
+      },
+      {
+        id: "sh-hasshin", title: "期間内に「出せば」いい（発信主義）", due: "出した日で決まる", hard: true,
+        body: "<p>条文はこうなっています。</p>" +
+              "<p><strong>「申込みの撤回等は、当該申込みの撤回等に係る書面又は電磁的記録による通知を" +
+              "発した時に、その効力を生ずる。」</strong>（特定商取引法第9条第2項）</p>" +
+              "<p><strong>相手に届くのが期限のあとになっても、期限内に出していれば効力があります。</strong>" +
+              "同じ趣旨の規定が、ほかの取引類型にも置かれています。</p>" +
+              "<p>だから、最終日でも出してください。" +
+              "「もう間に合わない」と思って出さなかった場合だけ、本当に間に合いません。</p>",
+        src: SRC_LAW + '第9条第2項'
+      },
+      {
+        id: "sh-kakikata", title: "書面でも、メールでもいい",
+        body: "<p>2022年6月1日から、<strong>書面によるほか、電磁的記録でも通知できます。</strong>" +
+              "消費者庁は、電子メールのほか、USBメモリ等の記録媒体、" +
+              "事業者が自社のウェブサイトに設けるクーリング・オフ専用フォーム等、" +
+              "FAXによる通知を挙げています。</p>" +
+              "<p>文面は、このページの下に雛形を置いてあります。" +
+              "<strong>クレジット契約をしている場合は、販売会社とクレジット会社に同時に通知します。</strong></p>",
+        src: '消費者庁「<a href="https://www.no-trouble.caa.go.jp/qa/coolingoff.html" target="_blank" rel="noopener">電磁的記録によるクーリング・オフに関するQ&amp;A</a>」／' +
+             '国民生活センター「<a href="https://www.kokusen.go.jp/soudan_now/data/coolingoff.html" target="_blank" rel="noopener">クーリング・オフ</a>」'
+      },
+      {
+        id: "sh-shouko", title: "証拠を残す", due: "出す前に", hard: true,
+        body: "<p>あとで「受け取っていない」と言われることがあります。<strong>出す前にやることです。</strong></p>" +
+              "<ul>" +
+              "<li><strong>はがきは、出す前に両面をコピーする</strong></li>" +
+              "<li><strong>特定記録郵便または簡易書留など、発信の記録が残る方法</strong>で、代表者あてに送る</li>" +
+              "<li>コピーと送付の記録は一緒に保管する</li>" +
+              "<li>電子メールなら<strong>送信メールを保存</strong>する</li>" +
+              "<li>ウェブサイトのフォームなら<strong>画面のスクリーンショット</strong>を残す</li>" +
+              "</ul>",
+        src: '国民生活センター「<a href="https://www.kokusen.go.jp/soudan_now/data/coolingoff.html" target="_blank" rel="noopener">クーリング・オフ</a>」／' +
+             '消費者庁「<a href="https://www.no-trouble.caa.go.jp/qa/coolingoff.html" target="_blank" rel="noopener">電磁的記録によるクーリング・オフに関するQ&amp;A</a>」'
+      },
+      {
+        id: "sh-bougai", title: "嘘をつかれた・妨害されたときは、期間が進まない",
+        body: "<p>「この契約はクーリング・オフできません」と言われた。" +
+              "解約したいと言ったら、強い調子で止められた。——このとき、期間は普通には終わりません。</p>" +
+              "<p>事業者が、クーリング・オフに関する事項につき<strong>事実と違うことを告げたり、威迫したりする</strong>ことによって、" +
+              "消費者が誤認・困惑してクーリング・オフしなかった場合には、" +
+              "<strong>上記期間を経過していても、消費者はクーリング・オフをすることができます。</strong></p>" +
+              "<p>条文上は、事業者が改めて「クーリング・オフを行うことができる旨」を記載した書面を交付し、" +
+              "<strong>それを受け取った日から起算して8日（20日）を経過するまで</strong>できる、という形になっています。</p>" +
+              "<p>言われた言葉を、できるだけそのまま書き留めて188に伝えてください。</p>",
+        src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/doortodoorsales/" target="_blank" rel="noopener">訪問販売</a>／' +
+             SRC_LAW + '第9条第1項ただし書'
+      },
+      {
+        id: "sh-watasanai", title: "訪問購入は、期間内なら渡さなくていい",
+        body: "<p>貴金属や着物を買い取る契約をしてしまったが、まだ持って行かれていない、という場合です。</p>" +
+              "<p><strong>「売買契約の相手方は、クーリング・オフ期間内は債務不履行に陥ることなく、" +
+              "事業者に対して契約対象である物品の引渡しを拒むことができます。」</strong></p>" +
+              "<p>渡さないことが契約違反にはならない、ということです。" +
+              "いったん持って行かれると、取り戻すのは一段難しくなります。</p>",
+        src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/doortodoorpurchases/" target="_blank" rel="noopener">訪問購入</a>'
+      }
+    ]
+  },
+
+  {
+    id: "s3", phase: "p2", chip: "できないとき", chipSub: "別の手段",
+    tag: "ほかの道",
+    title: "クーリング・オフができない場合",
+    lead: "できない、で終わりではありません。" +
+          "<strong>別の名前の制度がいくつもあって、期間も条件も別々です。</strong>",
+    tasks: [
+      {
+        id: "sh-tsuhan", title: "通信販売には、クーリング・オフがない", due: "重要な例外", hard: true,
+        body: "<p><strong>「通信販売には、クーリング・オフに関する規定はありません。」</strong>" +
+              "ネット通販、テレビショッピング、カタログ、新聞広告での注文が当たります。" +
+              "ここを勘違いしている人がとても多いところです。</p>" +
+              "<p>代わりに、<strong>返品についての別のルール</strong>があります。</p>" +
+              "<ul>" +
+              "<li>事業者が<strong>広告にあらかじめ返品特約を表示していた場合は、その特約によります</strong>" +
+              "（「返品不可」と書いてあれば、それが効きます）</li>" +
+              "<li>表示していなかった場合は、<strong>商品の引渡しを受けた日から起算して8日を経過するまで</strong>、" +
+              "申込みの撤回や解除ができます。ただし<strong>返送の費用は消費者の負担</strong>です</li>" +
+              "</ul>" +
+              "<p>通信販売では、<strong>事業者に返品に関する事項（返品の可否・期間などの条件・送料の負担）の" +
+              "表示が義務づけられています。</strong>買う前に、その表示を読んでください。</p>",
+        src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/mailorder/" target="_blank" rel="noopener">通信販売</a>／' +
+             SRC_LAW + '第15条の3'
+      },
+      {
+        id: "sh-15no4", title: "最終確認画面の表示がおかしければ、取り消せる",
+        body: "<p>通信販売でも、申込みそのものを取り消せる制度があります。</p>" +
+              "<p><strong>特定申込みをした者は、事業者が申込みを受けるに際し、" +
+              "表示義務のある事項について不実の表示をした、または表示をしなかったことにより誤認をし、" +
+              "それによって申し込んだときは、これを取り消すことができます。</strong>" +
+              "（特定商取引法第15条の4）</p>" +
+              "<p>だから、<strong>最終確認画面のスクリーンショット</strong>が効きます。" +
+              "あとから画面が差し替えられることがあるので、気づいた時点で撮っておいてください。</p>",
+        src: SRC_LAW + '第15条の4／消費者庁「<a href="https://www.caa.go.jp/policies/policy/consumer_transaction/amendment/2021/notice03/" target="_blank" rel="noopener">インターネット通販の定期購入トラブルには御注意を!</a>」'
+      },
+      {
+        id: "sh-torikeshi", title: "嘘やごまかしで契約させられたときの取消し（消費者契約法）", due: "1年／5年", hard: true,
+        body: "<p>取引の種類を問わず、消費者と事業者の契約であれば使えます。" +
+              "<strong>勧誘のされ方</strong>に着目した制度です。</p>" +
+              "<ul>" +
+              "<li><strong>不実告知</strong>　重要事項について事実と異なることを告げられた" +
+              "（第4条第1項第1号）</li>" +
+              "<li><strong>断定的判断の提供</strong>　将来の価額や受け取る金額など、" +
+              "将来における変動が不確実な事項について「確実だ」という判断を示された（同項第2号）</li>" +
+              "<li><strong>不利益事実の不告知</strong>　利益になることを告げておきながら、" +
+              "不利益になる事実を、故意または重大な過失によって告げなかった（同条第2項）</li>" +
+              "<li><strong>不退去</strong>　帰ってほしいと言ったのに帰らなかった（同条第3項第1号）</li>" +
+              "<li><strong>退去妨害</strong>　帰りたいと言ったのに帰してもらえなかった（同項第2号）</li>" +
+              "</ul>" +
+              "<p><strong>期間の制限があります。</strong>取消権は、" +
+              "<strong>追認をすることができる時から1年間</strong>行わないときは時効によって消滅し、" +
+              "<strong>契約の締結の時から5年</strong>を経過したときも同じです。" +
+              "（霊感等による知見を用いた告知に係る取消権は、3年／10年です。）</p>" +
+              "<p>「追認をすることができる時」がいつかは、事情によって変わります。" +
+              "<strong>おおよそ「だまされていたと気づいたとき」からと考えて、早めに動いてください。</strong></p>",
+        src: '<a href="https://laws.e-gov.go.jp/law/412AC0000000061" target="_blank" rel="noopener">消費者契約法</a>（e-Gov法令検索）第4条・第7条'
+      },
+      {
+        id: "sh-kajou", title: "必要のない量を買わされた（過量販売）",
+        body: "<p>訪問販売と電話勧誘販売には、分量に着目した解除の制度があります。</p>" +
+              "<p>消費者庁の説明では、<strong>日常生活において通常必要とされる分量などを著しく超える契約</strong>について、" +
+              "<strong>契約締結時から1年以内</strong>なら解除できるとされています" +
+              "（例：独り暮らしの方が半年で布団を10セット購入する）。</p>" +
+              "<p>高齢の家族の家に、同じような商品が大量にある。" +
+              "——それは、この制度の話になるかもしれません。</p>",
+        src: '消費者庁「<a href="https://www.caa.go.jp/publication/pamphlet/pdf/info_pamphlet_171115_0001.pdf" target="_blank" rel="noopener">知って安心、契約トラブル防止・解決のために</a>」'
+      },
+      {
+        id: "sh-chuto", title: "長く続く契約は、途中でやめられる（中途解約）",
+        body: "<p><strong>特定継続的役務提供</strong>（エステ、語学教室、学習塾など）は、" +
+              "<strong>クーリング・オフ期間の経過後においても、将来に向かって契約を解除（中途解約）することができます。</strong>" +
+              "事業者が請求できる額には上限があり、役務の種類と、提供が始まる前か後かで変わります。</p>" +
+              "<p><strong>連鎖販売取引</strong>も、クーリング・オフ期間の経過後に契約を解除できます。" +
+              "そのうえで、入会後1年を経過していない・引渡しから90日を経過していない・再販売していない・" +
+              "使用または消費していない・自らの責任で滅失またはき損していない、" +
+              "という条件を<strong>すべて満たせば</strong>、商品販売契約も解除できます。</p>" +
+              "<p>一定の違約金が必要な場合があります。金額の計算は窓口でしてもらってください。</p>",
+        src: '消費者庁「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/continuousservices/" target="_blank" rel="noopener">特定継続的役務提供</a>／' +
+             '<a href="https://www.no-trouble.caa.go.jp/what/multilevelmarketing/" target="_blank" rel="noopener">連鎖販売取引</a>'
+      }
+    ]
+  },
+
+  {
+    id: "s4", phase: "p3", chip: "よくある型", chipSub: "6つ",
+    tag: "手口",
+    title: "よくある型と、それぞれの入り口",
+    lead: "自分のケースがどれに近いかがわかると、" +
+          "<strong>188で話すときの最初の一言が決まります。</strong>",
+    tasks: [
+      {
+        id: "sh-teiki", title: "「お試し」のつもりが定期購入だった",
+        body: "<p>通信販売なので<strong>クーリング・オフはありません。</strong>" +
+              "ここで効くのは、最終確認画面の表示義務です。</p>" +
+              "<p>2022年6月1日から、事業者が定める様式で申込みを受ける場合" +
+              "（インターネット通販の<strong>最終確認画面</strong>など）に、" +
+              "次の事項を表示することが義務づけられています。</p>" +
+              "<ul>" +
+              "<li>分量</li>" +
+              "<li>販売価格（役務の対価）。送料についても表示が必要</li>" +
+              "<li>代金（対価）の支払時期、方法</li>" +
+              "<li>商品の引渡時期（権利の移転時期、役務の提供時期）</li>" +
+              "<li>申込みの期間に関する定めがあるときは、その旨及びその内容</li>" +
+              "<li>契約の申込みの撤回又は解除に関する事項（返品特約がある場合はその内容を含む）</li>" +
+              "</ul>" +
+              "<p>誤認させるような表示も禁止されていて、" +
+              "<strong>誤認して申し込んだ場合は、その意思表示を取り消すことができます。</strong></p>" +
+              "<p><strong>やること</strong>：注文履歴、最終確認画面、広告の画面、" +
+              "事業者とのやりとりを<strong>スクリーンショットで残してから</strong>188へ。" +
+              "画面はあとから変わります。</p>",
+        src: '消費者庁「<a href="https://www.caa.go.jp/policies/policy/consumer_transaction/amendment/2021/notice03/" target="_blank" rel="noopener">インターネット通販の定期購入トラブルには御注意を!</a>」／' +
+             '「特定商取引法ガイド」<a href="https://www.no-trouble.caa.go.jp/what/mailorder/" target="_blank" rel="noopener">通信販売</a>／' + SRC_LAW + '第15条の4'
+      },
+      {
+        id: "sh-sns", title: "SNS・マッチングアプリからの投資や副業の勧誘",
+        body: "<p>警察庁が説明している手口です。</p>" +
+              "<p><strong>SNSのダイレクトメッセージや広告で接触したあと、LINEなどの別のSNSに誘導</strong>し、" +
+              "<strong>著名人やそのアシスタントを名乗って</strong>、" +
+              "「株や暗号資産に投資すれば利益が得られる」と信用させ、" +
+              "投資金や手数料という名目で振り込ませる、というものです。</p>" +
+              "<p>途中で<strong>偽の利益画面を見せ、少額を実際に返金して信用させる</strong>段階があります。" +
+              "出金しようとすると「保証金が必要」「税金として一定割合がかかる」" +
+              "「監督当局によって資金が差し止めされている」などと言われて、さらに払わされます。</p>" +
+              "<p><strong>「一度だまされると、詐欺と気付くまで、お金を何度も振り込んでしまい、" +
+              "1,000万円以上の高額被害になってしまうこともあります。」</strong></p>" +
+              "<p><strong>やること</strong>：追加で払うのをやめる。" +
+              "やりとりの画面と振込先を保存する。警察（#9110）と、振込先の金融機関に連絡する。" +
+              "投資商品や暗号資産のことは金融庁の金融サービス利用者相談室でも相談できます。</p>",
+        src: '警察庁「<a href="https://www.npa.go.jp/bureau/safetylife/sos47/case/sns-romance/investment/" target="_blank" rel="noopener">SNS型投資詐欺</a>」'
+      },
+      {
+        id: "sh-sms", title: "身に覚えのない請求のSMS・メール・はがき",
+        body: "<p>国民生活センターの案内はとても短いです。</p>" +
+              "<p><strong>「身に覚えがない場合、相手には連絡せず様子を見ましょう。」</strong>" +
+              "相手に連絡すると、やり取りする中で金銭を請求されたり、" +
+              "新たに個人情報を知られることで、その後も同じようなSMSやメールが届く可能性があります。</p>" +
+              "<p><strong>コンビニ等で電子マネーカードを購入するよう指示し、番号を教えさせる方法は、すべて詐欺です。</strong>" +
+              "支払方法は振込だけでなく、プリペイドカードや、" +
+              "「支払番号」を伝えてコンビニのレジで支払わせる方法などさまざまです。</p>" +
+              "<p>架空請求かどうか判断できないとき、不安なときは188へ。" +
+              "届いたSMSは、着信日時・文章・発信元番号・受信先番号を、" +
+              "利用している携帯電話会社の申告窓口に転送して通報できます。</p>",
+        src: '国民生活センター「<a href="https://www.kokusen.go.jp/news/data/n-20240424_2.html" target="_blank" rel="noopener">覚えのない未納料金を請求する詐欺に注意！</a>」'
+      },
+      {
+        id: "sh-tenken", title: "訪問での住宅リフォーム・点検商法",
+        body: "<p>突然訪問してきて「近所で工事をしている挨拶に来た」「屋根瓦がずれている」と言い、" +
+              "点検したあとで<strong>不安をあおって工事の契約をする</strong>手口です。</p>" +
+              "<p>国民生活センターは、屋根について" +
+              "<strong>「屋根は外から見えるので、業者にとっては家の中に入らなくても不具合を確認することができる部分ですが、" +
+              "一方、屋根は消費者からは通常見えにくいところであり、" +
+              "消費者自身で工事が必要かどうかの判断が難しく、業者の言葉を信用してしまうため、" +
+              "悪質業者に利用されやすくなっています」</strong>と説明しています。" +
+              "契約当事者の8割超が60歳以上です。</p>" +
+              "<p>注意点として挙げられているのは、" +
+              "<strong>突然訪問してきた業者には安易に点検させない</strong>、" +
+              "<strong>すぐに契約せず十分に検討する</strong>、" +
+              "<strong>保険金を利用できるというトークには気をつける</strong>、の3つです。</p>" +
+              "<p><strong>これは訪問販売なので、クーリング・オフができます（8日）。</strong>" +
+              "工事が始まっていても、まず188に電話してください。</p>",
+        src: '国民生活センター「<a href="https://www.kokusen.go.jp/news/data/n-20231011_1.html" target="_blank" rel="noopener">屋根工事の点検商法のトラブルが増えています</a>」'
+      },
+      {
+        id: "sh-denwa", title: "高齢の家族を狙う電話勧誘",
+        body: "<p>電話勧誘販売も<strong>クーリング・オフができます（8日）。</strong>起算点は書面を受け取った日です。</p>" +
+              "<p>制度上、事業者には次のことが禁じられています。</p>" +
+              "<ul>" +
+              "<li><strong>勧誘に先立って、事業者の名称、勧誘を行う者の氏名、商品などの種類、" +
+              "そして「その電話が契約の勧誘のためのものであること」を告げなければならない</strong>" +
+              "（特定商取引法第16条）</li>" +
+              "<li><strong>契約を締結しない旨の意思を表示した者に対して、勧誘をしてはならない</strong>" +
+              "（同法第17条）</li>" +
+              "</ul>" +
+              "<p>つまり、<strong>一度「いりません」と言えば、もうかけてはいけないことになっています。</strong>" +
+              "それでもかかってくるなら、そのこと自体を188に伝えてください。</p>",
+        src: SRC_LAW + '第16条・第17条'
+      },
+      {
+        id: "sh-romance", title: "国際ロマンス詐欺・暗号資産",
+        body: "<p>親しくなった相手から投資を勧められる、という型です。" +
+              "警察庁はSNS型投資詐欺とあわせて「SNS型投資・ロマンス詐欺」として扱っています。" +
+              "手口の骨格は同じで、<strong>信用を作ってから、出金できなくする</strong>ところまで含まれます。</p>" +
+              "<p>暗号資産の交換業は登録制です。金融庁は" +
+              "<strong>無登録業者との取引について、出金の拒否、過大な出金手数料、突然の連絡途絶といった" +
+              "相談が多いとして注意を呼びかけ、取引の前に登録を受けているかを確認するよう案内しています。</strong>" +
+              "登録業者の一覧と、警告書を出した無登録業者の一覧は、金融庁のサイトで公表されています。</p>" +
+              "<p><strong>やること</strong>：追加で払うのをやめる。やりとりと送金先を保存する。" +
+              "#9110と、送金に使った金融機関・交換業者に連絡する。判断に迷えば188へ。</p>",
+        src: '警察庁「<a href="https://www.npa.go.jp/bureau/safetylife/sos47/case/sns-romance/investment/" target="_blank" rel="noopener">SNS型投資詐欺</a>」／' +
+             '金融庁「<a href="https://www.fsa.go.jp/ordinary/chuui/highrisk.html" target="_blank" rel="noopener">無登録業者との取引は要注意！！</a>」'
+      }
+    ]
+  },
+
+  {
+    id: "s5", phase: "p4", chip: "払ったあと", chipSub: "急ぐ順",
+    tag: "回復",
+    title: "お金を払ってしまったあと",
+    lead: "残高が動く前に手を打てるかどうかで、変わることがあります。" +
+          "<strong>早い順に並べました。</strong>",
+    tasks: [
+      {
+        id: "sh-ginko", title: "まず、振込先の金融機関と警察に連絡する", due: "いますぐ", hard: true,
+        body: "<p>金融庁の案内は、<strong>「警察と振込先の金融機関に連絡してください」</strong>です。" +
+              "近所の警察署、または警察相談専用電話（#9110）に連絡します。</p>" +
+              "<p>口座が犯罪に利用されたと疑うに足りる相当な理由があるとき、" +
+              "金融機関はその口座の取引を停止する措置をとります。" +
+              "<strong>これは早ければ早いほど、残っている残高が多くなります。</strong></p>" +
+              "<p>自分の口座やカードの番号を相手に伝えてしまった場合は、" +
+              "自分の金融機関・カード会社にも連絡して、止めてもらってください。</p>",
+        src: '金融庁「<a href="https://www.fsa.go.jp/policy/kyuusai/furikome/index.html" target="_blank" rel="noopener">振り込め詐欺等の被害にあわれた方へ</a>」'
+      },
+      {
+        id: "sh-kyusai", title: "振り込め詐欺救済法による被害回復分配金",
+        body: "<p>振込みを利用した犯罪の被害について、" +
+              "<strong>振り込んだ先の口座に残高が残っている場合、その残高を原資として" +
+              "被害回復分配金の支払いを行う</strong>という法律です。</p>" +
+              "<p>手続は、口座の名義人の権利を消滅させる<strong>債権消滅手続</strong>と、" +
+              "そのあとの<strong>支払手続</strong>に分かれ、" +
+              "支払手続が開始された旨の公告があった日の翌日から<strong>30日以上</strong>の申請期間内に申請します。</p>" +
+              "<p>知っておいてほしいことが3つあります。</p>" +
+              "<ul>" +
+              "<li><strong>申請期間内に申請しないと、支払を受けられません</strong></li>" +
+              "<li><strong>被害額の全額が返ってくるとは限りません。</strong>被害者が複数いる場合は按分されます</li>" +
+              "<li>実際に支払を受けられるまでに<strong>少なくとも半年以上かかるのが一般的です</strong></li>" +
+              "</ul>" +
+              "<p>自分が振り込んだ口座で手続が進んでいるか、申請期間がいつまでかは、" +
+              "預金保険機構のサイトの公告で調べられます。</p>",
+        where: "<b>調べる先</b>　預金保険機構「<a href=\"https://furikomesagi.dic.go.jp/\" target=\"_blank\" rel=\"noopener\">振り込め詐欺救済法に基づく公告</a>」<br>" +
+               "<b>申請する先</b>　振込先の金融機関",
+        src: '金融庁「<a href="https://www.fsa.go.jp/policy/kyuusai/furikome/index.html" target="_blank" rel="noopener">振り込め詐欺等の被害にあわれた方へ</a>」'
+      },
+      {
+        id: "sh-kouben", title: "クレジットカードで払った場合（支払停止の抗弁）",
+        body: "<p>割賦販売法に、こういう規定があります。</p>" +
+              "<p><strong>購入者は、包括信用購入あっせん（カードの分割払いなど）で買った商品や役務について" +
+              "支払分の請求を受けたとき、販売業者や役務提供事業者に対して生じている事由をもって、" +
+              "その請求をするクレジット会社に対抗することができる</strong>（第30条の4第1項）。" +
+              "これに反する、購入者に不利な特約は無効です（同条第2項）。</p>" +
+              "<p><strong>ただし、適用されない範囲があります。</strong>" +
+              "支払総額が政令で定める金額に満たないものには適用されません。" +
+              "その金額は<strong>4万円</strong>（リボルビング払いの場合は<strong>3万8千円</strong>）と定められています" +
+              "（割賦販売法施行令第21条）。</p>" +
+              "<p>対抗するときは、その事由の内容を記載した書面の提出を求められたら、" +
+              "提出するよう努めることとされています（同条第3項）。</p>" +
+              "<p><strong>自分の契約がこの制度の対象になるかどうかは、支払い方によって変わります。</strong>" +
+              "カード会社と188の両方に確認してください。</p>",
+        src: '<a href="https://laws.e-gov.go.jp/law/336AC0000000159" target="_blank" rel="noopener">割賦販売法</a>第30条の4／' +
+             '<a href="https://laws.e-gov.go.jp/law/336CO0000000341" target="_blank" rel="noopener">割賦販売法施行令</a>第21条（e-Gov法令検索）'
+      },
+      {
+        id: "sh-nijihigai", title: "「取り戻してあげる」という連絡が来たら",
+        body: "<p>被害のあとに、別の相手から連絡が来ることがあります。" +
+              "名簿が回っているためです。</p>" +
+              "<p><strong>お金を渡す前に、いったん切って188か#9110にかけ直してください。</strong>" +
+              "本物の窓口なら、かけ直しても困りません。急がせてくる相手ほど、いったん切ってください。</p>" +
+              "<p>公的な窓口（188、#9110、金融サービス利用者相談室、法テラス）は、" +
+              "<strong>こちらから連絡して使うもの</strong>です。</p>"
+      },
+      {
+        id: "sh-houterasu", title: "お金の話が大きいとき",
+        body: "<p>法テラス（日本司法支援センター）は、法制度や相談窓口を案内する情報提供のほか、" +
+              "<strong>資力が一定以下の場合に、弁護士・司法書士による無料法律相談と、" +
+              "弁護士等の費用の立替え</strong>を行う民事法律扶助を実施しています。</p>" +
+              "<p>まず188で整理してから、必要なら法テラス、という順番で困りません。</p>",
+        where: "<b>法テラス・サポートダイヤル</b>　0570-078374（平日9時〜21時／土曜9時〜17時）",
+        src: '<a href="https://www.houterasu.or.jp/" target="_blank" rel="noopener">法テラス（日本司法支援センター）</a>'
+      }
+    ]
+  },
+
+  {
+    id: "s6", phase: "p4", chip: "防ぐ", chipSub: "見守りと断り方",
+    tag: "予防",
+    title: "次を防ぐ",
+    lead: "一度あった家には、また来ます。" +
+          "<strong>本人の注意力に頼らない形にしておくのが確実です。</strong>",
+    tasks: [
+      {
+        id: "sh-kotowari", title: "断り方は、短くていい",
+        body: "<p>理由を説明する必要はありません。制度のほうが、断った人を守る作りになっています。</p>" +
+              "<ul>" +
+              "<li><strong>訪問販売</strong>　事業者は、契約を締結しない旨の意思を表示した者に対し、" +
+              "勧誘をしてはならない（特定商取引法第3条の2第2項）。" +
+              "訪問販売をしようとするときは、勧誘を受ける意思があることを確認するよう努めなければならない（同条第1項）</li>" +
+              "<li><strong>電話勧誘販売</strong>　契約を締結しない旨の意思を表示した者に対し、" +
+              "勧誘をしてはならない（同法第17条）</li>" +
+              "</ul>" +
+              "<p>つまり、<strong>「いりません」と一度言えば足ります。</strong>" +
+              "そのあと続けてくるほうが、規定に反しています。</p>" +
+              "<p>玄関なら、開けずにインターホンで。電話なら、名乗りを聞いた時点で切って。" +
+              "<strong>その場で決めない、が唯一の守り方です。</strong></p>",
+        src: SRC_LAW + '第3条の2・第17条'
+      },
+      {
+        id: "sh-mimamori", title: "高齢の家族を見守る",
+        body: "<p>本人は、たいてい言いません。<strong>「だまされた」と認めることになるからです。</strong>" +
+              "だから、責めない形で気づくしかありません。</p>" +
+              "<p>気づくきっかけになりやすいもの：</p>" +
+              "<ul>" +
+              "<li>同じような商品や健康食品が、使わないまま溜まっている</li>" +
+              "<li>知らない業者の名刺、契約書、振込の控えがある</li>" +
+              "<li>宅配便が頻繁に届く／家に業者が出入りしている</li>" +
+              "<li>お金の話を避けるようになった、通帳を見せなくなった</li>" +
+              "<li>家に新しい電話機や機器が増えている</li>" +
+              "</ul>" +
+              "<p>見つけても、まず<strong>日付と金額と相手の名前だけ</strong>控えてください。" +
+              "問い詰めると隠されて、期限だけが過ぎます。</p>" +
+              "<p>国民生活センターは、高齢者・障がい者に起きている消費者被害や製品事故情報を" +
+              "「見守り情報」としてまとめて発信しています。</p>",
+        where: "<b>読むところ</b>　国民生活センター「<a href=\"https://www.kokusen.go.jp/mimamori/\" target=\"_blank\" rel=\"noopener\">見守り情報</a>」",
+        share: "離れて暮らす家族は、契約書の写真を送ってもらって、代わりに188にかける役ができます。"
+      },
+      {
+        id: "sh-kiroku", title: "ふだんから残しておくと効くもの",
+        body: "<p>あとで効くのは、たいていこの3つです。</p>" +
+              "<ul>" +
+              "<li><strong>契約書・申込書は、受け取った日を書いて保管する。</strong>" +
+              "クーリング・オフの起算点は「書面を受け取った日」なので、ここが記録の中心になります</li>" +
+              "<li><strong>ネットの注文は、最終確認画面をスクリーンショットで撮る。</strong>" +
+              "画面はあとから差し替わります</li>" +
+              "<li><strong>言われたことを、その日のうちにメモする。</strong>" +
+              "「必ずもうかると言われた」「今日中と言われた」という記録が、" +
+              "不実告知や断定的判断の提供を話すときの中身になります</li>" +
+              "</ul>" +
+              "<p>捨てないでください。期限が過ぎているように見えても、" +
+              "書面に不備があれば期間が始まっていないことがあります。</p>"
+      }
+    ]
+  }
+];
+
+/* クーリング・オフ通知書の雛形
+   消費者庁「知って安心、契約トラブル防止・解決のために」の
+   ハガキ（契約解除通知書）記載例の項目に合わせている。
+   横書き用の言い回しは国民生活センター「クーリング・オフ」の通知書例に合わせた。 */
+var TMPL = [
+  "契約解除通知書",
+  "",
+  "次の契約を解除します。",
+  "",
+  "　契約（申込）年月日　　○○○○年○月○日",
+  "　販売会社　　　　　　　○○株式会社",
+  "　担当者名　　　　　　　○○　○○",
+  "　商品名　　　　　　　　○○○○一式",
+  "　契約金額　　　　　　　○○○,○○○円",
+  "",
+  "支払った代金○○○,○○○円を返金し、商品を引き取ってください。",
+  "",
+  "　○○○○年○月○日",
+  "　住所　○○県○○市○○町○丁目○番○号",
+  "　氏名　○○　○○"
+].join("\n");
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_TYPE = "shouhisha.type.v1";
+var KEY_DATE = "shouhisha.date.v1";
+var KEY_CHK  = "shouhisha.checks.v1";
+var KEY_TH   = "kurashi.theme.v1";   /* 配色は全ページ共通 */
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
+function fmtJP(d) { return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日"; }
+function addDays(d, n) { var x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function typeById(id) {
+  for (var i = 0; i < TYPES.length; i++) if (TYPES[i].id === id) return TYPES[i];
+  return null;
+}
+
+/* ------------------------------------------------------------
+   クーリング・オフの期限
+
+   数え方の根拠：
+   特定商取引法は、どの取引類型でも
+   「…書面を受領した日…から起算して八日（連鎖販売取引・業務提供誘引販売取引は二十日）を
+     経過した場合においては、この限りでない」
+   という書き方をしている（第9条第1項、第24条第1項、第40条第1項、
+   第48条第1項、第58条第1項、第58条の14第1項）。
+   「その日から起算して」は初日を算入する書き方で、
+   消費者庁「特定商取引法ガイド」も「書面を受け取った日から数えて8日以内」と説明し、
+   国民生活センターも「…受け取った日から起算します」と書いている。
+
+   → 書面を受け取った日が1日目。
+   → 最終日 = 受け取った日 + （日数 - 1）
+      例：9月1日に受領／8日間 → 9月8日が最終日。
+   ------------------------------------------------------------ */
+function deadlineOf(recv, days) {
+  return addDays(recv, days - 1);
+}
+
+/* 期限の計算結果を返す純粋関数。
+   base は「きょう」にあたる Date（省略時は今日）。 */
+function coolingOff(typeId, dateStr, base) {
+  var t = typeById(typeId);
+  if (!t) return { ok: false, reason: "notype" };
+  if (t.days === 0) return { ok: false, reason: "none", type: t };
+
+  var recv = parseDate(dateStr);
+  if (!recv) return { ok: false, reason: "nodate", type: t };
+
+  var now = base || today0();
+  var dl = deadlineOf(recv, t.days);
+  return {
+    ok: true,
+    type: t,
+    days: t.days,
+    received: recv,
+    deadline: dl,
+    left: daysBetween(now, dl)       /* 0 なら、きょうが最終日 */
+  };
+}
+
+function leftLabel(left) {
+  if (left < 0)  return (-left) + "日すぎています";
+  if (left === 0) return "きょうが最終日";
+  return "あと" + left + "日";
+}
+
+/* ここから下は DOM を触る。上は純粋な計算だけ（node でそのまま試せる） */
+/* ===== DOM ===== */
+
+/* ============================================================
+   描画
+   ============================================================ */
+
+var state = {
+  type: load(KEY_TYPE, ""),
+  date: load(KEY_DATE, ""),
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         "<b>" + esc(s.chip) + "</b>" + esc(s.chipSub) + "</button>";
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(t) {
+  var done = !!state.checks[t.id];
+  var due = t.due ? '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>" : "";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + t.id + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + t.id + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  if (t.share) h += '<div class="share"><b>まわりの人ができること</b>' + esc(t.share) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+/* ---- 期限の計算 ---- */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var typeIn   = document.getElementById("typeIn");
+var dateIn   = document.getElementById("dateIn");
+var setBtn   = document.getElementById("setBtn");
+var clearBtn = document.getElementById("clearBtn");
+var hint     = document.getElementById("hint");
+var nextup   = document.getElementById("nextup");
+var nextList = document.getElementById("nextList");
+var deadNote = document.getElementById("deadNote");
+
+function buildTypeSelect() {
+  var h = '<option value="">取引の種類を選ぶ</option>';
+  for (var i = 0; i < TYPES.length; i++) {
+    h += '<option value="' + TYPES[i].id + '">' + esc(TYPES[i].label) + "</option>";
+  }
+  typeIn.innerHTML = h;
+  if (state.type) typeIn.value = state.type;
+}
+
+function renderDeadline() {
+  var r = coolingOff(state.type, state.date);
+
+  clearBtn.hidden = !(state.type || state.date);
+
+  /* 取引が選ばれていない */
+  if (!r.ok && r.reason === "notype") {
+    dayBig.textContent = "取引の種類を選んでください";
+    daySub.textContent = "";
+    nextup.classList.remove("on");
+    hint.textContent = "契約書面（それより前に申込書面を受け取っていれば、その書面）を受け取った日を入れてください。" +
+                       "日付はこの端末にだけ保存されます。";
+    return;
+  }
+
+  /* 通信販売＝制度がない */
+  if (!r.ok && r.reason === "none") {
+    dayBig.textContent = "クーリング・オフはありません";
+    daySub.textContent = r.type.label;
+    nextList.innerHTML =
+      '<div class="nx over">' +
+      '<div class="nx-when"><b>なし</b></div>' +
+      '<div class="nx-what">この取引にクーリング・オフはありません' +
+      "<span>通信販売には、クーリング・オフに関する規定がありません</span></div></div>";
+    deadNote.innerHTML =
+      "代わりに、広告に返品特約が表示されていればその特約により、" +
+      "表示されていなければ商品の引渡しを受けた日から起算して8日を経過するまで、" +
+      "申込みの撤回や解除ができます（返送の費用は消費者の負担）。" +
+      "最終確認画面の表示が違っていた場合は、申込みそのものを取り消せることがあります。" +
+      "「できないとき」の段を見てください。";
+    nextup.classList.add("on");
+    hint.textContent = "通信販売を選んだので、日付は使いません。";
+    return;
+  }
+
+  /* 日付がまだ */
+  if (!r.ok && r.reason === "nodate") {
+    dayBig.textContent = r.type.days + "日間";
+    daySub.textContent = r.type.label;
+    nextup.classList.remove("on");
+    hint.textContent = "書面を受け取った日を入れると、期限の日付が出ます。" + r.type.start + "から数えます。";
+    return;
+  }
+
+  /* 計算できた */
+  dayBig.textContent = leftLabel(r.left);
+  daySub.textContent = r.type.label + "　" + r.days + "日間";
+  hint.textContent = "この日付はこの端末のブラウザにだけ保存されています。";
+
+  var cls, when, note;
+  if (r.left < 0) {
+    cls = "over";
+    when = "<b>" + (-r.left) + "</b>日すぎ";
+    note = fmtJP(r.deadline) + " まで　書面に不備があれば期間が始まっていないことがあります。188へ";
+  } else if (r.left <= 2) {
+    cls = "soon";
+    when = r.left === 0 ? "<b>きょう</b>" : "あと<b>" + r.left + "</b>日";
+    note = fmtJP(r.deadline) + " まで　きょう出してください";
+  } else {
+    cls = "far";
+    when = "あと<b>" + r.left + "</b>日";
+    note = fmtJP(r.deadline) + " まで";
+  }
+  nextList.innerHTML =
+    '<div class="nx ' + cls + '">' +
+    '<div class="nx-when">' + when + "</div>" +
+    '<div class="nx-what">クーリング・オフの期限<span>' + note + "</span></div></div>";
+
+  deadNote.innerHTML =
+    "<strong>" + esc(fmtJP(r.received)) + "</strong>が1日目、<strong>" + esc(fmtJP(r.deadline)) +
+    "</strong>が" + r.days + "日目です。法律が「書面を受領した日から起算して" +
+    (r.days === 8 ? "八" : "二十") + "日」と定めているためです（" + esc(r.type.art) + "）。" +
+    "起算点は" + esc(r.type.start) + "。" +
+    "<strong>期限内に発信すれば効力が生じます</strong>ので、最終日でも出してください。";
+
+  nextup.classList.add("on");
+}
+
+/* ---- 進捗 ---- */
+function renderProgress() {
+  var total = 0, done = 0;
+  for (var i = 0; i < STAGES.length; i++) {
+    for (var j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = +b.dataset.i;
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  var id = b.dataset.chk;
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest(".task");
+  if (card) card.classList.toggle("done", !!state.checks[id]);
+  renderProgress();
+});
+
+typeIn.addEventListener("change", function () {
+  state.type = typeIn.value;
+  save(KEY_TYPE, state.type);
+  renderDeadline();
+});
+
+setBtn.addEventListener("click", function () {
+  var v = dateIn.value;
+  var d = parseDate(v);
+  if (!d) { hint.textContent = "日付を選んでください。"; return; }
+  if (daysBetween(d, today0()) < 0) { hint.textContent = "未来の日付は入れられません。"; return; }
+  state.date = v;
+  save(KEY_DATE, v);
+  renderDeadline();
+});
+
+clearBtn.addEventListener("click", function () {
+  state.type = "";
+  state.date = "";
+  typeIn.value = "";
+  dateIn.value = "";
+  save(KEY_TYPE, "");
+  save(KEY_DATE, "");
+  renderDeadline();
+});
+
+dateIn.addEventListener("change", function () {
+  if (parseDate(dateIn.value)) setBtn.click();
+});
+
+/* ---- 通知書のコピー ---- */
+var tmplText = document.getElementById("tmplText");
+var copyBtn  = document.getElementById("copyBtn");
+var copyMsg  = document.getElementById("copyMsg");
+
+tmplText.textContent = TMPL;
+
+function copyFallback(text) {
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.top = "-1000px";
+  document.body.appendChild(ta);
+  ta.select();
+  var ok = false;
+  try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+  document.body.removeChild(ta);
+  return ok;
+}
+
+copyBtn.addEventListener("click", function () {
+  var done = function (ok) {
+    copyMsg.textContent = ok ? "コピーしました" : "コピーできませんでした。文面を選んでコピーしてください";
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(TMPL).then(function () { done(true); }, function () { done(copyFallback(TMPL)); });
+  } else {
+    done(copyFallback(TMPL));
+  }
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化
+   ============================================================ */
+
+buildRail();
+renderStage();
+
+/* 進捗バーをレールの下に足す */
+(function () {
+  var host = document.getElementById("stageHost");
+  var p = document.createElement("div");
+  p.className = "prog";
+  p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                '<span class="prog-bar"><i id="progFill"></i></span>';
+  host.parentNode.appendChild(p);
+})();
+
+buildTypeSelect();
+if (state.date) dateIn.value = state.date;
+renderDeadline();
+renderProgress();
+</script>

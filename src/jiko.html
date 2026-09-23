@@ -1,0 +1,1168 @@
+<title>交通事故のノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+%%CSS%%
+
+/* ---------- このノート固有 ---------- */
+
+/* その場ですること（日付より前、スクロールせずに読める位置に置く） */
+.now{
+  margin-top:14px;background:var(--surface);border:1px solid var(--alert);
+  border-radius:18px;padding:15px 15px 16px;box-shadow:var(--shadow);
+}
+.now h2{font-size:17px;color:var(--alert);font-family:var(--display)}
+.now .now-lead{font-size:12.5px;color:var(--ink-2);margin:4px 0 0;line-height:1.75}
+.nstep{display:flex;gap:10px;align-items:flex-start;border-top:1px solid var(--line-2);padding-top:9px;margin-top:9px}
+.nstep-n{
+  flex:none;width:22px;height:22px;border-radius:50%;margin-top:2px;
+  background:var(--alert-bg);color:var(--alert);
+  font-size:11.5px;font-weight:700;font-family:var(--body);
+  display:grid;place-items:center;font-variant-numeric:tabular-nums;
+}
+.nstep-b{flex:1;min-width:0}
+.nstep-t{font-family:var(--display);font-weight:700;font-size:14.5px;line-height:1.5}
+.nstep-d{font-size:12.5px;color:var(--ink-2);line-height:1.75;margin-top:1px}
+.nstep-d b{color:var(--ink)}
+.tel{font-variant-numeric:tabular-nums;font-weight:700;color:var(--alert)}
+
+/* 控えるもののメモ */
+.memo{
+  margin-top:8px;background:var(--surface-2);border:1px solid var(--line-2);
+  border-radius:10px;padding:9px 11px;font-size:12.5px;line-height:1.8;color:var(--ink-2);
+}
+.memo b{display:block;font-family:var(--body);font-weight:700;color:var(--ink);font-size:11.5px;letter-spacing:.06em;margin-bottom:2px}
+.memo ul{margin:0;padding-left:1.1em}
+.memo li{margin-bottom:1px}
+
+/* 相談先の電話番号 */
+.dial{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
+
+/* 書かないことの説明 */
+.nogo{
+  margin-top:12px;background:var(--surface-2);border:1px dashed var(--line);
+  border-radius:12px;padding:12px 13px;font-size:12.5px;color:var(--ink-2);line-height:1.85;
+}
+.nogo b{display:block;font-family:var(--display);color:var(--ink);font-size:13.5px;margin-bottom:3px}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M2.6 11.4h12.8M4.2 11.4l1.3-4.1a1.6 1.6 0 011.5-1.1h4a1.6 1.6 0 011.5 1.1l1.3 4.1"
+              fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" opacity=".75"/>
+        <circle cx="5.4" cy="12.6" r="1.1" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        <circle cx="12.6" cy="12.6" r="1.1" fill="none" stroke="currentColor" stroke-width="1.2"/>
+      </svg>
+      交通事故のノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="%%HOME%%" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 事故直後に開く人がいるので、いちばん上に手順を置く -->
+  <section class="now">
+    <h2>その場ですること</h2>
+    <p class="now-lead">上から順に。全部できなくてもかまいません。1と3だけは先に。</p>
+
+    <div class="nstep">
+      <div class="nstep-n">1</div>
+      <div class="nstep-b">
+        <div class="nstep-t">けが人を助ける</div>
+        <div class="nstep-d">動かすと危ないことがあります。迷ったら <b class="tel">119</b> にかけて、指示を聞きながら。</div>
+      </div>
+    </div>
+
+    <div class="nstep">
+      <div class="nstep-n">2</div>
+      <div class="nstep-b">
+        <div class="nstep-t">後続車にぶつけられないようにする</div>
+        <div class="nstep-d">ハザード、発炎筒や停止表示器材、動かせる車は路肩へ。人は車の外・ガードレールの外側へ。</div>
+      </div>
+    </div>
+
+    <div class="nstep">
+      <div class="nstep-n">3</div>
+      <div class="nstep-b">
+        <div class="nstep-t">警察に電話する（<b class="tel">110</b>）</div>
+        <div class="nstep-d">交通事故を警察に報告することは、<b>道路交通法で決められた運転者の義務</b>です。
+          「呼ばなくていい」と言われても、呼んでください。</div>
+      </div>
+    </div>
+
+    <div class="nstep">
+      <div class="nstep-n">4</div>
+      <div class="nstep-b">
+        <div class="nstep-t">相手のことを控える</div>
+        <div class="nstep-d">口約束より、写真とメモ。免許証と車検証、保険証明書をスマホで撮らせてもらうのが早いです。</div>
+        <div class="memo">
+          <b>控えておくもの</b>
+          <ul>
+            <li>相手の氏名・住所・連絡先</li>
+            <li>車のナンバー（登録番号）</li>
+            <li>自賠責保険・共済の会社名と証明書番号</li>
+            <li>任意保険（自動車保険）の会社名と証券番号</li>
+            <li>仕事中だったなら、勤務先の名前・住所・連絡先</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="nstep">
+      <div class="nstep-n">5</div>
+      <div class="nstep-b">
+        <div class="nstep-t">見ていた人に声をかける</div>
+        <div class="nstep-d">名前と連絡先だけでも。あとで話が食い違ったときに効きます。ドライブレコーダーがあれば、映像を保存。</div>
+      </div>
+    </div>
+
+    <div class="nstep">
+      <div class="nstep-n">6</div>
+      <div class="nstep-b">
+        <div class="nstep-t">現場を写真に撮る</div>
+        <div class="nstep-d">車の位置、傷、ブレーキ痕、信号と標識、路面、周りの様子。広く1枚、近くで数枚。</div>
+      </div>
+    </div>
+
+    <div class="nstep">
+      <div class="nstep-n">7</div>
+      <div class="nstep-b">
+        <div class="nstep-t">その日のうちに病院へ</div>
+        <div class="nstep-d">痛くなくても行ってください。<b>受診が遅れると、事故とけがのつながりが認められないことがあります。</b></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="warn">
+    <b>その場で決めないこと</b>
+    相手やその場に来た人に言われても、<strong>書類に署名・押印しない、金銭の受け渡しをしない、示談の約束をしない。</strong>
+    けがの程度も、修理の額も、その日にはまだわかりません。
+    「警察は呼ばないでほしい」「物損（物件事故）でお願いしたい」と頼まれることがありますが、
+    報告は法律上の義務ですし、あとから困るのは届け出なかった側です。
+    連絡先を交換したら、その場ではそれで十分です。
+  </div>
+
+  <p class="lede">
+    ここから下は、落ち着いてからで間に合います。
+    <strong>事故にあった日</strong>を入れると、いま何日目で、次に何が来るのかが出ます。
+    広告も関連記事もありません。入れた日付とチェックは、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- 今日 -->
+  <section class="today">
+    <div class="eyebrow">きょうの位置</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">日付を入れてください</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <input type="date" id="dateIn" aria-label="事故にあった日">
+      <button class="solid" id="setBtn" type="button">この日から数える</button>
+      <button class="ghost" id="clearBtn" type="button" hidden>消す</button>
+    </div>
+    <p class="hint" id="hint">
+      入れた日付はこの端末のブラウザにだけ保存されます。サーバーには送られません。
+    </p>
+
+    <div class="track" id="track" hidden>
+      <div class="track-bar" id="trackBar">
+        <div class="track-seg" style="background:var(--p1)"></div>
+        <div class="track-seg" style="background:var(--p2)"></div>
+        <div class="track-seg" style="background:var(--p3)"></div>
+        <div class="track-seg" style="background:var(--p4)"></div>
+        <div class="track-pin" id="trackPin" style="left:0"></div>
+      </div>
+      <div class="track-scale">
+        <span>当日</span><span>2週間</span><span>3か月</span><span>1年</span><span>3年</span>
+      </div>
+    </div>
+
+    <div class="nextup" id="nextup">
+      <h4>つぎに来る期限</h4>
+      <div id="nextList"></div>
+    </div>
+  </section>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>順番にすること</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="時期"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 無保険・ひき逃げ -->
+  <section class="sec">
+    <h2>相手が無保険のとき、ひき逃げのとき</h2>
+    <p class="note">相手が自賠責に入っていない、相手がわからない。このときのために、国が最後に受け止める仕組みがあります。</p>
+    <div class="help">
+      <dl>
+        <dt>政府保障事業（国土交通省）</dt>
+        <dd>自賠責保険・共済の対象にならない<strong>ひき逃げ事故・無保険（共済）事故</strong>の被害者に対し、
+          自動車損害賠償保障法施行令で定める金額の範囲内で、国が損害を塡補する制度です。
+          健康保険や労災保険など<strong>ほかの社会保険の給付や、加害者本人からの支払いによってもなお損害が残る場合の、
+          最終的な救済措置</strong>と位置づけられています。</dd>
+        <dt>自賠責とちがうところ</dt>
+        <dd>①請求できるのは<strong>被害者だけ</strong>（加害者からは請求できません）。
+          ②健康保険・労災保険などの給付を受けるべき場合は、その分を差し引いて塡補されます。
+          ③支払った額を限度に、国が加害者に求償します。</dd>
+        <dt>どこに出すか</dt>
+        <dd>請求の受付は<strong>損害保険会社（共済組合）の窓口</strong>で行っています（保険代理店では受け付けていません）。
+          受付・支払・調査は損害保険会社等に委託され、<strong>審査と決定は国が行います。</strong></dd>
+        <dt>期限</dt>
+        <dd>政府保障事業への請求権は、<strong>行使することができる時から3年</strong>で時効により消滅します
+          （自動車損害賠償保障法第75条）。</dd>
+        <dt>先にすること</dt>
+        <dd>請求の前に、<strong>必ず警察への届出を。</strong>届出がないと交通事故証明書が出ず、手続きが進みません。</dd>
+      </dl>
+      <span class="src">国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/public_payment/index.html" target="_blank" rel="noopener">政府保障事業</a>」／「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/faq/index.html" target="_blank" rel="noopener">よくあるご質問</a>」／e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/330AC0000000097" target="_blank" rel="noopener">自動車損害賠償保障法</a>」第72条・第75条</span>
+    </div>
+  </section>
+
+  <!-- 加害者になったとき -->
+  <section class="sec">
+    <h2>加害者になってしまったとき</h2>
+    <p class="note">
+      事故のあとは、<strong>刑事（罪に問われるか）・行政（免許）・民事（賠償）</strong>の3つが、それぞれ別に進みます。
+      どれも、最初にすることは同じです。
+    </p>
+    <div class="help">
+      <dl>
+        <dt>その場を去らない</dt>
+        <dd>運転者は、直ちに運転を停止して、<strong>負傷者を救護し、道路における危険を防止する等必要な措置</strong>を
+          講じなければなりません（道路交通法第72条第1項前段）。
+          これに違反すると<strong>5年以下の拘禁刑または50万円以下の罰金</strong>、
+          死傷がその運転に起因するものであるときは<strong>10年以下の拘禁刑または100万円以下の罰金</strong>です
+          （同法第117条）。</dd>
+        <dt>警察に報告する</dt>
+        <dd>現場に警察官がいればその警察官に、いなければ直ちに最寄りの警察署の警察官に、
+          事故の日時・場所、死傷者の数と負傷の程度、壊れた物とその程度、積載物、講じた措置を報告します
+          （同法第72条第1項後段）。報告しなかった場合は<strong>3月以下の拘禁刑または5万円以下の罰金</strong>
+          （同法第119条第1項第17号）。</dd>
+        <dt>免許の行政処分</dt>
+        <dd>免許の停止・取消しは、刑事の手続きとは別に、<strong>点数制度にもとづいて公安委員会が決めます。</strong>
+          その量定の基準は警察庁が示しています。自分の事故が何点になるかは、警察に聞いてください。</dd>
+        <dt>任意保険の会社に連絡する</dt>
+        <dd>けが人がいる事故は、自分の判断で相手と話をまとめようとせず、まず保険会社に連絡してください。
+          自賠責の範囲を超えた部分の賠償や、示談の代行に関わるのは保険会社です。
+          （このdd項目は制度の断定ではなく、段取りの提案です。契約内容は証券と保険会社に確認してください。）</dd>
+        <dt>被害者への連絡</dt>
+        <dd>謝罪や見舞いをどうするかは、事案によります。
+          示談・賠償の約束は、<strong>保険会社や弁護士と相談してから。</strong>
+          その場の善意で結んだ約束が、あとで双方の負担になることがあります。</dd>
+      </dl>
+      <span class="src">e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/335AC0000000105" target="_blank" rel="noopener">道路交通法</a>」第72条・第117条・第119条／警察庁「<a href="https://www.npa.go.jp/pdc/model/shobun/data/05-13b.pdf" target="_blank" rel="noopener">運転免許の効力の停止等の処分量定基準</a>」</span>
+    </div>
+  </section>
+
+  <!-- 期限一覧 -->
+  <section class="sec">
+    <h2>期限の一覧</h2>
+    <p class="note">
+      起算点は手続きごとに違います。とくに自賠責の3年は、けがと後遺障害と死亡で数えはじめる日が変わります。
+    </p>
+    <div class="table" id="deadlineTable"></div>
+  </section>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>相談できるところ</h2>
+    <p class="note">
+      どれも公的な窓口や、国が関わる機関です。相談は無料のものが中心です。
+      電話番号は国土交通省のページに載っているものを写しています。
+    </p>
+    <div class="help">
+      <dl>
+        <dt>どこに聞けばいいかわからないとき</dt>
+        <dd>（独）自動車事故対策機構（ナスバ）の<strong>交通事故被害者ホットライン</strong>
+          <span class="dial">0570-000738</span>（土日祝・年末年始を除く 10:00〜12:00、13:00〜16:00）。
+          法律・お金・介護など、困りごとに応じて相談先を案内してくれます。</dd>
+        <dt>都道府県・政令指定都市の交通事故相談所</dt>
+        <dd>示談、損害賠償請求、過失割合、保険。専門の相談員が公正・中立な立場で助言します。
+          連絡先は、お住まいの都道府県・市区町村の交通事故担当部署へ。</dd>
+        <dt>弁護士に無料で相談したい</dt>
+        <dd>（公財）日弁連交通事故相談センター　電話相談 <span class="dial">0120-078325</span>
+          （平日10:00〜19:00、1人10分程度）。全国154か所（令和8年4月1日現在）の相談所で面接相談も無料です。
+          話がつかないときの<strong>示談あっ旋・審査</strong>も無料で行っています。</dd>
+        <dt>相手の保険会社と話がまとまらない</dt>
+        <dd>（公財）交通事故紛争処理センター。被害者と、加害者が契約する保険会社との示談をめぐる紛争について、
+          中立公正な立場で法律相談・和解あっ旋・審査を行います。
+          <strong>電話での相談は受けておらず、面接相談の予約が必要です。</strong>
+          東京本部 <span class="dial">03-3346-1756</span> のほか、札幌・仙台・名古屋・大阪・広島・高松・福岡に支部、
+          さいたま・金沢・静岡に相談室があります。</dd>
+        <dt>自賠責の支払額・後遺障害等級に納得がいかない</dt>
+        <dd>（一財）自賠責保険・共済紛争処理機構　<span class="dial">03-6825-6022</span>
+          （土日祝・年末年始を除く 9:00〜12:00、13:00〜17:00）。
+          国の指定を受けた第三者機関で、弁護士・医師・学識経験者からなる紛争処理委員が調停を行います。</dd>
+        <dt>損害保険会社とのトラブル</dt>
+        <dd>（一社）日本損害保険協会の<strong>そんぽADRセンター</strong>　<span class="dial">03-4332-5241</span>（全国共通、
+          平日9:15〜17:00）。保険業法にもとづく指定紛争解決機関として、苦情の受付と紛争解決の支援（和解案の提示等）を行います
+          （協会と手続実施基本契約を結んでいる損害保険会社が対象です）。</dd>
+        <dt>制度や相談窓口そのものを知りたい</dt>
+        <dd>日本司法支援センター（法テラス）の<strong>犯罪被害者支援ダイヤル</strong>
+          <span class="dial">0120-079714</span>（平日9:00〜21:00、土曜9:00〜17:00）。
+          制度の情報提供、相談窓口の案内、犯罪被害者支援の経験のある弁護士の紹介をしています。</dd>
+        <dt>重い後遺障害が残った／お子さんが残された</dt>
+        <dd>（独）自動車事故対策機構（ナスバ）が、療護施設での治療・看護、在宅介護への介護料の支給、
+          短期入院・入所の受け入れ、交通遺児等への生活資金の無利子貸付などを行っています。
+          本部 <span class="dial">03-5608-7560</span>、各地に主管支所・支所があります。</dd>
+      </dl>
+      <span class="src">国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/accident/consultation/index.html" target="_blank" rel="noopener">相談先にお困りのときは？</a>」／「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/jikotai/victim_support/index.html" target="_blank" rel="noopener">被害者支援</a>」</span>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        ここに書いてあるのは<strong>一般的な流れと、法令・告示で決まっていること</strong>です。
+        実際にどうなるかは、けがの程度、過失の割合、加入している保険、仕事中だったかどうかで変わります。
+      </p>
+      <p style="margin:0 0 10px">
+        制度・金額・期限は<strong>警察庁・国土交通省・厚生労働省・全国健康保険協会・e-Gov法令検索</strong>で確認して書き、
+        その項目に出典リンクを置いています。出典のない記述は、段取りの提案です。
+      </p>
+      <div class="nogo">
+        <b>このページが書かないこと</b>
+        <strong>示談金や慰謝料の「相場」、賠償額の計算方法は書きません。</strong>
+        民間でよく紹介されている計算の基準には公的な出典がなく、
+        断定すると、読んだ人がそれを前提に動いてしまいます。
+        このページで金額を扱うのは、<strong>国が告示で定めた自賠責の支払基準と支払限度額</strong>に限っています。
+        自分の場合にいくらになるかは、上の相談先か、弁護士に聞いてください。
+        <br><br>
+        同じ理由で、<strong>「こうすべきだ」という助言もしません。</strong>
+        制度上どうなっているかを書いて、判断は読む人と専門家に委ねます。
+      </div>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/335AC0000000105" target="_blank" rel="noopener">道路交通法</a>」（第72条 交通事故の場合の措置、第117条、第119条第1項第17号）</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/330AC0000000097" target="_blank" rel="noopener">自動車損害賠償保障法</a>」（第16条 被害者請求、第17条 仮渡金、第19条 時効、第72条 政府保障事業、第75条 時効）</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/330CO0000000286" target="_blank" rel="noopener">自動車損害賠償保障法施行令</a>」（第5条 仮渡金の金額）</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/215M10000008036" target="_blank" rel="noopener">健康保険法施行規則</a>」第65条／「<a href="https://laws.e-gov.go.jp/law/333M50000100053" target="_blank" rel="noopener">国民健康保険法施行規則</a>」第32条の6（第三者の行為による被害の届出）</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/322AC0000000050" target="_blank" rel="noopener">労働者災害補償保険法</a>」第42条（時効）</li>
+      <li>国土交通省 自賠責保険・共済ポータルサイト「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/accident/correspondence/index.html" target="_blank" rel="noopener">交通事故にあったらまずどうする？</a>」</li>
+      <li>国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/accident/nopolicyholder/index.html" target="_blank" rel="noopener">損害賠償を受けるときは？</a>」（限度額、請求方法、請求期限、一括払制度）</li>
+      <li>国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/about/procedure/index.html" target="_blank" rel="noopener">支払までの流れと請求方法</a>」／「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/about/proper/index.html" target="_blank" rel="noopener">支払に疑問、不服がある場合には</a>」</li>
+      <li>国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/faq/index.html" target="_blank" rel="noopener">よくあるご質問</a>」（支払限度額、時効の起算点、過失による減額、休業損害の日額）</li>
+      <li>国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/public_payment/index.html" target="_blank" rel="noopener">政府保障事業</a>」／「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/jikotai/victim_support/index.html" target="_blank" rel="noopener">被害者支援</a>」／「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/accident/consultation/index.html" target="_blank" rel="noopener">相談先にお困りのときは？</a>」</li>
+      <li>金融庁・国土交通省告示「<a href="https://www.mlit.go.jp/jidosha/anzen/04relief/resourse/data/kijyun.pdf" target="_blank" rel="noopener">自動車損害賠償責任保険の保険金等及び自動車損害賠償責任共済の共済金等の支払基準</a>」（平成13年金融庁・国土交通省告示第1号）</li>
+      <li>全国健康保険協会「<a href="https://www.kyoukaikenpo.or.jp/benefit/accident/" target="_blank" rel="noopener">第三者行為による傷病届</a>」（届出が必要となる理由、添付書類、人身事故証明書入手不能理由書、示談の注意）</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/new-info/kobetu/roudou/gyousei/rousai/040324-10.html" target="_blank" rel="noopener">第三者行為災害のしおり</a>」（第三者行為災害届、求償と控除）</li>
+      <li>警察庁「<a href="https://www.npa.go.jp/pdc/model/shobun/data/05-13b.pdf" target="_blank" rel="noopener">運転免許の効力の停止等の処分量定基準</a>」／「<a href="https://www.npa.go.jp/bureau/traffic/jikosupport/index.html" target="_blank" rel="noopener">交通事故被害者サポート事業</a>」</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した日付とチェックは、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    内容の正確性には努めていますが、最終的な判断は各窓口・専門家の案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 一次情報で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「段取りの提案」であって、制度の断定ではない）
+
+   このノートでは、示談金・慰謝料の相場や計算基準は扱わない。
+   金額を書くのは、国が告示で定めた自賠責の支払基準・支払限度額だけ。
+   ============================================================ */
+
+var SRC_DOUKOU  = 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/335AC0000000105" target="_blank" rel="noopener">道路交通法</a>」';
+var SRC_JIBAI   = 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/330AC0000000097" target="_blank" rel="noopener">自動車損害賠償保障法</a>」';
+var SRC_MLIT_1  = '国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/accident/correspondence/index.html" target="_blank" rel="noopener">交通事故にあったらまずどうする？</a>」';
+var SRC_MLIT_2  = '国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/accident/nopolicyholder/index.html" target="_blank" rel="noopener">損害賠償を受けるときは？</a>」';
+var SRC_MLIT_3  = '国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/faq/index.html" target="_blank" rel="noopener">よくあるご質問</a>」';
+var SRC_MLIT_4  = '国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/about/proper/index.html" target="_blank" rel="noopener">支払に疑問、不服がある場合には</a>」';
+var SRC_MLIT_5  = '国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/about/procedure/index.html" target="_blank" rel="noopener">支払までの流れと請求方法</a>」';
+var SRC_KENPO   = '全国健康保険協会「<a href="https://www.kyoukaikenpo.or.jp/benefit/accident/" target="_blank" rel="noopener">第三者行為による傷病届</a>」';
+var SRC_ROUSAI  = '厚生労働省「<a href="https://www.mhlw.go.jp/new-info/kobetu/roudou/gyousei/rousai/040324-10.html" target="_blank" rel="noopener">第三者行為災害のしおり</a>」';
+var SRC_KIJYUN  = '金融庁・国土交通省告示「<a href="https://www.mlit.go.jp/jidosha/anzen/04relief/resourse/data/kijyun.pdf" target="_blank" rel="noopener">自賠責保険の支払基準</a>」（平成13年告示第1号）';
+
+var STAGES = [
+  {
+    id: "s1", phase: "p1", chip: "当日〜3日", chipSub: "警察と病院",
+    from: 0, to: 4,
+    tag: "最初の数日",
+    title: "届け出と、受診",
+    lead: "この時期にすることは2つだけです。<strong>警察に届け出ること</strong>と、" +
+          "<strong>病院にかかること</strong>。保険やお金の話は、あとで間に合います。" +
+          "体が痛むなら、そちらを先にしてください。",
+    tasks: [
+      {
+        id: "j-keisatsu", title: "警察に届け出る", due: "直ちに", hard: true,
+        body: "<p>交通事故があったとき、運転者その他の乗務員は" +
+              "<strong>直ちに運転を停止して、負傷者を救護し、道路における危険を防止する等必要な措置</strong>を" +
+              "講じなければなりません。そのうえで運転者は、警察官が現場にいるときはその警察官に、" +
+              "いないときは<strong>直ちに最寄りの警察署</strong>（派出所・駐在所を含む）の警察官に報告します。</p>" +
+              "<p>報告する中身も条文で決まっています。" +
+              "事故が発生した日時と場所、死傷者の数と負傷の程度、壊れた物とその程度、" +
+              "事故にあった車両等の積載物、事故について講じた措置。</p>" +
+              "<p>これは<strong>運転者の義務</strong>であって、相手との相談ごとではありません。" +
+              "「警察は呼ばないでほしい」と言われても、呼んでください。</p>",
+        where: "<b>連絡先</b>　110番（けが人がいるときは先に119番）",
+        src: SRC_DOUKOU + "第72条第1項"
+      },
+      {
+        id: "j-jushin", title: "その日のうちに病院に行く",
+        body: "<p>国土交通省のページには、こう書かれています。" +
+              "「その場では軽傷だと思っても、あとで意外とケガが重かったという例もあります。速やかに医師の診断等を受けましょう。" +
+              "<strong>事故後、速やかに受診をしない場合には、交通事故との因果関係が認められないことがあります。</strong>」</p>" +
+              "<p>むち打ちのように、翌日・翌々日に出てくる症状があります。" +
+              "整形外科など医師のいるところで、いつ・どこで・どうなったかを伝えて、記録に残してもらってください。</p>",
+        src: SRC_MLIT_1
+      },
+      {
+        id: "j-kiroku", title: "相手と現場の記録を残す",
+        body: "<p>控えておくものとして挙げられているのは、" +
+              "<strong>加害車両の登録ナンバー、加害者の住所・氏名・連絡先、" +
+              "加害者が加入している自賠責保険・共済および自動車保険会社（共済組合）名と証明書番号</strong>。" +
+              "相手が業務中であれば、<strong>勤務先と雇主の住所・氏名・連絡先</strong>も。" +
+              "業務中に従業員が事故を起こせば、運転者だけでなく雇主も賠償責任を負うことがあります。</p>" +
+              "<p>目撃者がいれば証言をメモし、氏名と連絡先を聞いておく。" +
+              "ドライブレコーダーがあれば映像を保存する。" +
+              "記憶は薄れるので、現場の見取図や経過、写真を、記憶が鮮明なうちに残す。" +
+              "<strong>記録は賠償交渉が終わるまで取っておく</strong>ことがすすめられています。</p>",
+        src: SRC_MLIT_1,
+        share: "写真を撮る人、相手の情報を控える人、救急に電話する人。家族や同乗者がいるなら、声に出して分担すると早いです。"
+      },
+      {
+        id: "j-jibun-hoken", title: "自分が入っている保険にも連絡する",
+        body: "<p>相手の保険からの賠償とは別に、自分が契約している自動車保険や、" +
+              "家族の保険の特約が使えることがあります。証券を出すか、保険会社に電話して、" +
+              "<strong>この事故で使えるものがあるかを聞いてください。</strong></p>" +
+              "<p>被害者側でも、自分の保険会社に事故を伝えておくと、あとの手続きが楽になることがあります。" +
+              "（ここは制度の断定ではなく、段取りの提案です。使えるかどうかは契約ごとに違います。）</p>"
+      }
+    ]
+  },
+
+  {
+    id: "s2", phase: "p1", chip: "〜2週間", chipSub: "人身事故に",
+    from: 4, to: 15,
+    tag: "最初の2週間",
+    title: "人身事故として整え、届出を出す",
+    lead: "ここでつまずく人がいちばん多いところです。" +
+          "<strong>けがをしているのに「物損（物件事故）」のまま進んでしまう。</strong>" +
+          "そして、<strong>交通事故では健康保険が使えない</strong>という誤解。どちらも、ここで直せます。",
+    tasks: [
+      {
+        id: "j-shoumei", title: "交通事故証明書を取る",
+        body: "<p>交通事故にあったことを公的機関が唯一証明する書面が、" +
+              "<strong>自動車安全運転センターが発行する「交通事故証明書」</strong>です。" +
+              "自賠責の請求をはじめ、あちこちの手続きで求められます。</p>" +
+              "<p>この証明書には、<strong>当事者の自賠責損害保険会社（共済組合）と証明書番号が記載されています。</strong>" +
+              "相手の自賠責がどこかわからないときは、まずこれを取ってください。</p>" +
+              "<p><strong>警察に届出をしていない事故については交付されません。</strong>" +
+              "また、人身事故の場合、<strong>事故発生から5年が経過すると原則として交付されません。</strong>" +
+              "すぐに必要がなくても、取っておくことがすすめられています。</p>",
+        where: "<b>申請書のある場所</b>　自動車安全運転センター事務所、警察署、交番、駐在所、損害保険会社（共済組合）など<br>" +
+               "<b>申込方法</b>　郵送・窓口・インターネット",
+        src: SRC_MLIT_1 + "／" + SRC_MLIT_3
+      },
+      {
+        id: "j-jinshin", title: "物件事故のままになっていたら、人身事故の扱いを相談する", hard: true, due: "早いほど",
+        body: "<p>国土交通省のページは、警察への届出について" +
+              "<strong>「特にケガを負った場合は『人身扱い』の届出が重要です」</strong>と書いています。</p>" +
+              "<p>事故の直後に「たいしたことはない」と答えて物件事故で処理され、" +
+              "あとから痛みが出てくる——これがよくある流れです。" +
+              "医師の診断書を持って、届け出た警察署に相談してください。" +
+              "扱いを変えられるかどうかは警察の判断で、日が経つほど難しくなります。" +
+              "（この段落は段取りの提案です。）</p>" +
+              "<h4 style=\"font-size:13px;margin:10px 0 2px\">人身事故証明書入手不能理由書</h4>" +
+              "<p>交通事故証明書が<strong>「物件事故」のまま</strong>でも、道が閉ざされるわけではありません。" +
+              "健康保険に第三者行為の届出をするとき、協会けんぽは" +
+              "<strong>「その際、『物件事故』となっている場合は、届出等様式にある『人身事故証明書入手不能理由書』が必要となります」</strong>" +
+              "としています。物件事故のままで人身の補償を受けるための、実務上の書類です。</p>" +
+              "<p>様式は健康保険の届出書類一式に含まれています。書き方や、誰が署名するのかは、" +
+              "提出先（協会けんぽ・健康保険組合・市区町村）や保険会社に確認してください。</p>",
+        src: SRC_MLIT_1 + "／" + SRC_KENPO,
+        share: "診断書を取りに行く人と、警察署に行く人は、別でもかまいません。警察署は平日の日中しか動かないことが多いので、動ける人が担当すると早いです。"
+      },
+      {
+        id: "j-kenpo", title: "健康保険を使うなら「第三者行為による傷病届」", due: "遅滞なく", hard: true,
+        body: "<p><strong>「交通事故では健康保険が使えない」というのは誤解です。</strong>" +
+              "協会けんぽは、こう書いています。" +
+              "「自動車事故等の第三者行為によりケガをしたときの治療費は、本来、加害者が負担するのが原則です。" +
+              "しかし、<strong>業務上や通勤災害によるものでなければ、健康保険を使って治療を受けることができます</strong>が、" +
+              "この場合、加害者が支払うべき治療費を健康保険が立て替えて支払うこととなります。」</p>" +
+              "<p>立て替えた分を、あとで保険者が加害者側に請求します。そのために必要なのが" +
+              "<strong>「第三者行為による傷病届」</strong>です。届出は法令上の義務でもあります" +
+              "（健康保険法施行規則第65条、国民健康保険法施行規則第32条の6）。</p>" +
+              "<p>届書がすぐ出せないときは、まず電話で事故の状況を知らせ、あとから書類を出せばよいとされています。</p>" +
+              "<p><strong>過失が自分のほうに大きくても、届出は必要です。</strong>" +
+              "書類上「被害者」とあるのは、過失の大小ではなく、けがをした被保険者のことです。</p>",
+        where: "<b>出す先</b>　協会けんぽの都道府県支部／加入している健康保険組合／市区町村の国民健康保険の窓口<br>" +
+               "<b>おもな書類</b>　第三者行為による傷病届、事故発生状況報告書、同意書、交通事故証明書" +
+               "（物件事故の場合は人身事故証明書入手不能理由書）",
+        src: SRC_KENPO + '／e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/215M10000008036" target="_blank" rel="noopener">健康保険法施行規則</a>」第65条・' +
+             '「<a href="https://laws.e-gov.go.jp/law/333M50000100053" target="_blank" rel="noopener">国民健康保険法施行規則</a>」第32条の6'
+      },
+      {
+        id: "j-rousai", title: "仕事中・通勤中の事故なら、健康保険ではなく労災", hard: true,
+        body: "<p>協会けんぽは「<strong>負傷の原因が仕事中または通退勤途上の負傷であれば労災保険の給付対象となりますので、" +
+              "健康保険での給付はできません</strong>（この場合は労災保険への手続きとなります）」としています。" +
+              "営業中の事故は業務災害、通勤の行き帰りの事故は通勤災害です。</p>" +
+              "<p>相手がいる事故で労災を使うときは、労働基準監督署に<strong>「第三者行為災害届」</strong>を出します。" +
+              "労災保険給付の請求書の提出前、または同時に出すことになっています。</p>" +
+              "<p>労災保険の給付と、加害者からの損害賠償が同じ事由で重なる場合は、" +
+              "<strong>求償（国が加害者に請求する）と控除（賠償を受けた分を給付から差し引く）</strong>という方法で調整されます。" +
+              "二重には受け取れない、ということです。</p>" +
+              "<p>会社が「労災は使わないでほしい」と言うことがありますが、" +
+              "労災にするかどうかは会社が決めることではありません。迷ったら労働基準監督署に聞いてください。</p>",
+        where: "<b>出す先</b>　勤務先を管轄する労働基準監督署（手続きは勤務先経由が一般的です）<br>" +
+               "<b>相談</b>　労災保険相談ダイヤル 0570-006031",
+        src: SRC_ROUSAI + "／" + SRC_KENPO
+      },
+      {
+        id: "j-kaisha", title: "勤務先に伝える",
+        body: "<p>通院で抜ける日が出ます。休業の扱い、有給を使うかどうか、労災にあたるかどうか。" +
+              "早めに伝えておくと、あとで書類をさかのぼって直す手間が減ります。</p>" +
+              "<p>自営業・フリーランスの場合は、休んだことと減った収入がわかるもの" +
+              "（帳簿、取引先とのやりとり、確定申告書の控え）を残しておいてください。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "s3", phase: "p2", chip: "治療中", chipSub: "お金の流れ",
+    from: 15, to: 180,
+    tag: "治療が続いている間",
+    title: "自賠責と任意保険の順番、そして示談を急がない",
+    lead: "自賠責は<strong>人身の損害だけ</strong>を、国が決めた基準で、限度額まで払う保険です。" +
+          "それを超える分と、壊れた物の損害は任意保険（自動車保険）の話になります。" +
+          "この順番がわかると、いま誰と何を話しているのかが見えます。",
+    tasks: [
+      {
+        id: "j-junban", title: "自賠責が下、任意保険が上",
+        body: "<p>国土交通省の説明はこうです。「自動車保険（共済）〔任意保険〕では対人賠償に関し、" +
+              "<strong>自賠責保険・共済の補償範囲までは自賠責保険・共済による保険金の支払いが行われ、" +
+              "任意保険は自賠責の補償範囲を超えた部分に限って、保険金の支払いが行われております。</strong>」</p>" +
+              "<p>そして<strong>自賠責の対象は人身事故による損害だけ</strong>です。" +
+              "車の修理代は、自動車のみならず、洋服や自転車といった物的損害も含めて、支払の対象になりません。" +
+              "物損は任意保険の話になります。</p>" +
+              "<h4 style=\"font-size:13px;margin:10px 0 2px\">一括払制度</h4>" +
+              "<p>多くの場合、相手の<strong>任意保険の会社が、自賠責の分も含めてまとめて支払い</strong>、" +
+              "あとで自賠責の会社に請求します。これを一括払制度といいます。" +
+              "だから被害者は、ふつう自賠責に別途請求する必要がありません。" +
+              "窓口が任意保険の会社ひとつになるのは、このためです。</p>",
+        src: SRC_MLIT_3 + "／" + SRC_MLIT_2
+      },
+      {
+        id: "j-gendo", title: "自賠責の限度額と、国が決めた支払基準",
+        body: "<p>自賠責で支払われる限度額は、被害者1名につき次のとおりです。</p>" +
+              "<ul>" +
+              "<li><strong>傷害による損害　120万円</strong>（治療関係費、文書料、休業損害、慰謝料）</li>" +
+              "<li><strong>後遺障害による損害　4,000万円〜75万円</strong>" +
+              "（介護を要する後遺障害は第1級4,000万円・第2級3,000万円、それ以外は第1級3,000万円〜第14級75万円）</li>" +
+              "<li><strong>死亡による損害　3,000万円</strong>（葬儀費、逸失利益、本人と遺族の慰謝料）</li>" +
+              "</ul>" +
+              "<p>支払額は、損害保険会社が勝手に決めているのではなく、" +
+              "<strong>国土交通大臣および内閣総理大臣が定める支払基準（告示）に従って</strong>支払わなければならない、" +
+              "と法律で決められています。</p>" +
+              "<p>わかっている数字を2つだけ。" +
+              "<strong>休業損害は原則として1日につき6,100円</strong>、" +
+              "これ以上に収入が減った立証があるときは19,000円を限度にその実額。" +
+              "そして<strong>被害者の過失割合が70%以上でなければ減額しない</strong>ことになっています。</p>" +
+              "<p>限度額を超えた損害は、加害者（が契約する任意保険）に請求することになります。</p>",
+        where: "<b>このページが書かないこと</b>　示談金や慰謝料の「相場」、民間で使われている算定基準。" +
+               "公的な出典がないため扱いません。金額の見込みは弁護士などに聞いてください",
+        src: SRC_MLIT_3 + "／" + SRC_MLIT_2 + "／" + SRC_KIJYUN
+      },
+      {
+        id: "j-higaisha", title: "相手側から支払われないときは、被害者請求",
+        body: "<p>自賠法第16条第1項は、保有者の損害賠償の責任が発生したとき、" +
+              "<strong>被害者は保険会社に対し、保険金額の限度において、損害賠償額の支払をなすべきことを請求することができる</strong>" +
+              "と定めています。これが<strong>被害者請求</strong>です。" +
+              "加害者を通さずに、相手の自賠責の会社へ直接請求できます。</p>" +
+              "<p>相手が賠償に応じない、任意保険の担当者と話が合わない、一括払いをやめて自分で進めたい。" +
+              "こうしたときに使えます。ただし一括払いを解除した場合、" +
+              "<strong>すでに支払われている治療費等は控除され、残りの損害について支払われます。</strong></p>" +
+              "<p>総損害額が確定する前でも、<strong>限度額の範囲内で何度でも請求できます。</strong></p>",
+        where: "<b>出す先</b>　加害者が加入している自賠責の損害保険会社（共済組合）<br>" +
+               "<b>相手の自賠責がわからないとき</b>　交通事故証明書に会社名と証明書番号が載っています<br>" +
+               "<b>おもな書類</b>　診断書、診療報酬明細書、交通事故証明書、事故発生状況報告書、印鑑証明書など",
+        src: SRC_JIBAI + "第16条／" + SRC_MLIT_5 + "／" + SRC_MLIT_3
+      },
+      {
+        id: "j-karidashi", title: "当面のお金が要るときは、仮渡金", due: "遅滞なく支払われる", soft: true,
+        body: "<p>自賠法第17条にもとづく制度です。被害者は保険会社に対し、" +
+              "損害賠償額の支払のための<strong>仮渡金</strong>を請求でき、" +
+              "保険会社は請求があったときは<strong>遅滞なく</strong>支払わなければならないとされています。</p>" +
+              "<p>金額は政令（自賠法施行令第5条）で決まっています。</p>" +
+              "<ul>" +
+              "<li><strong>死亡　290万円</strong></li>" +
+              "<li><strong>40万円</strong>　脊柱の骨折で脊髄を損傷したと認められる症状を有するもの、" +
+              "上腕・前腕の骨折で合併症を有するもの、大腿・下腿の骨折、内臓の破裂で腹膜炎を併発したもの、" +
+              "14日以上の入院を要する傷害で医師の治療を要する期間が30日以上のもの</li>" +
+              "<li><strong>20万円</strong>　脊柱の骨折、上腕・前腕の骨折、内臓の破裂、" +
+              "入院を要する傷害で治療期間30日以上のもの、14日以上の入院を要する傷害</li>" +
+              "<li><strong>5万円</strong>　11日以上医師の治療を要する傷害</li>" +
+              "</ul>" +
+              "<p>仮渡金が、あとで確定した損害賠償額を超えたときは、超えた分の返還を求められます。</p>",
+        src: SRC_JIBAI + '第17条／e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/330CO0000000286" target="_blank" rel="noopener">自動車損害賠償保障法施行令</a>」第5条／' + SRC_MLIT_3
+      },
+      {
+        id: "j-jidan", title: "治療が終わる前に、示談しない", hard: true, due: "とくに注意",
+        body: "<p>これは実務上、いちばん取り返しがつかないところです。" +
+              "協会けんぽは、健康保険に届け出るときの同意事項として、" +
+              "<strong>加害者と示談する場合は事前に報告すること、白紙委任状を渡さないこと、" +
+              "金品を受け取った場合は必ず報告すること</strong>を挙げています。" +
+              "理由は「立て替え分の治療費が加害者に請求できなくなることを防ぐため」です。</p>" +
+              "<p>協会けんぽの支部は、具体例としてこう注意しています。" +
+              "<strong>健康保険で治療を受けている間に示談が成立し、治療費用を含む賠償金を受け取った場合、" +
+              "その日以降は健康保険で治療を受けられなくなる</strong>——" +
+              "症状が固定せず治療が長引いても、全額自己負担になる、と。</p>" +
+              "<p>だから、書類にサインを求められたら、<strong>その場で書かない。</strong>" +
+              "持ち帰って、保険者（協会けんぽ・健保組合・市区町村）と、必要なら相談窓口に確認してから。" +
+              "急がせる理由がある側と、急ぐ理由がない側がいます。</p>",
+        src: SRC_KENPO,
+        share: "書類を受け取る係と、内容を確かめる係を分けると、その場で押し切られにくくなります。"
+      },
+      {
+        id: "j-kyugyo", title: "仕事を休んだとき",
+        body: "<p>使える道が3つあり、<strong>同じ事由について重ねて受け取ることはできません。</strong></p>" +
+              "<ul>" +
+              "<li><strong>自賠責の休業損害</strong>　原則1日6,100円。" +
+              "それ以上に収入が減った立証があれば19,000円を限度に実額。</li>" +
+              "<li><strong>労災の休業（補償）給付</strong>　仕事中・通勤中の事故のとき。" +
+              "損害賠償と重なる部分は、求償と控除で調整されます。</li>" +
+              "<li><strong>健康保険の傷病手当金</strong>　業務外の事故で働けないとき。" +
+              "第三者行為の場合は届出が必要で、損害賠償との間で調整されます。" +
+              "支給の要件と調整の中身は、加入している保険者に確認してください。</li>" +
+              "</ul>" +
+              "<p>どれになるかは、事故が仕事中だったか、加入している保険が何か、で決まります。" +
+              "自分で決めずに、勤務先と保険者に聞くのが確実です。</p>",
+        src: SRC_MLIT_3 + "／" + SRC_ROUSAI + "／" + SRC_KENPO
+      },
+      {
+        id: "j-tsuuin", title: "通院の記録を自分でも残す",
+        body: "<p>行った日、かかった時間、交通手段と費用、症状の変化。" +
+              "あとから思い出して書くのは難しく、書いていないことは「なかったこと」として扱われがちです。</p>" +
+              "<p>領収書は全部取っておいてください。" +
+              "通院交通費や文書料も、自賠責の傷害による損害の補償内容に挙げられています。</p>" +
+              "<p>けがそのものの手続き（高額療養費、傷病手当金など）は、" +
+              "同じ作りの<a href=\"%%NOTE:illness%%\">病気・けがのノート</a>にまとめていく予定です。</p>",
+        src: SRC_MLIT_2
+      }
+    ]
+  },
+
+  {
+    id: "s4", phase: "p3", chip: "症状固定", chipSub: "後遺障害",
+    from: 180, to: 1000,
+    tag: "症状が落ち着いてきたころ",
+    title: "症状固定と、後遺障害の等級",
+    lead: "治療を続けても、これ以上はよくならない。そう医師が判断したときを<strong>症状固定</strong>といいます。" +
+          "ここで治療費の区切りがつき、残った障害は<strong>後遺障害</strong>として別に評価されます。" +
+          "この切り替わりを知らないまま進むと、あとで困ることがあります。",
+    tasks: [
+      {
+        id: "j-kotei", title: "症状固定とは何か",
+        body: "<p>国土交通省の定義はこうです。" +
+              "「<strong>症状が安定し、医学上一般に認められた医療を行ってもその医療効果が期待できなくなった時をいい、" +
+              "医師により判断されます。</strong>」</p>" +
+              "<p>大事なのは、この日が<strong>時効の起算点にもなる</strong>ことです。" +
+              "後遺障害についての被害者請求は、症状固定日の翌日から3年。</p>" +
+              "<p>そして、<strong>後遺障害の症状固定後の治療費は、自賠責では認定されません。</strong>" +
+              "症状固定は「治療をやめなさい」という意味ではありませんが、" +
+              "そのあとの治療費の扱いは変わります。</p>" +
+              "<p>いつを症状固定とするかは医師の判断です。" +
+              "保険会社から治療の打ち切りを打診されることがありますが、" +
+              "打ち切りの打診と、医師の症状固定の判断は、別のものです。</p>",
+        src: SRC_MLIT_2 + "／" + SRC_MLIT_3
+      },
+      {
+        id: "j-toukyuu", title: "後遺障害の等級認定",
+        body: "<p>自賠責でいう後遺障害は、「当該事故において、傷害が治ったときに残存する当該傷害と相当因果関係を有し、" +
+              "かつ、将来においても回復が困難と見込まれる精神的又は身体的な障害の存在が" +
+              "<strong>医学的に認められる場合</strong>」とされています。</p>" +
+              "<p>支払は、<strong>医師の後遺障害診断書にもとづき、一定の手続きのもとで後遺障害として認定された場合に、" +
+              "等級に応じた金額</strong>が支払われます。" +
+              "限度額は第1級（別表第一）4,000万円から第14級（別表第二）75万円まで。</p>" +
+              "<p>つまり、後遺障害診断書の中身が結果を左右します。" +
+              "症状、検査の結果、日常生活でできなくなったことを、" +
+              "<strong>医師に具体的に伝えて書いてもらう</strong>ことが要になります。" +
+              "（この段落は段取りの提案です。）</p>",
+        src: SRC_MLIT_3 + "／" + SRC_MLIT_2
+      },
+      {
+        id: "j-igi", title: "認定に納得できないときの、異議申立て", hard: true, due: "3つの道",
+        body: "<p>認定された等級や支払額に納得できないとき、道は3つあります。</p>" +
+              "<p><strong>① 異議申立て</strong>　" +
+              "損害保険会社（共済組合）に対して行います。" +
+              "異議申立事案は、<strong>損害保険料率算出機構に設置された自賠責保険（共済）審査会において、" +
+              "外部の専門家が参加して審査</strong>されます。" +
+              "後遺障害等級への不服の場合は、<strong>新たな立証資料を添えて</strong>申し立てます。</p>" +
+              "<p><strong>② 紛争処理機構への調停申請</strong>　" +
+              "（一財）自賠責保険・共済紛争処理機構は、国の指定を受けた第三者機関で、" +
+              "弁護士・医師・学識経験者で構成する紛争処理委員が調停を行います。" +
+              "調停の結果にも不服があれば、再度の異議申立てか、訴訟になります。</p>" +
+              "<p><strong>③ 国土交通大臣に対する申出</strong>　" +
+              "支払が支払基準に従っていないとき、または支払基準の概要などの情報提供について" +
+              "書面の交付が適正に行われていないときは、自賠法第16条の7にもとづいて国土交通大臣に申し出ることができます。" +
+              "大臣は必要と認めれば、保険会社に指示を行います（第16条の8）。</p>" +
+              "<p>なお保険会社は、支払うときに<strong>支払金額、後遺障害等級とその判断理由、" +
+              "減額する場合の割合とその理由、異議申立ての手続き</strong>を書面で交付する義務があります。" +
+              "さらに詳しい情報も請求できます。<strong>まず、その書面をもらって読むことから。</strong></p>",
+        where: "<b>（一財）自賠責保険・共済紛争処理機構</b>　03-6825-6022（土日祝・年末年始を除く 9:00〜12:00、13:00〜17:00）",
+        src: SRC_MLIT_4 + "／" + SRC_MLIT_3 + "／" + SRC_JIBAI + "第16条の7・第16条の8"
+      },
+      {
+        id: "j-akka", title: "認定のあとで悪化したとき",
+        body: "<p>「後遺障害の悪化や新たに高次脳機能障害と診断されたことなどにより、" +
+              "<strong>既認定等級より重いものになった場合は、請求者が診断書やレントゲン写真など医学的な立証資料等を添付の上、" +
+              "損害保険会社（共済組合）に申請することが可能</strong>」とされています。</p>" +
+              "<p>頭を打った事故のあと、記憶や段取りがうまくいかない、怒りっぽくなった、疲れやすい。" +
+              "こうした変化が高次脳機能障害として診断されることがあります。" +
+              "本人より家族のほうが先に気づくことが多いので、気になることはメモに残しておいてください。</p>" +
+              "<p>高次脳機能障害の疑いがある方については、" +
+              "（公財）日弁連交通事故相談センターが弁護士による面接相談を無料で行っています。</p>",
+        src: SRC_MLIT_3 + '／国土交通省「<a href="https://www.mlit.go.jp/jidosha/jibaiseki/accident/consultation/index.html" target="_blank" rel="noopener">相談先にお困りのときは？</a>」'
+      }
+    ]
+  },
+
+  {
+    id: "s5", phase: "p4", chip: "3年", chipSub: "時効",
+    from: 1000, to: 3650,
+    tag: "3年",
+    title: "自賠責の時効",
+    lead: "自賠責への請求権は<strong>3年</strong>で消えます。" +
+          "起算点が3つに分かれているので、「事故から3年」とだけ覚えていると間違えます。",
+    tasks: [
+      {
+        id: "j-jikou", title: "被害者請求の時効は3年", due: "3年", hard: true,
+        body: "<p>自賠法第19条は、第16条第1項（被害者請求）および第17条第1項（仮渡金）による請求権は、" +
+              "<strong>被害者又はその法定代理人が損害及び保有者を知った時から3年を経過したときは、" +
+              "時効によって消滅する</strong>と定めています。</p>" +
+              "<p>国土交通省は、実際の起算点をこう整理しています。</p>" +
+              "<ul>" +
+              "<li><strong>傷害</strong>　事故発生の翌日から3年</li>" +
+              "<li><strong>後遺障害</strong>　症状固定日の翌日から3年</li>" +
+              "<li><strong>死亡</strong>　死亡日の翌日から3年</li>" +
+              "</ul>" +
+              "<p>加害者請求（加害者が賠償金を払ってから請求するもの）は、" +
+              "<strong>損害賠償金を支払った日の翌日から3年以内</strong>です。</p>" +
+              "<p>平成22年3月31日以前に発生した事故については、3年ではなく2年です。</p>",
+        src: SRC_JIBAI + "第19条／" + SRC_MLIT_2
+      },
+      {
+        id: "j-koushin", title: "間に合いそうにないとき", due: "時効更新", soft: true,
+        body: "<p>国土交通省は「<strong>何らかの理由で請求が遅れてしまう場合は、時効の更新の制度があるので、" +
+              "各損害保険会社（共済組合）にご相談ください</strong>」としています。</p>" +
+              "<p>治療が長引いている、等級の認定を争っている、話し合いが止まっている。" +
+              "理由があるなら、期限が来る前に保険会社に連絡してください。" +
+              "<strong>過ぎてからでは、できることが減ります。</strong></p>",
+        src: SRC_MLIT_2 + "／" + SRC_MLIT_3
+      },
+      {
+        id: "j-shoumei5", title: "交通事故証明書は5年", due: "5年", hard: true,
+        body: "<p>「人身事故の場合、<strong>事故発生から5年が経過すると、原則として交通事故証明書は交付されません。</strong>" +
+              "交通事故直後には必要が生じなくても、何年か経った後に様々な支援を受けるための申請に" +
+              "必要になることもありますので、証明書を取得しておくことをお勧めします。」</p>" +
+              "<p>手元に1枚もないなら、いま取っておいてください。あとから取り直せなくなります。</p>",
+        src: SRC_MLIT_1
+      },
+      {
+        id: "j-rousai-jikou", title: "労災を使った場合の時効", due: "2年・5年", hard: true,
+        body: "<p>労災保険の給付を受ける権利は、<strong>これらを行使することができる時から</strong>、" +
+              "次の期間で時効により消滅します（労働者災害補償保険法第42条）。</p>" +
+              "<ul>" +
+              "<li><strong>2年</strong>　療養（補償）給付、休業（補償）給付、葬祭料・葬祭給付、介護（補償）給付など</li>" +
+              "<li><strong>5年</strong>　障害（補償）給付、遺族（補償）給付</li>" +
+              "</ul>" +
+              "<p>正確な起算日は給付ごとに違います。労働基準監督署か、労災保険相談ダイヤル（0570-006031）へ。</p>",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/322AC0000000050" target="_blank" rel="noopener">労働者災害補償保険法</a>」第42条'
+      }
+    ]
+  }
+];
+
+/* 期限一覧 */
+var DEADLINES = [
+  { g: "g1", w: "直ちに", t: "警察への報告", s: "道路交通法第72条第1項。運転者の義務です" },
+  { g: "g1", w: "遅滞なく", t: "第三者行為による傷病届", s: "健康保険を使うとき。健保則第65条・国保則第32条の6" },
+  { g: "g1", w: "請求前に", t: "第三者行為災害届", s: "労災を使うとき。労災保険給付の請求前または同時に" },
+  { g: "g2", w: "早いほど", t: "人身事故としての届出", s: "法律上の期限はありませんが、日が経つほど扱いを変えにくくなります" },
+  { g: "g2", w: "3年", t: "自賠責の被害者請求（傷害）", s: "事故発生の翌日から。仮渡金の請求権も同じ" },
+  { g: "g2", w: "3年", t: "自賠責の被害者請求（後遺障害）", s: "症状固定日の翌日から" },
+  { g: "g2", w: "3年", t: "自賠責の被害者請求（死亡）", s: "死亡日の翌日から" },
+  { g: "g3", w: "3年", t: "自賠責の加害者請求", s: "損害賠償金を支払った日の翌日から" },
+  { g: "g3", w: "3年", t: "政府保障事業への請求", s: "行使することができる時から。自賠法第75条" },
+  { g: "g4", w: "2年", t: "労災の療養・休業・葬祭・介護の給付", s: "行使することができる時から。労災法第42条" },
+  { g: "g4", w: "5年", t: "労災の障害・遺族の給付", s: "行使することができる時から。労災法第42条" },
+  { g: "g4", w: "5年", t: "交通事故証明書の交付", s: "人身事故は事故発生から5年で、原則として交付されません" }
+];
+
+/* 「つぎに来る期限」に出すもの。day = 事故日からの日数の目安 */
+var MILESTONES = [
+  { day: 7,    t: "人身事故としての届出",             s: "法律上の期限はありませんが、遅れるほど難しくなります" },
+  { day: 730,  t: "労災の療養・休業（補償）給付の時効", s: "2年（労災を使うとき）" },
+  { day: 1095, t: "自賠責への被害者請求（傷害）の時効", s: "事故発生の翌日から3年" },
+  { day: 1826, t: "労災の障害（補償）給付の時効／交通事故証明書", s: "5年。人身事故の証明書は5年で原則交付されません" }
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_DATE = "jiko.date.v1";
+var KEY_CHK  = "jiko.checks.v1";
+var KEY_TH   = "kurashi.theme.v1";
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+var state = {
+  date: load(KEY_DATE, ""),
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+function fmtJP(d) {
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+}
+function addDays(d, n) {
+  var x = new Date(d.getTime());
+  x.setDate(x.getDate() + n);
+  return x;
+}
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* 経過の言い換え。年・月は日数の割り算ではなく暦どおりに数える
+   （365日を「0年12か月」と出す事故を避けるため） */
+function elapsedLabel(n, from) {
+  if (n < 0)   return "まだ先の日付です";
+  if (n === 0) return "当日";
+  if (n < 31)  return n + "日目";
+
+  var t = today0();
+  var months = (t.getFullYear() - from.getFullYear()) * 12 + (t.getMonth() - from.getMonth());
+  if (t.getDate() < from.getDate()) months--;
+  if (months < 0) months = 0;
+
+  if (months < 12) return months + "か月ごろ（" + n + "日目）";
+  var y = Math.floor(months / 12);
+  var rm = months % 12;
+  return y + "年" + (rm > 0 ? rm + "か月" : "") + "ごろ（" + n + "日目）";
+}
+
+/* ============================================================
+   描画
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         '<b>' + esc(s.chip) + '</b>' + esc(s.chipSub) +
+         '<span class="here">いま</span></button>';
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(s, t) {
+  var done = !!state.checks[t.id];
+  var due = "";
+  if (t.due) due = '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + t.id + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + t.id + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  if (t.share) h += '<div class="share"><b>家族で分けられること</b>' + esc(t.share) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s, s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+function renderDeadlines() {
+  var h = "";
+  for (var i = 0; i < DEADLINES.length; i++) {
+    var d = DEADLINES[i];
+    h += '<div class="row ' + d.g + '"><div class="w">' + esc(d.w) + "</div>" +
+         '<div class="t">' + esc(d.t) + "<span>" + esc(d.s) + "</span></div></div>";
+  }
+  document.getElementById("deadlineTable").innerHTML = h;
+}
+
+/* ---- 今日の位置 ---- */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var dateIn   = document.getElementById("dateIn");
+var clearBtn = document.getElementById("clearBtn");
+var hint     = document.getElementById("hint");
+var track    = document.getElementById("track");
+var trackPin = document.getElementById("trackPin");
+var nextup   = document.getElementById("nextup");
+var nextList = document.getElementById("nextList");
+
+/* 帯の位置。区切りは 0 / 2週間 / 3か月 / 1年 / 3年 の4区間 */
+var BAND = [0, 14, 92, 365, 1095];
+function pinPercent(n) {
+  if (n <= 0) return 0;
+  if (n >= BAND[4]) return 100;
+  for (var i = 0; i < 4; i++) {
+    if (n <= BAND[i + 1]) {
+      var within = (n - BAND[i]) / (BAND[i + 1] - BAND[i]);
+      return (i + within) * 25;
+    }
+  }
+  return 100;
+}
+
+function renderToday() {
+  var d = parseDate(state.date);
+  if (!d) {
+    dayBig.textContent = "日付を入れてください";
+    daySub.textContent = "";
+    clearBtn.hidden = true;
+    track.hidden = true;
+    nextup.classList.remove("on");
+    hint.textContent = "入れた日付はこの端末のブラウザにだけ保存されます。サーバーには送られません。";
+    var chips0 = rail.querySelectorAll(".chip");
+    for (var k = 0; k < chips0.length; k++) chips0[k].classList.remove("now");
+    return;
+  }
+
+  var n = daysBetween(d, today0());
+  dayBig.textContent = elapsedLabel(n, d);
+  daySub.textContent = fmtJP(d) + " の事故から";
+  clearBtn.hidden = false;
+  hint.textContent = "この日付はこの端末のブラウザにだけ保存されています。";
+
+  track.hidden = false;
+  trackPin.style.left = pinPercent(n) + "%";
+
+  /* いまのステージに印 */
+  var chips = rail.querySelectorAll(".chip");
+  var hereIdx = -1;
+  for (var i = 0; i < STAGES.length; i++) {
+    if (n >= STAGES[i].from && n < STAGES[i].to) { hereIdx = i; break; }
+  }
+  if (hereIdx === -1 && n >= STAGES[STAGES.length - 1].from) hereIdx = STAGES.length - 1;
+  for (var j = 0; j < chips.length; j++) chips[j].classList.toggle("now", j === hereIdx);
+
+  /* つぎに来る期限を3つ。過ぎたものは、直近の1件だけ上に出す
+     （全部を「◯日すぎ」で埋めると、次に何が来るのかが見えなくなるため） */
+  var rows = [], overdue = null;
+  for (var m = 0; m < MILESTONES.length; m++) {
+    var ms = MILESTONES[m];
+    var left = ms.day - n;
+    if (left < 0) {
+      if (left >= -60) overdue = { ms: ms, left: left, on: addDays(d, ms.day) };
+      continue;
+    }
+    if (rows.length < 3) rows.push({ ms: ms, left: left, on: addDays(d, ms.day) });
+  }
+  if (overdue) rows.unshift(overdue);
+  if (!rows.length) {
+    nextup.classList.remove("on");
+    return;
+  }
+  var h = "";
+  for (var r = 0; r < rows.length; r++) {
+    var row = rows[r];
+    var cls = row.left < 0 ? "over" : (row.left <= 30 ? "soon" : "far");
+    var when = row.left < 0
+      ? '<b>' + Math.abs(row.left) + "</b>日すぎ"
+      : (row.left === 0 ? "<b>きょう</b>" : "あと<b>" + row.left + "</b>日");
+    h += '<div class="nx ' + cls + '">' +
+         '<div class="nx-when">' + when + "</div>" +
+         '<div class="nx-what">' + esc(row.ms.t) +
+         "<span>" + fmtJP(row.on) + "ごろ　" + esc(row.ms.s) + "</span></div></div>";
+  }
+  nextList.innerHTML = h;
+  nextup.classList.add("on");
+}
+
+/* ---- 進捗 ---- */
+function renderProgress() {
+  var total = 0, done = 0;
+  for (var i = 0; i < STAGES.length; i++) {
+    for (var j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = +b.dataset.i;
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  var id = b.dataset.chk;
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest(".task");
+  if (card) card.classList.toggle("done", !!state.checks[id]);
+  renderProgress();
+});
+
+document.getElementById("setBtn").addEventListener("click", function () {
+  var v = dateIn.value;
+  var d = parseDate(v);
+  if (!d) { hint.textContent = "日付を選んでください。"; return; }
+  if (daysBetween(d, today0()) < 0) { hint.textContent = "未来の日付は入れられません。"; return; }
+  state.date = v;
+  save(KEY_DATE, v);
+  renderToday();
+});
+
+clearBtn.addEventListener("click", function () {
+  state.date = "";
+  dateIn.value = "";
+  save(KEY_DATE, "");
+  renderToday();
+});
+
+dateIn.addEventListener("change", function () {
+  if (parseDate(dateIn.value)) document.getElementById("setBtn").click();
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化
+   ============================================================ */
+
+buildRail();
+renderStage();
+renderDeadlines();
+
+/* 進捗バーを期限一覧の下に足す */
+(function () {
+  var sec = document.getElementById("deadlineTable").parentNode;
+  var p = document.createElement("div");
+  p.className = "prog";
+  p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                '<span class="prog-bar"><i id="progFill"></i></span>';
+  sec.appendChild(p);
+})();
+
+if (state.date) dateIn.value = state.date;
+renderToday();
+renderProgress();
+
+/* 日付が入っていれば、いまの時期を開いておく */
+(function () {
+  var d = parseDate(state.date);
+  if (!d) return;
+  var n = daysBetween(d, today0());
+  for (var i = 0; i < STAGES.length; i++) {
+    if (n >= STAGES[i].from && n < STAGES[i].to) {
+      state.stage = i;
+      renderStage();
+      var chip = rail.querySelector('.chip[data-i="' + i + '"]');
+      if (chip) chip.scrollIntoView({ block: "nearest", inline: "center" });
+      break;
+    }
+  }
+})();
+</script>

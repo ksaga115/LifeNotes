@@ -1,0 +1,1459 @@
+<title>被災したあとのノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+%%CSS%%
+
+/* ---------- このノート固有 ---------- */
+
+/* いちばん上の写真カード */
+.shoot{
+  margin-top:14px;background:var(--surface);border:1px solid var(--alert);
+  border-radius:18px;padding:16px;box-shadow:var(--shadow);
+}
+.shoot h2{font-size:19px;line-height:1.4;margin-top:2px}
+.shoot p{font-size:13.5px;color:var(--ink-2);line-height:1.85;margin:9px 0 0}
+.shoot ol{margin:11px 0 0;padding-left:1.3em;font-size:13.5px;color:var(--ink-2);line-height:1.8}
+.shoot li{margin-bottom:6px}
+.shoot li b{color:var(--ink)}
+.shoot .src{margin-top:11px}
+.shoot .eyebrow{color:var(--alert)}
+
+/* ノート間のリンク */
+.xlink{
+  display:inline-block;font-size:12.5px;text-decoration:none;
+  border:1px solid var(--line);border-radius:999px;padding:4px 12px;
+  color:var(--p1);background:var(--surface-2);white-space:nowrap;
+}
+.xlink:hover{border-color:var(--p1)}
+.xrow{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+
+/* 「ここは自分で確かめる」 */
+.ask{
+  display:block;margin-top:7px;font-size:12.5px;color:var(--ink-2);line-height:1.8;
+  background:var(--p3-bg);border-radius:9px;padding:8px 11px;
+}
+.ask b{
+  display:block;font-family:var(--body);font-weight:700;color:var(--p3);
+  font-size:11px;letter-spacing:.08em;margin-bottom:2px;
+}
+
+/* 金額の小表 */
+.money{width:100%;border-collapse:collapse;margin:9px 0 2px;font-size:12.5px}
+.money th,.money td{padding:6px 2px 6px 0;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
+.money th{font-weight:500;color:var(--muted);font-size:11px;letter-spacing:.06em}
+.money td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap;padding-right:0}
+.money tr:last-child td{border-bottom:0}
+
+/* 本文中のリンク */
+.task-body a,.help a,.lede a,.warn a,.ask a{color:var(--p1)}
+.warn a{color:var(--alert)}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M2.8 8L9 3.2 15.2 8v6.6H2.8z" fill="none" stroke="currentColor"
+              stroke-width="1.3" stroke-linejoin="round" opacity=".65"/>
+        <path d="M7.3 14.6L8.7 10.2l-1.8-.7L10.1 6.1" fill="none" stroke="currentColor"
+              stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      被災したあとのノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="%%HOME%%" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- いま読むのはここだけでいい -->
+  <div class="warn">
+    <b>今日することは、3つだけ</b>
+    <strong>① 片づける前に、家の外と中の写真を撮る。</strong>
+    ② 市区町村に罹災証明書を申請する。ほとんどの支援の入口です。
+    ③ 保険会社に連絡する。請求は自分でできます。<br>
+    ほかは、あとからで間に合います。急いで決めないでください。
+  </div>
+
+  <!-- 写真 -->
+  <section class="shoot">
+    <div class="eyebrow">いちばん先に</div>
+    <h2>片づける前に、写真を撮る</h2>
+    <p>
+      片づけたあとでは、被害の程度を確かめられません。
+      内閣府の事務連絡にも、被害認定調査の前に
+      <strong>「建物の除去や被害箇所がわからないような修理、片付け等をしてしまうと調査が困難となる」</strong>
+      とあります。写真は<strong>罹災証明書</strong>と<strong>保険の請求</strong>の両方で使います。
+      濡れたものを運び出す前に、10分だけこれをしてください。
+    </p>
+    <ol>
+      <li><b>家の外を、4方向から</b>　建物の全景を、できるだけ周囲4面（4枚以上）。</li>
+      <li><b>浸水したら、深さがわかるように</b>　メジャーなどをあてて、全体を写した「引き」と、目盛りが読み取れる「寄り」の2枚。</li>
+      <li><b>家の中は、部屋ごとに全景を1枚</b>　被災した部屋すべて。内壁、床、窓、出入口、サッシ、襖、障子、システムキッチン、洗面台、便器、ユニットバスなど。</li>
+      <li><b>壊れたところは「寄り」も</b>　被害を受けた箇所の全体がわかる写真と、程度がわかるクローズアップ。</li>
+      <li><b>表札も1枚</b>　あとから「どの家の写真か」を示せます。</li>
+      <li><b>日時を残す</b>　カメラやスマホの日時設定を正確にしておくと、整理が楽になります。</li>
+    </ol>
+    <p>
+      <strong>撮ったら、その日のうちにクラウドか自分宛てのメールに送っておいてください。</strong>
+      端末が水没しても、写真だけは残ります。
+      家を解体することになった場合も、<strong>解体前の写真が費用の払戻しの根拠になる</strong>ことがあります。
+    </p>
+    <span class="src">内閣府政策統括官（防災担当）付参事官（被災者生活再建担当）「<a href="https://www.bousai.go.jp/taisaku/pdf/0705_shashin.pdf" target="_blank" rel="noopener">住家の被害認定調査における写真撮影に係る留意事項について</a>」（令和2年7月5日事務連絡）および別添チラシ「住まいが被害を受けたとき　最初にすること」</span>
+  </section>
+
+  <p class="lede">
+    地震・台風・豪雨などで家が被害を受けたあとの手続きを、順番に並べたノートです。
+    被害を受けた日を入れると、いま何日目かと、次に来る期限の目安が出ます。<br>
+    <strong>どの支援がこの災害に使えるかは、災害ごとに決まります。</strong>
+    被災者生活再建支援法が適用されるか、激甚災害に指定されるか、特例が出るか——
+    これはその災害が指定されてはじめて決まるものです。
+    このノートは一般制度として書いているので、<strong>この災害に何が適用されるかは、
+    市区町村の発表と内閣府の公表で必ず確かめてください。</strong>
+    広告も関連記事もありません。入れた日付とチェックは、この端末の中にだけ保存されます。
+  </p>
+  <div class="xrow">
+    <a class="xlink" href="%%NOTE:disaster%%">備えと、揺れた直後の行動は「防災の備蓄ノート」へ</a>
+    <a class="xlink" href="%%NOTE:consumer%%">便乗商法・訪問販売は「消費者トラブルのノート」へ</a>
+  </div>
+
+  <!-- 今日 -->
+  <section class="today">
+    <div class="eyebrow">きょうの位置</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">日付を入れてください</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <input type="date" id="dateIn" aria-label="被害を受けた日">
+      <button class="solid" id="setBtn" type="button">この日から数える</button>
+      <button class="ghost" id="clearBtn" type="button" hidden>消す</button>
+    </div>
+    <p class="hint" id="hint">
+      入れた日付はこの端末のブラウザにだけ保存されます。サーバーには送られません。
+    </p>
+
+    <div class="track" id="track" hidden>
+      <div class="track-bar" id="trackBar">
+        <div class="track-seg" style="background:var(--p1)"></div>
+        <div class="track-seg" style="background:var(--p2)"></div>
+        <div class="track-seg" style="background:var(--p3)"></div>
+        <div class="track-seg" style="background:var(--p4)"></div>
+        <div class="track-pin" id="trackPin" style="left:0"></div>
+      </div>
+      <div class="track-scale">
+        <span>当日</span><span>10日</span><span>3か月</span><span>13か月</span><span>37か月</span>
+      </div>
+    </div>
+
+    <div class="nextup" id="nextup">
+      <h4>つぎに来る期限（目安）</h4>
+      <div id="nextList"></div>
+      <p class="hint" id="nextNote"></p>
+    </div>
+  </section>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>順番にすること</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="項目"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 期限一覧 -->
+  <section class="sec">
+    <h2>期限の一覧</h2>
+    <p class="note">
+      <strong>ここに書いた日数は、法令や国の一般基準の数字です。</strong>
+      実際の受付期間は災害ごとに決まり、延長されることもあります。
+      日付が近づいたら、市区町村の発表を見てください。
+    </p>
+    <div class="table" id="deadlineTable"></div>
+  </section>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>どこに聞けばいいか</h2>
+    <p class="note">「誰に聞けばいいかわからない」が、いちばん多いつまずきです。</p>
+    <div class="help">
+      <dl>
+        <dt>市区町村の被災者支援の窓口</dt>
+        <dd>罹災証明書、支援金、応急修理、公費解体、税と保険料の減免。
+          <strong>このノートに出てくる手続きの大半は、ここが入口です。</strong>
+          災害が起きると総合窓口が設けられることが多いので、まず市区町村のサイトか広報を見てください。</dd>
+        <dt>内閣府（防災担当）の防災情報のページ</dt>
+        <dd>被災者生活再建支援法の適用状況、激甚災害の指定、支援制度の一覧。
+          <a href="https://www.bousai.go.jp/taisaku/hisaisyagyousei/index.html" target="_blank" rel="noopener">被災者支援</a>／<a href="https://www.bousai.go.jp/taisaku/gekijinhukko/index.html" target="_blank" rel="noopener">激甚災害からの復旧・復興対策</a></dd>
+        <dt>加入している保険会社・共済</dt>
+        <dt>金融機関（住宅ローンを借りている先）</dt>
+        <dd>返済の猶予や条件の変更、自然災害債務整理ガイドラインの相談は、
+          <strong>いちばん多額のローンを借りている金融機関</strong>が窓口になります。</dd>
+        <dd>火災保険・地震保険・共済。証券や印鑑をなくしていても、まず電話してください。</dd>
+        <dt>税務署</dt>
+        <dd>所得税の軽減（雑損控除・災害減免法）、申告と納付の期限の延長、納税の猶予。</dd>
+        <dt>消費者ホットライン 188（いやや）</dt>
+        <dd>局番なしの188で、近くの消費生活センターにつながります。
+          点検商法、保険金申請の代行、高額な修理契約。少しでもおかしいと思ったら、契約する前に。</dd>
+        <dt>精神保健福祉センター（都道府県・指定都市）</dt>
+        <dd>こころの健康の相談。電話でも面接でも受けられます。
+          厚生労働省「<a href="https://www.mhlw.go.jp/mamorouyokokoro/" target="_blank" rel="noopener">まもろうよ こころ</a>」に、公的な相談先がまとまっています。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        書いてあるのは<strong>一般制度としての内容と、国の資料で確認できた金額・期間</strong>です。
+        <strong>災害ごとに、適用される制度が違います。</strong>
+        被災者生活再建支援法が適用されるか、災害救助法が適用されるか、激甚災害に指定されるかは、
+        その災害の被害規模で決まります。ここに書いた制度が「この災害で使える」とはかぎりません。
+      </p>
+      <p style="margin:0 0 10px">
+        金額は、<strong>制度で決まっているものだけ</strong>を、年度と根拠をつけて書いています。
+        自治体独自の見舞金や上乗せ支援は、あるともないとも書いていません。市区町村で確かめてください。
+      </p>
+      <p style="margin:0">
+        出典リンクのない記述は、<strong>段取りの提案</strong>です。制度の断定ではありません。
+        どこまで信じるかを、読む人が決められるようにしてあります。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>内閣府（防災担当）「<a href="https://www.bousai.go.jp/taisaku/hisaisyagyousei/pdf/kakusyuseido_tsuujou.pdf" target="_blank" rel="noopener">被災者支援に関する各種制度の概要</a>」（令和8年6月1日現在）／「<a href="https://www.bousai.go.jp/taisaku/hisaisyagyousei/index.html" target="_blank" rel="noopener">被災者支援</a>」</li>
+      <li>内閣府「<a href="https://www.bousai.go.jp/taisaku/seikatsusaiken/shiensya.html" target="_blank" rel="noopener">被災者生活再建支援法</a>」／「<a href="https://www.bousai.go.jp/taisaku/seikatsusaiken/pdf/140612gaiyou.pdf" target="_blank" rel="noopener">被災者生活再建支援制度の概要</a>」（支給額・申請期間・対象災害）</li>
+      <li>内閣府政策統括官（防災担当）付参事官（被災者生活再建担当）「<a href="https://www.bousai.go.jp/taisaku/pdf/0705_shashin.pdf" target="_blank" rel="noopener">住家の被害認定調査における写真撮影に係る留意事項について</a>」（令和2年7月5日事務連絡）</li>
+      <li>内閣府（防災担当）「<a href="https://www.bousai.go.jp/taisaku/pdf/r705saigai_tebiki_full.pdf" target="_blank" rel="noopener">災害に係る住家被害認定業務 実施体制の手引き</a>」（令和7年5月）／「<a href="https://www.bousai.go.jp/taisaku/unyou.html" target="_blank" rel="noopener">災害に係る住家の被害認定</a>」</li>
+      <li>内閣府政策統括官（防災担当）「<a href="https://www.bousai.go.jp/oyakudachi/pdf/kyuujo_a7.pdf" target="_blank" rel="noopener">災害救助法の概要（令和8年6月）</a>」（応急仮設住宅・住宅の応急修理の一般基準）／「<a href="https://www.bousai.go.jp/taisaku/hisaisyagyousei/sumai.html" target="_blank" rel="noopener">被災者の住まいの確保</a>」</li>
+      <li>内閣府「<a href="https://www.bousai.go.jp/taisaku/gekijinhukko/index.html" target="_blank" rel="noopener">激甚災害からの復旧・復興対策</a>」／「<a href="https://www.bousai.go.jp/taisaku/gekijinhukko/qa.html" target="_blank" rel="noopener">激甚災害制度Q&amp;A</a>」</li>
+      <li>環境省「<a href="https://policies.env.go.jp/recycle/disaster_waste/guidance/publicly_funded_demolition_and_removal_manual/index.html" target="_blank" rel="noopener">公費解体・撤去マニュアル／自費解体・撤去の手引き</a>」（災害廃棄物対策情報サイト）</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/shinsai_jouhou/saigaishien.html" target="_blank" rel="noopener">災害弔慰金・災害援護資金などの支援について</a>」／「<a href="https://www.mhlw.go.jp/mamorouyokokoro/" target="_blank" rel="noopener">まもろうよ こころ</a>」</li>
+      <li>金融庁「<a href="https://www.fsa.go.jp/ordinary/hisaisyashien_kinyusochi.html" target="_blank" rel="noopener">災害等における被災者等支援について ― 金融上の措置要請 ―</a>」</li>
+      <li>財務省「<a href="https://www.mof.go.jp/policy/financial_system/earthquake_insurance/jisin.htm" target="_blank" rel="noopener">地震保険制度の概要</a>」</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/420AC0000000056" target="_blank" rel="noopener">保険法</a>」（第95条 消滅時効）／「<a href="https://laws.e-gov.go.jp/law/503AC1000000064" target="_blank" rel="noopener">自然災害義援金に係る差押禁止等に関する法律</a>」</li>
+      <li>国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1110.htm" target="_blank" rel="noopener">No.1110 災害や盗難などで資産に損害を受けたとき（雑損控除）</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1902.htm" target="_blank" rel="noopener">No.1902 災害減免法による所得税の軽減免除</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/saigai/8004.htm" target="_blank" rel="noopener">No.8004 災害により被害を受けたときの所得税の取扱い</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/saigai/index.htm" target="_blank" rel="noopener">災害関連情報</a>」</li>
+      <li>消費者庁「<a href="https://www.caa.go.jp/notice/entry/035897/" target="_blank" rel="noopener">災害に便乗した悪質商法に注意!</a>」</li>
+      <li>国民生活センター「<a href="https://www.kokusen.go.jp/soudan_now/data/disaster.html" target="_blank" rel="noopener">ご用心 災害に便乗した悪質商法</a>」／「<a href="https://www.kokusen.go.jp/news/data/n-20231011_1.html" target="_blank" rel="noopener">屋根工事の点検商法のトラブルが増えています</a>」／「<a href="https://www.kokusen.go.jp/news/data/n-20210902_2.html" target="_blank" rel="noopener">保険金で住宅修理ができると勧誘する事業者に注意！</a>」</li>
+      <li>警察庁「<a href="https://www.npa.go.jp/policies/application/license_renewal/QA.html" target="_blank" rel="noopener">運転免許に関する諸手続 Q&amp;A</a>」</li>
+      <li>デジタル庁「<a href="https://services.digital.go.jp/mynumbercard/lost-stolen/" target="_blank" rel="noopener">マイナンバーカードまたはスマートフォンの紛失・盗難にあったとき</a>」</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した日付とチェックは、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    制度の適用・受付期間・金額は災害ごとに変わります。最終的な判断は、市区町村と各窓口の案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 官公庁の一次情報で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「段取りの提案」であって、制度の断定ではない）
+   ============================================================ */
+
+var S_KAKUSYU  = '内閣府（防災担当）「<a href="https://www.bousai.go.jp/taisaku/hisaisyagyousei/pdf/kakusyuseido_tsuujou.pdf" target="_blank" rel="noopener">被災者支援に関する各種制度の概要</a>」（令和8年6月1日現在）';
+var S_SEIKATSU = '内閣府「<a href="https://www.bousai.go.jp/taisaku/seikatsusaiken/pdf/140612gaiyou.pdf" target="_blank" rel="noopener">被災者生活再建支援制度の概要</a>」／「<a href="https://www.bousai.go.jp/taisaku/seikatsusaiken/shiensya.html" target="_blank" rel="noopener">被災者生活再建支援法</a>」';
+var S_KYUJO    = '内閣府政策統括官（防災担当）「<a href="https://www.bousai.go.jp/oyakudachi/pdf/kyuujo_a7.pdf" target="_blank" rel="noopener">災害救助法の概要（令和8年6月）</a>」';
+var S_TEBIKI   = '内閣府（防災担当）「<a href="https://www.bousai.go.jp/taisaku/pdf/r705saigai_tebiki_full.pdf" target="_blank" rel="noopener">災害に係る住家被害認定業務 実施体制の手引き</a>」（令和7年5月）';
+var S_FSA      = '金融庁「<a href="https://www.fsa.go.jp/ordinary/hisaisyashien_kinyusochi.html" target="_blank" rel="noopener">災害等における被災者等支援について ― 金融上の措置要請 ―</a>」';
+var S_KAITAI   = '環境省「<a href="https://policies.env.go.jp/recycle/disaster_waste/guidance/publicly_funded_demolition_and_removal_manual/index.html" target="_blank" rel="noopener">公費解体・撤去マニュアル／自費解体・撤去の手引き</a>」';
+
+var ASK_TEKIYO = '<span class="ask"><b>この災害に使えるかは、別の話</b>' +
+  'この制度がこの災害に適用されるかどうかは、被害の規模で決まります。' +
+  '市区町村の発表と、<a href="https://www.bousai.go.jp/taisaku/hisaisyagyousei/index.html" target="_blank" rel="noopener">内閣府の被災者支援のページ</a>で確かめてください。</span>';
+
+var STAGES = [
+  {
+    id: "h1", phase: "p1", chip: "最初の数日", chipSub: "記録と安全",
+    from: 0, to: 7,
+    tag: "最初の数日",
+    title: "記録を残し、体を守る",
+    lead: "この時期に急ぐ手続きは、ほとんどありません。" +
+          "やることは<strong>記録を残すこと</strong>と、<strong>片づけで怪我をしないこと</strong>の2つです。" +
+          "支援金も保険も、数日で締め切られることはありません。",
+    tasks: [
+      {
+        id: "t-anzen", title: "壊れた家の中を、素手で歩かない",
+        body: "<p>片づけでの怪我が、被災後にはよく起きます。" +
+              "<strong>厚手の手袋、底の厚い靴、長袖、マスク。</strong>" +
+              "割れたガラス、露出した釘、濡れて滑る床、崩れかけた壁。</p>" +
+              "<p>家に大きな損傷があるときは、<strong>応急危険度判定</strong>の結果" +
+              "（建物に貼られる赤・黄・緑の紙）を確かめてください。" +
+              "赤や黄が貼られている建物に荷物を取りに入るのは、危険です。</p>" +
+              "<p>電気・ガス・水道が止まったときの初動（ブレーカー、通電火災、断水したときのトイレ）は、" +
+              "このノートでは繰り返しません。</p>" +
+              '<p><a class="xlink" href="%%NOTE:disaster%%">停電・断水のときの初動は「防災の備蓄ノート」へ</a></p>'
+      },
+      {
+        id: "t-kiroku", title: "写真のほかに、残しておくもの",
+        body: "<p>写真の撮り方は、このページのいちばん上に書きました。" +
+              "写真のほかに、あとで必要になるものがあります。</p>" +
+              "<ul>" +
+              "<li><strong>業者に頼んだ修理の見積書・契約書・領収書</strong>（保険の請求と、税の申告の両方で使います）</li>" +
+              "<li><strong>捨てたものの写真とリスト</strong>（家財の被害を説明するときの手がかりになります）</li>" +
+              "<li><strong>誰といつ何を話したか</strong>（保険会社、業者、役所。日付と担当者名を1行ずつ）</li>" +
+              "</ul>" +
+              "<p>家を解体することになった場合、<strong>罹災証明書を取る前に解体してしまうと、" +
+              "全壊・半壊の被害が確認できる解体前の写真が要ります。</strong>" +
+              "自費で解体して費用の払戻しを受ける場合も、施工前・施工中・施工後の写真で確認されます。</p>",
+        src: S_KAITAI + '（自費解体・撤去の費用の確認について「罹災証明書を取得前に解体を行っていた場合は、全壊・半壊の被害が確認できる解体前の写真」が挙げられています）',
+        share: "写真を撮る係と、電話の記録をつける係は、分けたほうが続きます。"
+      },
+      {
+        id: "t-kichou", title: "通帳も印鑑もなくても、お金は下ろせる",
+        body: "<p>金融庁は、災害救助法が適用された災害等のときに、金融機関へこう要請しています。" +
+              "<strong>「預金証書、通帳、届出の印鑑等を紛失した場合等でも、被災者等の被災状況等を踏まえた" +
+              "確認方法をもって預金者本人の申出であることを確認して払戻しに応ずること」。</strong></p>" +
+              "<p>定期預金などの期限前の払戻しに応じることも、あわせて要請されています。" +
+              "<strong>「通帳がないから無理だ」と自分で決めないでください。</strong>窓口で事情を話せば通ります。</p>" +
+              "<p>保険についても同じで、" +
+              "<strong>「保険証券、届出印鑑等を紛失した保険契約者等については、申出の保険契約内容が確認できれば、" +
+              "保険金等の請求案内を行うなど可能な限りの便宜措置を講ずること」</strong>とされています。</p>",
+        src: S_FSA
+      },
+      {
+        id: "t-sumai0", title: "避難所にいても、家にいても",
+        body: "<p>在宅避難を選んだ人にも、支援は同じように届きます。" +
+              "ただし<strong>情報は避難所に集まりがちです。</strong>" +
+              "罹災証明書の受付が始まった、支援金の説明会がある、といった知らせは、" +
+              "避難所の掲示板と、市区町村のサイト・広報に出ます。</p>" +
+              "<p>家にいる場合は、<strong>市区町村の災害関連ページをブックマークして、1日1回見る</strong>のが確実です。" +
+              "自治体によっては、在宅避難の世帯に物資を届ける窓口を別に設けています。</p>",
+        share: "市区町村のページを見る担当を1人決めると、家族が同じ情報を何度も追わずに済みます。"
+      }
+    ]
+  },
+
+  {
+    id: "h2", phase: "p1", chip: "罹災証明書", chipSub: "支援の入口",
+    from: 7, to: 30,
+    tag: "いちばん先の手続き",
+    title: "罹災証明書を申請する",
+    lead: "<strong>このノートでいちばん大事な手続きです。</strong>" +
+          "支援金、応急修理、公費解体、税や保険料の減免——" +
+          "その多くが、罹災証明書に書かれる「被害の程度」を前提にしています。",
+    tasks: [
+      {
+        id: "t-risai", title: "罹災証明書とは何か、どこに出すか", due: "早めに", soft: true,
+        body: "<p>罹災証明書は、<strong>災害対策基本法第90条の2</strong>にもとづいて、" +
+              "市町村が住家等の被害の状況を調査し、被災者に交付する" +
+              "<strong>「災害による被害の程度を証明する書面」</strong>です。" +
+              "各種の被災者支援制度の適用を受ける際の判断材料として使われます。</p>" +
+              "<p>証明される被害の程度は、<strong>全壊／大規模半壊／中規模半壊／半壊／準半壊／" +
+              "準半壊に至らない（一部損壊）</strong>。判定は内閣府の「災害の被害認定基準について」等にもとづいて行われます。</p>" +
+              "<p><strong>出す先は、被害を受けた家のある市区町村です。</strong>" +
+              "大きな災害では臨時の窓口や、郵送・オンラインの受付が設けられることが多いので、" +
+              "並びに行く前に市区町村のサイトを見てください。</p>" +
+              "<p>罹災証明書が前提になる支援は広い範囲にわたります。" +
+              "給付（被災者生活再建支援金、義援金）、融資（住宅金融支援機構融資、災害援護資金）、" +
+              "減免・猶予（税、社会保険料、公共料金）、現物給付（住宅の応急修理、応急仮設住宅）。</p>",
+        where: "<b>出す先</b>　被害を受けた住家のある市区町村<br>" +
+               "<b>持ちもの</b>　本人確認できるもの、被害状況のわかる写真など（市区町村によって違います）",
+        src: S_KAKUSYU + "／" + S_TEBIKI
+      },
+      {
+        id: "t-kigen", title: "申請の期限は、災害ごとに決まる", due: "災害ごと", hard: true,
+        body: "<p><strong>罹災証明書の申請に、全国一律の期限はありません。</strong>" +
+              "内閣府の手引きにも「罹災証明書の交付申請については、目安の期間等はありません」とあります。</p>" +
+              "<p>ただし、同じ手引きはこう続きます。" +
+              "<strong>「その災害とその被害との関係が立証できるものであるかや、" +
+              "罹災証明書交付の目的となる支援措置が申請期間内（例えば被災者生活再建支援金は13ヶ月）であるか等の" +
+              "状況を踏まえて判断してください」。</strong></p>" +
+              "<p>つまり実際の期限は、<strong>市区町村が災害ごとに定める受付期間</strong>と、" +
+              "<strong>その先にある支援制度の申請期間</strong>の2つで決まります。" +
+              "多くの市区町村は、災害ごとに受付期間を公表します。" +
+              "<strong>自分の市区町村が何月何日までと言っているかを、必ず確かめてください。</strong></p>" +
+              '<span class="ask"><b>確かめる先</b>市区町村の「罹災証明書」のページ。受付期間・受付場所・持ちものが出ています。</span>',
+        src: S_TEBIKI
+      },
+      {
+        id: "t-chousa", title: "住家被害認定調査を受ける",
+        body: "<p>申請すると、市町村の職員が調査に来ます。" +
+              "地震の場合は<strong>第1次調査（外観の目視、住家の傾斜の計測）</strong>と、" +
+              "<strong>第2次調査（外観に加えて内部立入）</strong>の2段階です。" +
+              "第2次調査は、第1次調査を受けた被災者から<strong>申請があった場合に</strong>実施されます。</p>" +
+              "<p>第2次調査と、風害による被害の調査は、外観から一見して全壊と判定できる場合などを除き、" +
+              "<strong>原則として被災者の立会いが必要</strong>です。日程の連絡を見落とさないでください。</p>" +
+              "<p>被害が軽微で、明らかに「準半壊に至らない（一部損壊）」とわかる場合は、" +
+              "<strong>自己判定方式</strong>といって、写真で判定を済ませる扱いをしている市区町村があります。" +
+              "そのときに求められるのは、建物の全景（周囲4面、4枚以上）、表札、" +
+              "被害を受けた部位の内容が明らかになる写真です。</p>",
+        src: S_TEBIKI
+      },
+      {
+        id: "t-saichousa", title: "判定に納得できないときは、再調査を依頼できる", due: "修理の前に", hard: true,
+        body: "<p>判定結果は、そのあとの支援の中身を大きく左右します。" +
+              "内閣府の手引きは市町村に対して、" +
+              "<strong>「被災者から市町村に住家被害等の第2次調査や再調査を依頼することが可能であることを、" +
+              "被災住民に十分周知するよう配慮してください」</strong>と求めています。" +
+              "<strong>依頼できる、ということです。</strong></p>" +
+              "<p>再調査は第2次調査とは別のものです。依頼の内容が精査され、" +
+              "再調査が必要と考えられる点があれば、その点について調査が行われます。" +
+              "<strong>判定結果は、理由とともに示されます。</strong></p>" +
+              "<p>ここがいちばん大事なところです。手引きには、再調査は" +
+              "<strong>「住家の被害認定調査（第2次調査）の後、被災建物の復旧修理を行う前に実施することとなります」</strong>" +
+              "と書かれています。<strong>修理を始めてしまうと、再調査ができなくなります。</strong></p>" +
+              "<p>判定に納得がいかないなら、<strong>直す前に、市区町村に言ってください。</strong></p>",
+        src: S_TEBIKI,
+        share: "「この判定でいいのか」を、修理を頼む前に家族で一度確かめる。"
+      }
+    ]
+  },
+
+  {
+    id: "h3", phase: "p2", chip: "お金の支援", chipSub: "申請しないと出ない",
+    from: 30, to: 120,
+    tag: "お金",
+    title: "申請しないと出ないお金",
+    lead: "どれも<strong>自分で申請しないと出ません。</strong>" +
+          "役所から一軒ずつ教えに来てくれるわけではありません。" +
+          "そして<strong>どの制度がこの災害に適用されるかは、災害ごとに決まります。</strong>",
+    tasks: [
+      {
+        id: "t-seikatsu", title: "被災者生活再建支援制度", due: "13月／37月", hard: true,
+        body: "<p>住宅が全壊するなど、生活の基盤に著しい被害を受けた世帯に支援金が支給されます。" +
+              "<strong>使いみちは限定されません。</strong></p>" +
+              "<p><strong>制度の対象になる自然災害</strong>は、10世帯以上の住宅全壊被害が発生した市町村等。" +
+              "<strong>対象になる被災世帯</strong>は次の5つです。</p>" +
+              "<ul>" +
+              "<li>住宅が「全壊」した世帯</li>" +
+              "<li>住宅が半壊、または住宅の敷地に被害が生じ、その住宅をやむを得ず解体した世帯</li>" +
+              "<li>災害による危険な状態が継続し、住宅に居住不能な状態が長期間継続している世帯</li>" +
+              "<li>住宅が半壊し、大規模な補修を行わなければ居住することが困難な世帯（大規模半壊世帯）</li>" +
+              "<li>住宅が半壊し、相当規模の補修を行わなければ居住することが困難な世帯（中規模半壊世帯）</li>" +
+              "</ul>" +
+              "<p>支援金は<strong>基礎支援金（住宅の被害程度に応じて）</strong>と" +
+              "<strong>加算支援金（住宅の再建方法に応じて）</strong>の2階建てです。" +
+              "<strong>世帯人数が1人の場合は、それぞれ4分の3の額</strong>になります。</p>" +
+              '<table class="money">' +
+              "<tr><th>被害程度</th><th>基礎</th><th>再建方法</th><th>加算</th></tr>" +
+              '<tr><td>全壊・解体・長期避難</td><td class="n">100万円</td><td>建設・購入</td><td class="n">200万円</td></tr>' +
+              '<tr><td></td><td class="n"></td><td>補修</td><td class="n">100万円</td></tr>' +
+              '<tr><td></td><td class="n"></td><td>賃借（公営住宅を除く）</td><td class="n">50万円</td></tr>' +
+              '<tr><td>大規模半壊</td><td class="n">50万円</td><td>建設・購入／補修／賃借</td><td class="n">200／100／50万円</td></tr>' +
+              '<tr><td>中規模半壊</td><td class="n">—</td><td>建設・購入／補修／賃借</td><td class="n">100／50／25万円</td></tr>' +
+              "</table>" +
+              "<p><strong>申請期間は、基礎支援金が災害発生日から13月以内、加算支援金が37月以内。</strong>" +
+              "2つを同時に申請する必要はなく、まず基礎支援金を申請し、" +
+              "住宅の再建方法が決まってから加算支援金を申請することができます。</p>" +
+              "<p>被災時に現に居住していた世帯が対象なので、" +
+              "<strong>空き家、別荘、他人に貸している物件は対象になりません。</strong></p>",
+        where: "<b>出す先</b>　市町村（都道府県がとりまとめます）<br>" +
+               "<b>おもな書類</b>　支給申請書、罹災証明書等、住民票等、預金通帳の写し／" +
+               "加算支援金は契約書（住宅の購入・補修、借家の賃貸借 等）",
+        src: S_SEIKATSU,
+        ask: true
+      },
+      {
+        id: "t-chouikin", title: "災害弔慰金・災害障害見舞金",
+        body: "<p>災害弔慰金の支給等に関する法律にもとづいて、市町村が支給します。</p>" +
+              "<p><strong>災害弔慰金</strong>（災害により亡くなった方のご遺族に）</p>" +
+              "<ul>" +
+              "<li>生計維持者が死亡した場合：市町村条例で定める額（<strong>500万円以下</strong>）</li>" +
+              "<li>その他の者が死亡した場合：市町村条例で定める額（<strong>250万円以下</strong>）</li>" +
+              "</ul>" +
+              "<p>受け取れるご遺族の範囲は、配偶者、子、父母、孫、祖父母。" +
+              "いずれもいない場合は、死亡当時に同居し、または生計を同じくしていた兄弟姉妹です。</p>" +
+              "<p><strong>災害障害見舞金</strong>（災害による負傷・疾病で、精神または身体に著しい障害が出た場合）</p>" +
+              "<ul>" +
+              "<li>生計維持者が重度の障害を受けた場合：市町村条例で定める額（<strong>250万円以下</strong>）</li>" +
+              "<li>その他の者が重度の障害を受けた場合：市町村条例で定める額（<strong>125万円以下</strong>）</li>" +
+              "</ul>" +
+              "<p>どちらも<strong>対象となる災害は、自然災害で1市町村において住居が5世帯以上滅失した災害等</strong>です。" +
+              "金額の上限は法律で決まっていますが、実際にいくらになるかは<strong>市町村の条例</strong>で決まります。" +
+              "ここは市区町村に確かめてください。</p>",
+        where: "<b>出す先</b>　市町村",
+        src: S_KAKUSYU + '／厚生労働省「<a href="https://www.mhlw.go.jp/shinsai_jouhou/saigaishien.html" target="_blank" rel="noopener">災害弔慰金・災害援護資金などの支援について</a>」'
+      },
+      {
+        id: "t-engo", title: "災害援護資金（貸付）",
+        body: "<p>同じ法律にもとづく<strong>貸付</strong>です。給付ではありません。" +
+              "災害により負傷、または住居・家財の損害を受けた方に、生活の再建に必要な資金を貸し付けます。</p>" +
+              "<p><strong>貸付限度額</strong></p>" +
+              "<ul>" +
+              "<li>世帯主に1か月以上の負傷がある場合：負傷のみ150万円／家財の3分の1以上の損害250万円／" +
+              "住居の半壊270万円／住居の全壊350万円</li>" +
+              "<li>世帯主に1か月以上の負傷がない場合：家財の3分の1以上の損害150万円／住居の半壊170万円／" +
+              "住居の全壊250万円／住居の全体の滅失または流失350万円</li>" +
+              "</ul>" +
+              "<p><strong>貸付利率は年3％以内で条例で定める率（据置期間中は無利子）、" +
+              "据置期間は3年以内（特別の場合5年）、償還期間は10年以内（据置期間を含む）。</strong></p>" +
+              "<p>所得による制限があります。借りられるかどうか、いくら借りられるかは、市町村で確かめてください。</p>",
+        where: "<b>出す先</b>　市町村",
+        src: S_KAKUSYU
+      },
+      {
+        id: "t-gienkin", title: "義援金と支援金は、別のもの",
+        body: "<p>混ざりやすいので、分けて覚えてください。</p>" +
+              "<p><strong>義援金</strong>は、法律にこう定義されています。" +
+              "<strong>「自然災害の被災者又はその遺族の生活を支援し、被災者等を慰藉するため等のため" +
+              "自発的に拠出された金銭を原資として、都道府県又は市町村が一定の配分の基準に従い被災者等に交付する金銭」。</strong>" +
+              "つまり、寄付されたお金が<strong>配分委員会などの基準にしたがって、被災した人に配られる</strong>ものです。" +
+              "配分の基準と時期は災害ごとに決まり、<strong>何回かに分けて配られる</strong>ことがよくあります。</p>" +
+              "<p><strong>被災者生活再建支援金</strong>は、国と都道府県のお金で、制度として決まった額が支給されるものです。" +
+              "寄付ではありません。両方を受け取れます。</p>" +
+              "<p>義援金には、法律による保護があります。" +
+              "<strong>交付を受ける権利は譲り渡し・担保・差押えができず、交付を受けた金銭も差し押さえることができません。</strong>" +
+              "借金があっても、義援金は手元に残ります。</p>" +
+              "<p>なお「支援金」という言葉は、<strong>支援団体の活動資金への寄付</strong>を指して使われることもあります。" +
+              "寄付をする側になったときは、そのお金が被災者に配られるのか、団体の活動に使われるのかを確かめてください。</p>",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/503AC1000000064" target="_blank" rel="noopener">自然災害義援金に係る差押禁止等に関する法律</a>」（令和3年法律第64号 第2条・第3条）'
+      }
+    ]
+  },
+
+  {
+    id: "h4", phase: "p2", chip: "保険", chipSub: "自分で請求できる",
+    from: 120, to: 200,
+    tag: "保険",
+    title: "保険会社に、自分で連絡する",
+    lead: "<strong>保険金の請求は、加入者が自分でできます。</strong>" +
+          "代行業者に頼む必要はありません。" +
+          "罹災証明書とは別のしくみで動くので、両方を並行して進めてください。",
+    tasks: [
+      {
+        id: "t-renraku", title: "まず、加入先に電話する",
+        body: "<p>火災保険、地震保険、共済。<strong>証券も印鑑も手元になくてかまいません。</strong>" +
+              "金融庁は保険会社に対して、" +
+              "<strong>「保険証券、届出印鑑等を紛失した保険契約者等については、申出の保険契約内容が確認できれば、" +
+              "保険金等の請求案内を行うなど可能な限りの便宜措置を講ずること」</strong>を要請しています。" +
+              "保険金の支払いについても、<strong>迅速な支払いに配慮すること</strong>、" +
+              "<strong>保険料の払込猶予期間を延長すること</strong>が要請されています。</p>" +
+              "<p>どこの保険に入っていたか分からないときは、" +
+              "通帳やクレジットカードの引き落とし履歴に保険料が残っていることが多いので、そこからたどれます。</p>" +
+              "<p>なお、<strong>損害保険や共済は独自に損害査定をするため、" +
+              "罹災証明書の添付を求めないことが一般的です。</strong>" +
+              "罹災証明書が出るのを待たずに、保険会社には先に連絡してください。</p>",
+        src: S_FSA + "／" + S_TEBIKI + "（罹災証明書の添付について）"
+      },
+      {
+        id: "t-jishin", title: "地震保険は、火災保険とセットでしか入れない",
+        body: "<p>財務省の説明は明確です。" +
+              "<strong>地震保険は「火災保険に付帯する方式での契約となりますので、火災保険への加入が前提となります」。</strong>" +
+              "単独では契約できません。<strong>地震・噴火・津波を原因とする損害は、火災保険だけでは支払われません。</strong>" +
+              "自分の契約に地震保険が付いているかどうかを、証券か保険会社で確かめてください。</p>" +
+              "<p>補償の対象は<strong>居住の用に供する建物および家財（生活用動産）</strong>。" +
+              "保険金額は<strong>火災保険金額の30〜50％の範囲内</strong>で、" +
+              "限度額は<strong>建物5,000万円、家財1,000万円</strong>です。</p>" +
+              "<p>支払われる額は損害の区分で決まります（平成29年1月以降に始期のある契約）。" +
+              "<strong>全損100％／大半損60％／小半損30％／一部損5％</strong>（保険金額に対する割合）。</p>" +
+              "<p><strong>保険会社の損害区分と、市区町村の罹災証明書の判定は別物です。</strong>" +
+              "全壊なのに地震保険は大半損、ということは起こり得ます。それぞれの基準で判定されるためです。</p>",
+        src: '財務省「<a href="https://www.mof.go.jp/policy/financial_system/earthquake_insurance/jisin.htm" target="_blank" rel="noopener">地震保険制度の概要</a>」'
+      },
+      {
+        id: "t-jikou", title: "請求の時効は3年", due: "3年", hard: true,
+        body: "<p>保険法第95条は、こう定めています。" +
+              "<strong>「保険給付を請求する権利、保険料の返還を請求する権利及び第63条又は第92条に規定する" +
+              "保険料積立金の払戻しを請求する権利は、これらを行使することができる時から3年間行使しないときは、" +
+              "時効によって消滅する」。</strong></p>" +
+              "<p>3年あるからといって放っておく理由はありませんが、" +
+              "<strong>「もう遅い」とあきらめる前に、まず連絡してください。</strong>" +
+              "あとから被害に気づいた、という事情もあります。</p>" +
+              "<p>共済や、保険会社ごとの約款には別の定めがあることもあります。加入先に確かめてください。</p>",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/420AC0000000056" target="_blank" rel="noopener">保険法</a>」第95条'
+      },
+      {
+        id: "t-kataru", title: "保険会社をかたる訪問に気をつける", due: "契約の前に", hard: true,
+        body: "<p>被災地には、こういう訪問があります。" +
+              "<strong>「台風や地震で建物の被害がないか、近所を調査している」</strong>" +
+              "<strong>「火災保険を使えば実質無料で修理できる」</strong>" +
+              "<strong>「請求期限が迫っている」</strong>。</p>" +
+              "<p>国民生活センターは、" +
+              "<strong>「請求期限が迫っている等の勧誘やインターネット広告をうのみにせず、安易に契約しないようにしましょう」</strong>" +
+              "<strong>「申請サポート会社に頼らずとも、保険金の請求は加入者自身で行えます」</strong>と呼びかけています。</p>" +
+              "<p>そして、<strong>「うその理由で保険金を請求することは絶対にやめましょう」。</strong>" +
+              "経年劣化と知りながら自然災害による損傷として請求すると、" +
+              "保険金の返還請求や契約の解除、詐欺罪に問われる可能性があります。" +
+              "<strong>業者に言われるまま書類に署名した結果、責任を負うのは契約者です。</strong></p>" +
+              "<p>屋根に上がらせる前に、<strong>まず自分の保険会社に電話してください。</strong>" +
+              "それだけで、この手口はほとんど効かなくなります。</p>",
+        src: '国民生活センター「<a href="https://www.kokusen.go.jp/news/data/n-20210902_2.html" target="_blank" rel="noopener">保険金で住宅修理ができると勧誘する事業者に注意！</a>」',
+        share: "「今日決めてくれれば」と言われたら、その場で断る。これを家族の合言葉にしておく。"
+      }
+    ]
+  },
+
+  {
+    id: "h5", phase: "p3", chip: "住まい", chipSub: "仮設と修理",
+    from: 200, to: 400,
+    tag: "住まい",
+    title: "住むところを決める",
+    lead: "災害救助法が適用された市町村では、" +
+          "<strong>応急仮設住宅</strong>と<strong>住宅の応急修理</strong>が使えます。" +
+          "この2つは<strong>制度の上で関係しあっている</strong>ので、順番を間違えないでください。",
+    tasks: [
+      {
+        id: "t-kasetsu", title: "応急仮設住宅（建設型・賃貸型）", due: "最長2年", hard: true,
+        body: "<p>災害救助法にもとづく応急仮設住宅は、3つに分かれます。</p>" +
+              "<ul>" +
+              "<li><strong>賃貸型応急住宅</strong>　民間の賃貸住宅を都道府県が借り上げて提供するもの。" +
+              "いわゆる「みなし仮設」です。着工を待たずに<strong>災害発生の日から速やかに提供</strong>されます</li>" +
+              "<li><strong>建設型応急住宅</strong>　プレハブ、木造、トレーラーハウス、ムービングハウスなどを建てるもの。" +
+              "<strong>着工は災害発生の日から20日以内</strong>が一般基準です</li>" +
+              "<li><strong>その他適切な方法</strong>　用途廃止した公営住宅などを改修して提供するもの</li>" +
+              "</ul>" +
+              "<p><strong>対象は「住家が全壊、全焼又は流出した者であって、自らの資力では住宅を確保できない者」</strong>。" +
+              "ただし、半壊でも住宅として再利用できずやむを得ず解体する場合、" +
+              "水害で流入した土砂や流木等により住宅としての利用ができない場合などは、" +
+              "入居資格者として扱われることがあります（実施には事前の協議が必要です）。</p>" +
+              "<p><strong>救助期間は、建設型が完成の日から最長2年（建築基準法第85条）、賃貸型も同じく最長2年。</strong>" +
+              "この期間は、災害によっては延長されます。</p>" +
+              "<p>公営住宅の空き住戸を目的外使用で活用することもあります。" +
+              "<strong>仮設住宅だけが選択肢ではありません。</strong>市区町村に、いま何が空いているかを聞いてください。</p>",
+        where: "<b>問い合わせ先</b>　都道府県／災害救助法が適用された市区町村",
+        src: S_KYUJO,
+        ask: true
+      },
+      {
+        id: "t-shuri", title: "住宅の応急修理", due: "3か月以内に完了", hard: true,
+        body: "<p>災害救助法にもとづいて、<strong>居室、台所、トイレなど、日常生活に必要な最小限度の部分</strong>を" +
+              "応急的に修理する制度です。<strong>お金が振り込まれるのではなく、" +
+              "都道府県等が修理業者を通じて実施する「現物給付」</strong>です。" +
+              "自分で先に工事を頼んでしまうと使えないことがあるので、順番に注意してください。</p>" +
+              "<p><strong>基準額（1世帯当たり・令和8年4月）</strong></p>" +
+              "<ul>" +
+              "<li>大規模半壊・中規模半壊・半壊（半焼）の世帯：<strong>75万7千円以内</strong></li>" +
+              "<li>準半壊の世帯：<strong>36万7千円以内</strong></li>" +
+              "</ul>" +
+              "<p>全壊（全焼）は、修理を行えない程度の被害を受けた住家なので原則として対象外ですが、" +
+              "<strong>修理することで居住が可能になる場合は、個別に対象とすることが可能</strong>とされています。</p>" +
+              "<p><strong>救助期間は、災害発生の日から3か月以内に完了。" +
+              "ただし国の災害対策本部が設置された場合は、災害発生の日から6か月以内に完了</strong>です。" +
+              "この期間は延長されることがあります。</p>" +
+              "<p>対象は「自らの資力では応急修理をすることができない者」。" +
+              "資力の要件は災害ごとの運用で変わることがあるので、市区町村に確かめてください。</p>",
+        where: "<b>問い合わせ先</b>　都道府県／災害救助法が適用された市区町村",
+        src: S_KYUJO + "／" + S_KAKUSYU,
+        ask: true
+      },
+      {
+        id: "t-kankei", title: "応急修理を使うと、仮設住宅に入れないことがある", due: "決める前に", hard: true,
+        body: "<p>もともと、<strong>応急修理を使う世帯は「元の家に住み続ける」ことが前提</strong>なので、" +
+              "応急仮設住宅とは併用できない制度でした。" +
+              "修理のあいだ住むところがなくて困る、という声を受けて、令和2年7月豪雨災害以降、扱いが変わっています。</p>" +
+              "<p>いまの一般基準はこうです。<strong>応急修理期間中に応急仮設住宅を使用できるのは、</strong></p>" +
+              "<ul>" +
+              "<li><strong>応急修理の期間が、災害発生の日から1か月を超えると見込まれ</strong></li>" +
+              "<li><strong>住家が半壊（住宅としての利用ができない場合）以上の被害を受け</strong></li>" +
+              "<li><strong>他の住まいの確保が困難な者</strong></li>" +
+              "</ul>" +
+              "<p>この場合の<strong>入居期限は、応急修理の申込日から原則6か月以内</strong>で、" +
+              "<strong>応急修理が完了したら速やかに退去</strong>することになります。</p>" +
+              "<p>そして大事なのは、<strong>この扱いは「事前に内閣府と協議の上、実施されたい」とされている</strong>こと。" +
+              "つまり<strong>その災害で使えるかどうかは、自治体が協議して決めます。</strong>" +
+              "全国どこでも自動的に使えるわけではありません。</p>" +
+              "<p><strong>応急修理を申し込む前に、仮設住宅との関係をどう扱っているかを市区町村に聞いてください。</strong>" +
+              "申し込んだあとでは、選び直せません。</p>",
+        src: S_KYUJO + "／" + S_KAKUSYU,
+        share: "「修理して住み続ける」か「一度出る」かは、家族で先に決めておく。申し込んでからでは戻せません。"
+      },
+      {
+        id: "t-blue", title: "屋根が抜けたら、緊急の修理（ブルーシート）", due: "10日以内", hard: true,
+        body: "<p>住宅の屋根、外壁、建具（窓や玄関）等に損傷があり、" +
+              "<strong>雨水の浸入等を放置すれば被害が拡大するおそれがある世帯</strong>に対して、" +
+              "災害救助法にもとづいて、</p>" +
+              "<ul>" +
+              "<li>ブルーシート、ロープ、土のう等の資材の現物給付</li>" +
+              "<li>修理業者・団体によるブルーシート展張等</li>" +
+              "</ul>" +
+              "<p>のいずれかが行われます。<strong>実施は災害発生日から10日以内</strong>、" +
+              "<strong>基準額は1世帯当たり5万6,400円以内（令和8年4月）</strong>。" +
+              "対象は、自治体から<strong>準半壊以上（相当）</strong>と判断された方です。" +
+              "その判断は、自治体職員による現場確認か、<strong>被害を受けた方が持参した写真</strong>で行われます。</p>" +
+              "<p>住家が対象で、物置、倉庫、駐車場は対象になりません。</p>" +
+              "<p><strong>自分で屋根に上らないでください。</strong>被災後の屋根からの転落は、毎回起きています。</p>",
+        src: S_KAKUSYU,
+        ask: true
+      },
+      {
+        id: "t-kouhi", title: "公費解体（損壊した家屋等の解体）",
+        body: "<p>市町村が行う<strong>災害等廃棄物処理事業</strong>の一環として、" +
+              "損壊した家屋等の解体に必要な経費が補助対象になります。" +
+              "片付けごみの収集・運搬・処分、がれきの処理も同じ事業です。</p>" +
+              "<p><strong>解体は私有財産の処分なので、公費解体であっても所有者自身の申請が要ります。</strong>" +
+              "申請には罹災証明書のほか、所有権に関する情報の確認が必要になります" +
+              "（自治体内で確認できるものは、添付を求めない運用が示されています）。</p>" +
+              "<p>共有名義の建物や相続が済んでいない建物では、" +
+              "<strong>他の共有者・相続人の同意を集めるのに時間がかかります。</strong>" +
+              "解体を考えているなら、早めに名義を確かめてください。</p>" +
+              "<p>自分で解体費用を払ってしまった場合でも、" +
+              "<strong>あとから払戻しを受けられる制度（自費解体）</strong>が設けられることがあります。" +
+              "そのときに確認されるのは、罹災証明書、施工金額と内訳がわかる書類、解体証明書、" +
+              "<strong>施工前・施工中・施工後の写真</strong>です。" +
+              "<strong>罹災証明書を取る前に解体していた場合は、全壊・半壊の被害が確認できる解体前の写真</strong>が要ります。</p>" +
+              '<span class="ask"><b>申請の期限がある</b>公費解体の申請受付は、災害ごとに市町村が期間を区切ります。' +
+              "解体を考えているなら、受付が始まった時点で相談だけでもしておいてください。</span>",
+        where: "<b>問い合わせ先</b>　市町村（廃棄物の担当課）",
+        src: S_KAITAI + "／" + S_KAKUSYU
+      },
+      {
+        id: "t-shougai", title: "土砂や流木が入り込んだとき（障害物の除去）",
+        body: "<p>災害救助法にもとづいて、土石、竹木等の障害物が住家またはその周辺に運び込まれ、" +
+              "<strong>日常生活を営むのに支障をきたしている方</strong>に対して、障害物の除去が行われます。" +
+              "都道府県等が業者等に委託して実施します。</p>" +
+              "<p><strong>基準額は、市町村内において行った1世帯当たりの平均が14万8,600円以内（令和8年4月）。</strong></p>" +
+              "<p>対象は、居室、炊事場等、生活に欠くことのできない場所または玄関に障害物が運び込まれているため" +
+              "一時的に居住できない状態にあって、自らの資力では除去できない方です。</p>" +
+              "<p>降雪により屋根に積もった雪などを放置すれば住家が倒壊等するおそれがある場合の" +
+              "<strong>屋根雪の除雪</strong>も、この対象になります。</p>",
+        src: S_KAKUSYU,
+        ask: true
+      }
+    ]
+  },
+
+  {
+    id: "h6", phase: "p3", chip: "止める・待ってもらう", chipSub: "減免と猶予",
+    from: 400, to: 600,
+    tag: "支払いを止める",
+    title: "払えないものは、待ってもらう",
+    lead: "収入が途切れても、請求は止まりません。" +
+          "<strong>ほとんどのものに、減免か猶予のしくみがあります。</strong>" +
+          "止まる前に、滞納する前に、電話してください。",
+    tasks: [
+      {
+        id: "t-kouri", title: "公共料金・使用料",
+        body: "<p>災害により被害を受けた被災者に対して、都道府県や市町村が所管する" +
+              "<strong>公共料金や施設使用料、保育料等が軽減・免除されることがあります。</strong>" +
+              "<strong>電気、ガス、電話料金等についても、各種料金の軽減・免除が実施されることがあります。</strong></p>" +
+              "<p>対象者は、都道府県・市町村・関係事業者が定めます。" +
+              "つまり<strong>事業者ごとに扱いが違う</strong>ので、契約先それぞれに聞くことになります。</p>" +
+              "<p>NHKの受信料も、受信契約の住所の建物が<strong>半壊・半焼または床上浸水以上</strong>の被害を受けた場合、" +
+              "一定期間免除されることがあります。</p>" +
+              "<p>使わなくなった家の電気・ガス・水道は、<strong>止める手続きをしないと基本料金がかかり続けます。</strong>" +
+              "仮設住宅に移るときは、忘れずに。</p>",
+        src: S_KAKUSYU
+      },
+      {
+        id: "t-hokenryou", title: "医療保険・介護保険・年金の保険料",
+        body: "<p><strong>医療保険・介護保険</strong>　国民健康保険・後期高齢者医療制度の保険料と窓口負担について、" +
+              "<strong>減免・支払猶予の措置が講じられる場合があります。</strong>" +
+              "健康保険等の被保険者等についても、窓口負担の減免措置が講じられる場合があります。" +
+              "介護保険料の減免・支払猶予や、利用者負担の減免も同じです。</p>" +
+              "<p>対象は「災害等による収入の減少などの特別な理由により、保険料・窓口負担の支払いが困難と認められる方」。" +
+              "<strong>保険者によって取扱いが異なります。</strong>加入先に確かめてください。</p>" +
+              "<p><strong>国民年金保険料</strong>　災害によって財産に相当な被害を受け、納付が困難な方は、" +
+              "申請により<strong>保険料の納付が免除等される場合があります。</strong>" +
+              "対象は<strong>住宅、家財、その他の財産についておおむね2分の1以上の損害を受けた方</strong>です。</p>" +
+              "<p>免除を受けても、その期間は<strong>年金の受給資格期間には算入されます。</strong>" +
+              "未納のまま放置するのとは、まったく違います。</p>",
+        where: "<b>問い合わせ先</b>　市町村（国民健康保険・介護保険・国民年金）／健康保険組合／協会けんぽ／年金事務所",
+        src: S_KAKUSYU
+      },
+      {
+        id: "t-chihouzei", title: "住民税・固定資産税・自動車税",
+        body: "<p>災害により被害を受けた場合、地方税（個人住民税、固定資産税、自動車税など）について、" +
+              "<strong>一部軽減または免除</strong>を受けることができます。" +
+              "<strong>徴収の猶予</strong>を受けることもできます。</p>" +
+              "<p>申告・納付の<strong>期限の延長</strong>もあります。" +
+              "都道府県・市町村が条例で一律に期限を延長している場合と、申請により延長が認められる場合があり、" +
+              "<strong>一律に延長されている場合は手続きは要りません。</strong></p>" +
+              "<p>流された自動車、住めなくなった家の固定資産税。" +
+              "<strong>黙っていると請求は続きます。</strong>税務課に、被害があったことを伝えてください。</p>",
+        where: "<b>問い合わせ先</b>　都道府県・市町村（税務課など）",
+        src: S_KAKUSYU
+      },
+      {
+        id: "t-saimu", title: "自然災害債務整理ガイドライン（住宅ローンが残っている場合）", due: "破産の前に", hard: true,
+        body: "<p>家を失っても、住宅ローンは残ります。" +
+              "新しい住まいのローンと二重になる<strong>「二重ローン」</strong>は、被災後にいちばん重い問題のひとつです。</p>" +
+              "<p>住宅ローン等を借りている個人の方や、事業に必要な資金を借りている個人事業主の方で、" +
+              "自然災害の影響によって災害前の借入の返済が困難となった方は、" +
+              "<strong>「自然災害による被災者の債務整理に関するガイドライン」</strong>を利用することにより、" +
+              "<strong>破産手続などの法的な手続によらず、債務の免除・減額を申し出ることができます。</strong></p>" +
+              "<p>内閣府が挙げている、このガイドラインの利点です。</p>" +
+              "<ul>" +
+              "<li><strong>義援金等に加え、財産の一部を、ローンの支払いに充てずに手元に残すことができます</strong></li>" +
+              "<li><strong>破産等の手続とは異なり、債務整理をしたことは個人信用情報として登録されないため、" +
+              "その後の新たな借入れに影響が及びません</strong></li>" +
+              "<li><strong>国の補助により、弁護士等の「登録支援専門家」による手続支援を無料で受けることができます</strong></li>" +
+              "</ul>" +
+              "<p><strong>対象となる自然災害は、東日本大震災、または平成27年9月2日以降に災害救助法の適用を受けた自然災害です。</strong>" +
+              "この災害が該当するかどうかは、災害救助法の適用状況で決まります。</p>" +
+              "<p>相談先は、<strong>いちばん多額のローンを借りている金融機関</strong>です。" +
+              "<strong>破産を考える前に、まずここに電話してください。</strong></p>",
+        where: "<b>問い合わせ先</b>　最も多額のローンを借りている金融機関",
+        src: S_KAKUSYU,
+        share: "ローンの残高と借入先を、1枚の紙に書き出してから電話する。それだけで話が早く進みます。"
+      },
+      {
+        id: "t-kinyu", title: "金融機関に相談する",
+        body: "<p>金融庁は、災害等のときに金融機関へ、" +
+              "<strong>「融資相談所の開設」</strong>や<strong>「返済猶予などの貸付条件の変更」</strong>の実施を要請しています。" +
+              "手形・小切手についても、" +
+              "<strong>「今回の災害等のため支払いができない手形・小切手について、" +
+              "不渡報告への掲載及び取引停止処分に対する配慮を行うこと」</strong>とされています。</p>" +
+              "<p>返済が苦しくなってから止まるまでの間に、できることがあります。" +
+              "<strong>引き落としが1回落ちなかった時点で、電話してください。</strong></p>",
+        src: S_FSA
+      }
+    ]
+  },
+
+  {
+    id: "h7", phase: "p3", chip: "税", chipSub: "有利なほうを選ぶ",
+    from: 600, to: 800,
+    tag: "税",
+    title: "所得税は、2つの方法から選べる",
+    lead: "災害で住宅や家財に損害を受けたとき、所得税を軽くする方法が<strong>2つ</strong>あります。" +
+          "<strong>どちらか有利なほうを、自分で選べます。</strong>両方は使えません。",
+    tasks: [
+      {
+        id: "t-erabu", title: "雑損控除と災害減免法、どちらか有利なほうを選ぶ", due: "確定申告で", hard: true,
+        body: "<p>国税庁の説明は、こうです。" +
+              "<strong>「災害により住宅や家財などに損害を受けた場合、確定申告で、" +
+              "1. 所得税法に定める雑損控除の方法、2. 災害減免法に定める税金の軽減免除による方法の" +
+              "どちらか有利な方法を選ぶことによって、所得税の全部又は一部を軽減することができます」。</strong></p>" +
+              "<p><strong>① 雑損控除（所得税法）</strong>　次の2つのうち、多いほうの金額を所得から差し引けます。</p>" +
+              "<ul>" +
+              "<li>（損害金額＋災害等関連支出－保険金等）－（総所得金額等）×10％</li>" +
+              "<li>（災害関連支出－保険金等）－5万円</li>" +
+              "</ul>" +
+              "<p>その年の所得から引ききれなかった分は、<strong>翌年以後3年間</strong>に繰り越せます" +
+              "（東日本大震災、または令和5年4月1日以後の特定非常災害は5年間）。" +
+              "<strong>所得の制限はありません。</strong></p>" +
+              "<p><strong>② 災害減免法</strong>　その年の所得税が、所得金額に応じて軽減・免除されます。</p>" +
+              '<table class="money">' +
+              "<tr><th>その年の所得金額</th><th>軽減・免除</th></tr>" +
+              '<tr><td>500万円以下</td><td class="n">全額免除</td></tr>' +
+              '<tr><td>500万円超 750万円以下</td><td class="n">2分の1を軽減</td></tr>' +
+              '<tr><td>750万円超 1,000万円以下</td><td class="n">4分の1を軽減</td></tr>' +
+              "</table>" +
+              "<p>使えるのは、<strong>災害によって受けた住宅や家財の損害金額がその価額の2分の1以上</strong>で、" +
+              "かつ<strong>その年の所得金額の合計額が1,000万円以下</strong>の場合です。" +
+              "繰越はできません。</p>" +
+              "<p><strong>おおまかな目安</strong>：損害が大きく所得が低い年は災害減免法、" +
+              "損害が複数年にわたって響くときや所得が高いときは雑損控除、" +
+              "になりやすいのですが、<strong>実際の有利・不利は金額を入れて計算しないと決まりません。</strong>" +
+              "税務署で両方を試算してもらえます。</p>",
+        where: "<b>出す先</b>　納税地の所轄税務署（確定申告書に、適用を受ける旨、被害の状況、損害金額を記載します）",
+        src: '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1110.htm" target="_blank" rel="noopener">No.1110 災害や盗難などで資産に損害を受けたとき（雑損控除）</a>」／' +
+             '「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1902.htm" target="_blank" rel="noopener">No.1902 災害減免法による所得税の軽減免除</a>」／' + S_KAKUSYU,
+        share: "領収書を捨てないこと。ここで効きます。"
+      },
+      {
+        id: "t-kigen-zei", title: "申告と納付を、待ってもらう",
+        body: "<p><strong>期限の延長</strong>　災害などの理由で申告・納付を期限までにできない場合、" +
+              "<strong>その理由のやんだ日から2か月以内の範囲でその期限が延長されます。</strong>" +
+              "国税庁長官が地域と期日を定めて告示する場合（<strong>地域指定</strong>）と、" +
+              "所轄税務署長に申請して承認を受ける場合（<strong>個別指定</strong>）があります。" +
+              "<strong>地域指定なら、手続きは要りません。</strong></p>" +
+              "<p><strong>納税の猶予</strong>　災害により被害を受けた場合、税務署長への申請により納税の猶予を受けられます。" +
+              "対象は「災害により全積極財産の概ね5分の1以上の損失を受けた方」など、一定の要件を満たす方です。</p>" +
+              "<p><strong>予定納税の減額</strong>　所得税の予定納税をする方が災害により損失を受けた場合、" +
+              "申請により、災害後に納期限が来る予定納税の減額を受けられます。</p>" +
+              "<p><strong>給与所得者の源泉所得税の徴収猶予</strong>　住宅や家財の損害額がその価額の2分の1以上で、" +
+              "かつその年分の所得金額の見積額が1,000万円以下である方などは、" +
+              "申請により源泉所得税の徴収猶予や還付を受けられます。" +
+              "<strong>年末や確定申告を待たずに、手取りが増えます。</strong></p>",
+        where: "<b>問い合わせ先</b>　所轄の税務署",
+        src: S_KAKUSYU + '／国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/saigai/index.htm" target="_blank" rel="noopener">災害関連情報</a>」'
+      }
+    ]
+  },
+
+  {
+    id: "h8", phase: "p4", chip: "再発行", chipSub: "なくしたもの",
+    from: 800, to: 1000,
+    tag: "なくしたもの",
+    title: "証明書とカードを取り直す",
+    lead: "流された、燃えた、どこにあるか分からない。" +
+          "<strong>だいたいのものは、再発行できます。</strong>" +
+          "急ぐ順に並べました。",
+    tasks: [
+      {
+        id: "t-tsucho", title: "通帳・印鑑・キャッシュカード", due: "いちばん先", soft: true,
+        body: "<p>前に書いたとおり、<strong>通帳も印鑑もなくても払い戻しに応じるよう、金融庁が金融機関に要請しています。</strong>" +
+              "届出の印鑑がない場合には拇印で応じることが要請された例もあります。</p>" +
+              "<p>本人確認ができるものが何もない場合でも、まず窓口か、その金融機関の災害用の電話窓口に相談してください。" +
+              "<strong>「何も持っていないから行けない」が、いちばんもったいない判断です。</strong></p>",
+        src: S_FSA
+      },
+      {
+        id: "t-myna", title: "マイナンバーカード",
+        body: "<p>なくしたと分かったら、順番はこうです。</p>" +
+              "<ol>" +
+              "<li><strong>マイナンバー総合フリーダイヤル 0120-95-0178</strong>（24時間365日）に電話して、" +
+              "<strong>カード機能の一時利用停止</strong>をする（音声ガイダンスは2番）</li>" +
+              "<li>自宅での紛失を除き、<strong>最寄りの交番・警察署に遺失届・盗難届</strong>を出し、受理番号を控える</li>" +
+              "<li>住民登録のある<strong>市区町村の窓口で再発行</strong>の手続きをする（紛失したカードの廃止手続きが必要です）</li>" +
+              "</ol>" +
+              "<p>災害でなくした場合、<strong>再交付手数料が免除される扱い</strong>が示されることがあります。" +
+              "市区町村に確かめてください。</p>",
+        src: 'デジタル庁「<a href="https://services.digital.go.jp/mynumbercard/lost-stolen/" target="_blank" rel="noopener">マイナンバーカードまたはスマートフォンの紛失・盗難にあったとき</a>」'
+      },
+      {
+        id: "t-menkyo", title: "運転免許証",
+        body: "<p>免許証をなくした場合は、<strong>住所地の都道府県公安委員会に再交付を申請できます。</strong>" +
+              "必要なものは、</p>" +
+              "<ul>" +
+              "<li>再交付申請書</li>" +
+              "<li>当該免許証、または<strong>免許証を忘失し、もしくは滅失した事実を証するに足りる書類</strong></li>" +
+              "<li>都道府県によっては申請用写真（申請前6か月以内に撮影した、無帽・正面・無背景で胸から上、3.0×2.4センチ）</li>" +
+              "</ul>" +
+              "<p>申請場所、受付時間、手数料は都道府県ごとに違います。" +
+              "運転免許センターに電話してから行ってください。" +
+              "<strong>災害時は手数料の免除や、臨時の受付が設けられることがあります。</strong></p>",
+        src: '警察庁「<a href="https://www.npa.go.jp/policies/application/license_renewal/QA.html" target="_blank" rel="noopener">運転免許に関する諸手続 Q&amp;A</a>」'
+      },
+      {
+        id: "t-kenpo", title: "健康保険証・お薬手帳",
+        body: "<p>健康保険の資格を確かめる手段をなくしても、<strong>保険診療は受けられます。</strong>" +
+              "災害時には、氏名・生年月日・加入先などを申し立てることで受診できる取扱いが示されるのが通例です。" +
+              "<strong>扱いは保険者と災害ごとに変わる</strong>ので、受診する前に医療機関か加入先に一報を。</p>" +
+              "<p>再発行の手続きは、加入先によって違います。" +
+              "市区町村（国民健康保険・後期高齢者医療）、勤務先または健康保険組合、協会けんぽ、共済組合。</p>" +
+              "<p><strong>持病の薬は、切らすと命にかかわります。</strong>" +
+              "お薬手帳をなくしても、薬局には調剤の記録が残っていることがあります。" +
+              "いつもの薬局に電話してください。<strong>薬の名前が分からなくても、薬局の名前が分かれば足ります。</strong></p>",
+        where: "<b>問い合わせ先</b>　市区町村（国民健康保険・後期高齢者医療）／勤務先・健康保険組合／協会けんぽ／共済組合"
+      },
+      {
+        id: "t-sonota", title: "権利証・実印・パスポート・そのほか",
+        body: "<p><strong>権利証（登記識別情報）</strong>　なくしても、不動産の権利がなくなるわけではありません。" +
+              "登記は法務局に記録として残っています。再発行はされませんが、代わりの手続きがあります。" +
+              "法務局に相談してください。</p>" +
+              "<p><strong>実印</strong>　印鑑登録は市区町村で、廃止と新しい登録ができます。</p>" +
+              "<p><strong>パスポート</strong>　大規模な災害のとき、" +
+              "<strong>旅券手数料が減免される</strong>ことがあります。" +
+              "国内では災害救助法または被災者生活再建支援法の適用日から、原則1年が受付期間です。" +
+              "都道府県の旅券事務所へ。</p>" +
+              "<p><strong>学校の証明書、資格の証明書</strong>　発行元に連絡すれば、たいてい再発行されます。" +
+              "焦らなくて大丈夫です。</p>",
+        src: S_KAKUSYU + "（旅券手数料の減免）"
+      }
+    ]
+  },
+
+  {
+    id: "h9", phase: "p4", chip: "便乗商法", chipSub: "契約の前に",
+    from: 1000, to: 1400,
+    tag: "気をつける",
+    title: "被災地には、便乗した商売が来る",
+    lead: "訪問してくる人が、全員悪いわけではありません。" +
+          "ただし<strong>「その場で契約させようとする」相手だけは、必ず断ってください。</strong>" +
+          "急がせる理由は、相手の側にしかありません。",
+    tasks: [
+      {
+        id: "t-tenken", title: "屋根修理の点検商法",
+        body: "<p>国民生活センターによれば、全国の消費生活センター等に寄せられる" +
+              "<strong>屋根工事の点検商法に関する相談は増加</strong>しており、" +
+              "2022年度の相談件数は過去5年で最多、2018年度の約3倍になっています。</p>" +
+              "<p>典型的な流れです。</p>" +
+              "<ul>" +
+              "<li><strong>「近所で工事をしている」「無料で点検する」と訪問してくる</strong></li>" +
+              "<li><strong>屋根に上がり、「このままでは危ない」と写真を見せる</strong>（その写真が自分の家のものか、確かめようがありません）</li>" +
+              "<li><strong>「今日契約すれば安くなる」とその場で契約させる</strong></li>" +
+              "</ul>" +
+              "<p><strong>点検中に屋根を壊された、というトラブルも報告されています。</strong>" +
+              "頼んでいない業者を、屋根に上げないでください。</p>" +
+              "<p>訪問販売で契約してしまっても、<strong>クーリング・オフ</strong>ができる場合があります。" +
+              "工事が始まっていても、あきらめずに188へ。</p>",
+        src: '国民生活センター「<a href="https://www.kokusen.go.jp/news/data/n-20231011_1.html" target="_blank" rel="noopener">屋根工事の点検商法のトラブルが増えています</a>」／「<a href="https://www.kokusen.go.jp/soudan_now/data/disaster.html" target="_blank" rel="noopener">ご用心 災害に便乗した悪質商法</a>」'
+      },
+      {
+        id: "t-daikou", title: "保険金申請の代行業者",
+        body: "<p>「保険金を使えば実質無料で修理できる」「申請を代行する」。" +
+              "消費者庁も、<strong>火災保険金を利用した修理工事契約を締結させる事業者について注意喚起</strong>を出しています。</p>" +
+              "<p>覚えておくことは2つです。</p>" +
+              "<ul>" +
+              "<li><strong>保険金の請求は、加入者自身で行えます。</strong>代行業者は要りません</li>" +
+              "<li><strong>うその理由で保険金を請求してはいけません。</strong>" +
+              "経年劣化と知りながら自然災害による損傷として請求すると、保険金の返還請求や契約の解除、" +
+              "詐欺罪に問われる可能性があります</li>" +
+              "</ul>" +
+              "<p>代行業者に高額な手数料を取られ、" +
+              "<strong>解約しようとすると違約金を請求される</strong>という相談も多く寄せられています。</p>" +
+              "<p>疑わしい話が来たら、<strong>まず自分の保険会社に電話する。</strong>これで足ります。</p>",
+        src: '消費者庁「<a href="https://www.caa.go.jp/notice/entry/035897/" target="_blank" rel="noopener">災害に便乗した悪質商法に注意!</a>」／国民生活センター「<a href="https://www.kokusen.go.jp/news/data/n-20210902_2.html" target="_blank" rel="noopener">保険金で住宅修理ができると勧誘する事業者に注意！</a>」'
+      },
+      {
+        id: "t-188", title: "迷ったら、契約の前に188",
+        body: "<p><strong>消費者ホットライン 188</strong>（局番なし）。" +
+              "消費者トラブルで困ったときに、近くの消費生活センター等の相談窓口を案内してくれます。</p>" +
+              "<p>「契約してしまったあとで相談する」よりも、<strong>「契約する前に相談する」ほうが、はるかに楽です。</strong>" +
+              "見積書を見てもらうだけでも構いません。</p>" +
+              "<p>義援金や支援をかたる<strong>寄付の呼びかけ</strong>、" +
+              "公的機関を名乗る<strong>不審な電話</strong>も、被災後には増えます。" +
+              "<strong>役所が電話でATMの操作を指示することはありません。</strong></p>" +
+              '<p><a class="xlink" href="%%NOTE:consumer%%">訪問販売・クーリング・オフの詳しいところは「消費者トラブルのノート」へ</a></p>',
+        src: S_KAKUSYU + "（消費者ホットライン188）"
+      }
+    ]
+  },
+
+  {
+    id: "h10", phase: "p4", chip: "こころとからだ", chipSub: "あとから来る",
+    from: 1400, to: 4000,
+    tag: "無理をしない",
+    title: "疲れは、あとから来る",
+    lead: "手続きが一段落したころに、動けなくなる人がいます。" +
+          "それは弱さではありません。<strong>順番にそうなるだけです。</strong>",
+    tasks: [
+      {
+        id: "t-muri", title: "全部を自分でやらない",
+        body: "<p>被災後の手続きは、<strong>数が多いわりに、1つずつは短い</strong>という性質があります。" +
+              "だから「今日は罹災証明の申請だけ」で十分です。" +
+              "一度に片づけようとすると、たいてい途中で止まります。</p>" +
+              "<p>やれることを分けてください。</p>" +
+              "<ul>" +
+              "<li>役所に行く人と、電話をかける人</li>" +
+              "<li>写真と書類を整理する人</li>" +
+              "<li>子どもや高齢の家族を見る人</li>" +
+              "</ul>" +
+              "<p><strong>睡眠と食事だけは削らないでください。</strong>" +
+              "判断を誤るのは、たいてい寝ていないときです。" +
+              "契約の判断は、寝たあとにしてください。</p>"
+      },
+      {
+        id: "t-soudan", title: "話せる先がある",
+        body: "<p><strong>精神保健福祉センター</strong>（都道府県・指定都市）では、こころの健康についての相談を受け付けています。" +
+              "電話や面接で相談でき、医師、看護師、保健師、精神保健福祉士、公認心理師などの専門職が対応します。</p>" +
+              "<p>厚生労働省の「<a href=\"https://www.mhlw.go.jp/mamorouyokokoro/\" target=\"_blank\" rel=\"noopener\">まもろうよ こころ</a>」に、" +
+              "公的な相談窓口（電話・SNS）がまとまっています。</p>" +
+              "<p>被災した地域には、" +
+              "<strong>被災高齢者等把握事業</strong>（個別訪問等による早期の状況把握と支援機関へのつなぎ）や、" +
+              "<strong>被災者見守り・相談支援等事業</strong>（孤立防止の見守りと生活上の相談）が置かれることがあります。" +
+              "仮設住宅に入ったあとも、訪ねてくる人がいます。<strong>断らなくていいです。</strong></p>",
+        src: S_KAKUSYU
+      },
+      {
+        id: "t-kiroku2", title: "記録は、しばらく捨てない",
+        body: "<p>写真、罹災証明書、見積書、領収書、振込の記録。" +
+              "<strong>加算支援金の申請期間は災害発生日から37月（3年余り）あります。</strong>" +
+              "税の繰越も3年（特定非常災害は5年）です。</p>" +
+              "<p>紙の束は、<strong>災害の名前を書いた箱1つ</strong>にまとめて入れておけば十分です。" +
+              "写真は、クラウドに置いたまま消さないでください。</p>" +
+              "<p>何年かあとに「あのとき何をもらったか」を聞かれる場面が、確実に来ます。</p>",
+        src: S_SEIKATSU + "（加算支援金の申請期間）"
+      }
+    ]
+  }
+];
+
+/* 期限の一覧。日数はすべて「災害発生の日」から */
+var DEADLINES = [
+  { g: "g1", w: "期限なし", t: "罹災証明書の申請", s: "全国一律の期限はなく、市区町村が災害ごとに受付期間を定めます" },
+  { g: "g1", w: "10日", t: "ブルーシート等の緊急の修理", s: "災害救助法の一般基準。準半壊以上（相当）と判断された世帯" },
+  { g: "g1", w: "20日", t: "建設型応急住宅の着工", s: "一般基準。自治体側の期限です" },
+  { g: "g2", w: "3か月", t: "住宅の応急修理の完了", s: "国の災害対策本部が設置された場合は6か月以内" },
+  { g: "g2", w: "災害ごと", t: "公費解体の申請", s: "市町村が受付期間を区切ります" },
+  { g: "g3", w: "13月", t: "被災者生活再建支援金（基礎支援金）", s: "災害発生日から。制度が適用された災害の場合" },
+  { g: "g3", w: "3年", t: "保険金を請求する権利の時効", s: "保険法第95条。行使することができる時から3年" },
+  { g: "g4", w: "37月", t: "被災者生活再建支援金（加算支援金）", s: "災害発生日から。再建方法が決まってから申請できます" },
+  { g: "g4", w: "3年", t: "雑損控除の繰越", s: "引ききれなかった損失は翌年以後3年間（特定非常災害は5年間）" }
+];
+
+/* 「つぎに来る期限」に出すもの。
+   d = 災害発生日からの日数 / m = 災害発生日からの暦月 */
+var MILESTONES = [
+  { d: 10,  t: "ブルーシート等の緊急の修理", s: "災害救助法の一般基準は災害発生日から10日以内" },
+  { d: 20,  t: "建設型応急住宅の着工", s: "一般基準。入居の申込時期は自治体の発表で" },
+  { m: 3,   t: "住宅の応急修理の完了", s: "一般基準。国の災害対策本部が設置された場合は6か月" },
+  { m: 6,   t: "住宅の応急修理の完了（本部設置の場合）", s: "延長されることがあります" },
+  { m: 13,  t: "被災者生活再建支援金（基礎支援金）の申請", s: "災害発生日から13月以内" },
+  { m: 36,  t: "保険金を請求する権利の時効", s: "保険法第95条は3年" },
+  { m: 37,  t: "被災者生活再建支援金（加算支援金）の申請", s: "災害発生日から37月以内" }
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_DATE = "hisai.date.v1";
+var KEY_CHK  = "hisai.checks.v1";
+var KEY_TH   = "kurashi.theme.v1";
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+var state = {
+  date: load(KEY_DATE, ""),
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+function fmtJP(d) {
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+}
+function addDays(d, n) {
+  var x = new Date(d.getTime());
+  x.setDate(x.getDate() + n);
+  return x;
+}
+/* 暦どおりに月を足す。月末の繰り上がり（1/31 + 1か月 = 3/3）を防ぐため、
+   はみ出したらその月の末日に丸める */
+function addMonths(d, n) {
+  var y = d.getFullYear();
+  var m = d.getMonth() + n;
+  var day = d.getDate();
+  var last = new Date(y, m + 1, 0).getDate();
+  return new Date(y, m, day > last ? last : day);
+}
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                  .replace(/"/g, "&quot;");
+}
+
+/* 経過の言い換え。年・月は日数の割り算ではなく暦どおりに数える
+   （365日を「0年12か月」と出す事故を避けるため） */
+function elapsedLabel(n, from) {
+  if (n < 0)   return "まだ先の日付です";
+  if (n === 0) return "当日";
+  if (n < 31)  return n + "日目";
+
+  var t = today0();
+  var months = (t.getFullYear() - from.getFullYear()) * 12 + (t.getMonth() - from.getMonth());
+  if (t.getDate() < from.getDate()) months--;
+  if (months < 0) months = 0;
+
+  if (months < 12) return months + "か月ごろ（" + n + "日目）";
+  var y = Math.floor(months / 12);
+  var rm = months % 12;
+  return y + "年" + (rm > 0 ? rm + "か月" : "") + "ごろ（" + n + "日目）";
+}
+
+/* MILESTONE の期日を、起点の日付から出す */
+function milestoneDate(base, ms) {
+  return ms.m ? addMonths(base, ms.m) : addDays(base, ms.d);
+}
+
+/* ============================================================
+   描画
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         "<b>" + esc(s.chip) + "</b>" + esc(s.chipSub) +
+         '<span class="here">いま</span></button>';
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(t) {
+  var done = !!state.checks[t.id];
+  var due = "";
+  if (t.due) due = '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + esc(t.id) + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + esc(t.id) + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.ask)   h += ASK_TEKIYO;
+  if (t.src)   h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  if (t.share) h += '<div class="share"><b>家族で分けられること</b>' + esc(t.share) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+function renderDeadlines() {
+  var h = "";
+  for (var i = 0; i < DEADLINES.length; i++) {
+    var d = DEADLINES[i];
+    h += '<div class="row ' + d.g + '"><div class="w">' + esc(d.w) + "</div>" +
+         '<div class="t">' + esc(d.t) + "<span>" + esc(d.s) + "</span></div></div>";
+  }
+  document.getElementById("deadlineTable").innerHTML = h;
+}
+
+/* ---- 今日の位置 ---- */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var dateIn   = document.getElementById("dateIn");
+var setBtn   = document.getElementById("setBtn");
+var clearBtn = document.getElementById("clearBtn");
+var hint     = document.getElementById("hint");
+var track    = document.getElementById("track");
+var trackPin = document.getElementById("trackPin");
+var nextup   = document.getElementById("nextup");
+var nextList = document.getElementById("nextList");
+var nextNote = document.getElementById("nextNote");
+
+var HINT_EMPTY = "入れた日付はこの端末のブラウザにだけ保存されます。サーバーには送られません。";
+var HINT_SET   = "この日付はこの端末のブラウザにだけ保存されています。";
+var NEXT_NOTE  = "ここに出るのは、法令と国の一般基準から計算した目安です。" +
+                 "実際の受付期間は災害ごとに決まり、延長されることもあります。" +
+                 "必ず市区町村の公表で確かめてください。";
+
+/* 帯の位置。区切りは 当日 / 10日 / 3か月 / 13か月 / 37か月 の4区間 */
+var BAND = [0, 10, 92, 396, 1126];
+function pinPercent(n) {
+  if (n <= 0) return 0;
+  if (n >= BAND[4]) return 100;
+  for (var i = 0; i < 4; i++) {
+    if (n <= BAND[i + 1]) {
+      var within = (n - BAND[i]) / (BAND[i + 1] - BAND[i]);
+      return (i + within) * 25;
+    }
+  }
+  return 100;
+}
+
+function renderToday() {
+  var d = parseDate(state.date);
+  if (!d) {
+    dayBig.textContent = "日付を入れてください";
+    daySub.textContent = "";
+    clearBtn.hidden = true;
+    track.hidden = true;
+    nextup.classList.remove("on");
+    hint.textContent = HINT_EMPTY;
+    var chips0 = rail.querySelectorAll(".chip");
+    for (var k = 0; k < chips0.length; k++) chips0[k].classList.remove("now");
+    return;
+  }
+
+  var n = daysBetween(d, today0());
+  dayBig.textContent = elapsedLabel(n, d);
+  daySub.textContent = fmtJP(d) + " に被害を受けてから";
+  clearBtn.hidden = false;
+  hint.textContent = HINT_SET;
+
+  track.hidden = false;
+  trackPin.style.left = pinPercent(n) + "%";
+
+  /* いまの区間に印 */
+  var chips = rail.querySelectorAll(".chip");
+  var hereIdx = -1;
+  for (var i = 0; i < STAGES.length; i++) {
+    if (n >= STAGES[i].from && n < STAGES[i].to) { hereIdx = i; break; }
+  }
+  if (hereIdx === -1 && n >= STAGES[STAGES.length - 1].from) hereIdx = STAGES.length - 1;
+  for (var j = 0; j < chips.length; j++) {
+    if (j === hereIdx) chips[j].classList.add("now");
+    else chips[j].classList.remove("now");
+  }
+
+  /* つぎに来る期限を3つ。過ぎたものは、直近の1件だけ上に出す
+     （全部を「◯日すぎ」で埋めると、次に何が来るのかが見えなくなるため） */
+  var rows = [], overdue = null, t0 = today0();
+  for (var m = 0; m < MILESTONES.length; m++) {
+    var ms = MILESTONES[m];
+    var on = milestoneDate(d, ms);
+    var left = daysBetween(t0, on);
+    if (left < 0) {
+      if (left >= -60) overdue = { ms: ms, left: left, on: on };
+      continue;
+    }
+    if (rows.length < 3) rows.push({ ms: ms, left: left, on: on });
+  }
+  if (overdue) rows.unshift(overdue);
+  if (!rows.length) {
+    nextup.classList.remove("on");
+    return;
+  }
+  var h = "";
+  for (var r = 0; r < rows.length; r++) {
+    var row = rows[r];
+    var cls = row.left < 0 ? "over" : (row.left <= 30 ? "soon" : "far");
+    var when = row.left < 0
+      ? "<b>" + Math.abs(row.left) + "</b>日すぎ"
+      : (row.left === 0 ? "<b>きょう</b>" : "あと<b>" + row.left + "</b>日");
+    h += '<div class="nx ' + cls + '">' +
+         '<div class="nx-when">' + when + "</div>" +
+         '<div class="nx-what">' + esc(row.ms.t) +
+         "<span>" + fmtJP(row.on) + "ごろ　" + esc(row.ms.s) + "</span></div></div>";
+  }
+  nextList.innerHTML = h;
+  nextNote.textContent = NEXT_NOTE;
+  nextup.classList.add("on");
+}
+
+/* ---- 進捗 ---- */
+function renderProgress() {
+  var total = 0, done = 0;
+  for (var i = 0; i < STAGES.length; i++) {
+    for (var j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = parseInt(b.getAttribute("data-i"), 10) || 0;
+  renderStage();
+  try {
+    if (b.scrollIntoView) b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    if (stageHost.scrollIntoView) stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  } catch (err) {}
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  var id = b.getAttribute("data-chk");
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest ? b.closest(".task") : null;
+  if (card) {
+    if (state.checks[id]) card.classList.add("done");
+    else card.classList.remove("done");
+  }
+  renderProgress();
+});
+
+setBtn.addEventListener("click", function () {
+  var v = dateIn.value;
+  var d = parseDate(v);
+  if (!d) { hint.textContent = "日付を選んでください。"; return; }
+  if (daysBetween(d, today0()) < 0) { hint.textContent = "未来の日付は入れられません。"; return; }
+  state.date = v;
+  save(KEY_DATE, v);
+  renderToday();
+});
+
+clearBtn.addEventListener("click", function () {
+  state.date = "";
+  dateIn.value = "";
+  save(KEY_DATE, "");
+  renderToday();
+});
+
+dateIn.addEventListener("change", function () {
+  if (parseDate(dateIn.value)) setBtn.click();
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化。どこかで転んでも、ページ全体は白くならないようにする
+   ============================================================ */
+
+try { buildRail(); renderStage(); } catch (e) {}
+try { renderDeadlines(); } catch (e) {}
+
+/* 進捗バーを期限一覧の下に足す */
+try {
+  (function () {
+    var host = document.getElementById("deadlineTable");
+    if (!host || !host.parentNode) return;
+    var p = document.createElement("div");
+    p.className = "prog";
+    p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                  '<span class="prog-bar"><i id="progFill"></i></span>';
+    host.parentNode.appendChild(p);
+  })();
+} catch (e) {}
+
+try { if (state.date) dateIn.value = state.date; renderToday(); } catch (e) {}
+try { renderProgress(); } catch (e) {}
+
+/* 日付が入っていれば、いまの時期を開いておく */
+try {
+  (function () {
+    var d = parseDate(state.date);
+    if (!d) return;
+    var n = daysBetween(d, today0());
+    for (var i = 0; i < STAGES.length; i++) {
+      if (n >= STAGES[i].from && n < STAGES[i].to) {
+        state.stage = i;
+        renderStage();
+        var chip = rail.querySelector('.chip[data-i="' + i + '"]');
+        if (chip && chip.scrollIntoView) chip.scrollIntoView({ block: "nearest", inline: "center" });
+        break;
+      }
+    }
+  })();
+} catch (e) {}
+</script>
