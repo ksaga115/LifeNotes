@@ -1,0 +1,982 @@
+<title>引っ越しノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+%%CSS%%
+
+/* ---------- このノート固有 ---------- */
+
+/* 引っ越し前／当日／引っ越し後の位置を、帯の上に書き添える */
+.track-scale.hk span:nth-child(3){color:var(--alert);font-weight:700}
+
+/* 「あと◯日」と「◯日目」で字面の幅が変わるので、数字を等幅に寄せる */
+.today-day{font-variant-numeric:tabular-nums}
+
+/* 期限がないものの但し書き */
+.nodue{display:block;margin-top:7px;font-size:11.5px;color:var(--muted);line-height:1.65}
+.nodue::before{content:"期限について　";letter-spacing:.06em;font-weight:700}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M3.2 7.6L9 3.4l5.8 4.2v6.2a.8.8 0 01-.8.8H4a.8.8 0 01-.8-.8z"
+              fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" opacity=".7"/>
+        <path d="M7.3 14.6V10h3.4v4.6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+      </svg>
+      引っ越しノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="%%HOME%%" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">
+    引っ越しの手続きを、<strong>引っ越す日を起点に期限の順</strong>に並べたノートです。
+    これから引っ越す日でも、もう引っ越した日でも入れられます。
+    「あと何日」「何日目」と、次に来る期限が出ます。
+    広告も関連記事もありません。入れた日付とチェックは、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- 今日 -->
+  <section class="today">
+    <div class="eyebrow">きょうの位置</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">日付を入れてください</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <input type="date" id="dateIn" aria-label="引っ越す日（引っ越した日）">
+      <button class="solid" id="setBtn" type="button">この日に引っ越す</button>
+      <button class="ghost" id="clearBtn" type="button" hidden>消す</button>
+    </div>
+    <p class="hint" id="hint">
+      予定の日で大丈夫です。未来の日付も入れられます。入れた日付はこの端末のブラウザにだけ保存され、サーバーには送られません。
+    </p>
+
+    <div class="track" id="track" hidden>
+      <div class="track-bar" id="trackBar">
+        <div class="track-seg" style="background:var(--p1)"></div>
+        <div class="track-seg" style="background:var(--p2)"></div>
+        <div class="track-seg" style="background:var(--p3)"></div>
+        <div class="track-seg" style="background:var(--p4)"></div>
+        <div class="track-pin" id="trackPin" style="left:0"></div>
+      </div>
+      <div class="track-scale hk">
+        <span>2か月前</span><span>2週間前</span><span>引っ越し</span><span>2週間後</span><span>3か月後</span>
+      </div>
+    </div>
+
+    <div class="nextup" id="nextup">
+      <h4>つぎに来る期限</h4>
+      <div id="nextList"></div>
+    </div>
+  </section>
+
+  <!-- 最初に読む -->
+  <div class="warn">
+    <b>先に知っておくと困らない2つ</b>
+    ひとつは<strong>引っ越した日から14日以内</strong>の届出です。転入届・転居届・国民健康保険・介護保険がここに集まっていて、
+    住民票の届出は正当な理由なく怠ると5万円以下の過料の対象になります。窓口は同じことが多いので、一度で済ませられます。
+    もうひとつは<strong>インターネット回線</strong>。工事の日程が取れるまでに時間がかかり、
+    2〜4月は数週間から1か月以上待つことがあります。ここだけは、日取りが決まった時点で動いてください。
+  </div>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>時期ごとにすること</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="時期"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 期限一覧 -->
+  <section class="sec">
+    <h2>期限の一覧</h2>
+    <p class="note">
+      起算点は手続きごとに違います（「引っ越した日」「転出予定日の翌日」「転入届を提出した日」など）。
+      下の表はそれぞれの正式な起算点で書いています。
+      持ちもの・窓口の名前・手数料は自治体で違うので、このノートでは書いていません。
+    </p>
+    <div class="table" id="deadlineTable"></div>
+  </section>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>迷ったときの聞き先</h2>
+    <p class="note">「これは誰に聞けばいいのか」が、引っ越しでいちばん時間を食うところです。</p>
+    <div class="help">
+      <dl>
+        <dt>市区町村の窓口（住民票・戸籍の係）</dt>
+        <dd>転出届・転入届・転居届・マイナンバーカード・印鑑登録。
+          国民健康保険、国民年金、介護保険、児童手当も同じフロアにあることが多く、
+          「引っ越してきたので、必要な手続きを全部教えてください」と最初に言うと案内してもらえます。
+          必要な持ちものは自治体で違うので、行く前にその市区町村のページを見るか、電話で聞いてください。</dd>
+        <dt>マイナポータル（デジタル庁）</dt>
+        <dd>マイナンバーカードがあれば、転出届をオンラインで出して、転入先に来庁予定日を連絡できます。
+          転入届そのものは窓口に行く必要があります。</dd>
+        <dt>運転免許センター・運転免許試験場</dt>
+        <dd>免許証の住所変更。運転免許関係の手続きを扱っている警察署でもできます。
+          扱っている窓口と受付時間は都道府県警のページで確認してください。</dd>
+        <dt>運輸支局・警察署</dt>
+        <dd>自動車の変更登録は運輸支局、車庫（保管場所）の届出は新しい保管場所を管轄する警察署。
+          軽自動車は手続き先も書類も違います。</dd>
+        <dt>年金事務所・ねんきんダイヤル</dt>
+        <dd>住所変更の届出が要るかどうか。マイナンバーと基礎年金番号が結びついていれば原則不要ですが、
+          自分がどちらかは電話で確かめられます。</dd>
+        <dt>税務署</dt>
+        <dd>確定申告をする人の、提出先（納税地）の確認。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 気をつけてほしいこと -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        ここに書いてあるのは<strong>一般的な段取りと、法令・官公庁の案内で決まっている期限</strong>です。
+        実際に必要な手続きは、持ち家か賃貸か、同じ市区町村の中で動くのか別の市区町村へ動くのか、
+        子ども・車・ペットがいるか、会社の健康保険か国民健康保険かで変わります。
+      </p>
+      <p style="margin:0 0 10px">
+        <strong>自治体ごとに違うもの</strong>（持ちもの、窓口の名前、手数料、粗大ごみの出し方、
+        子育て関係の手続き、印鑑登録の扱い）と、<strong>契約ごとに違うもの</strong>（賃貸の解約予告期間、
+        電気・ガス・水道の受付方法、ネット回線の工期）は、このページでは断定せず、
+        「どこで確かめればいいか」だけ書いています。
+      </p>
+      <p style="margin:0">
+        期限は<strong>e-Gov法令検索・総務省・デジタル庁・警察庁・厚生労働省・日本年金機構・こども家庭庁・国税庁・日本郵便</strong>
+        で確認して書き、その項目に出典リンクを置いています。出典のない記述は、段取りの提案です。
+        どこまで信じるかを、読む人が決められるようにしてあります。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/342AC0000000081" target="_blank" rel="noopener">住民基本台帳法</a>」（第22条 転入届＝14日以内／第23条 転居届＝14日以内／第24条 転出届＝あらかじめ／第24条の2 転入届の特例／第52条第2項 5万円以下の過料）</li>
+      <li>総務省「<a href="https://www.soumu.go.jp/menu_kyotsuu/important/topics081127.html" target="_blank" rel="noopener">住所の異動届は正しく行われていますか？</a>」</li>
+      <li>デジタル庁「<a href="https://www.digital.go.jp/policies/moving_onestop_service" target="_blank" rel="noopener">引越し手続オンラインサービス</a>」（2023年2月6日から全市区町村。転出元への来庁は原則不要、転入先への来庁は必要）</li>
+      <li>マイナポータル「<a href="https://myna.go.jp/html/moving_oss_procedure_list.html" target="_blank" rel="noopener">引越し関連手続一覧</a>」（転入届14日以内／マイナンバーカードの継続利用は転入届を提出した日から90日以内／署名用電子証明書の失効）</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/335AC0000000105" target="_blank" rel="noopener">道路交通法</a>」（第94条第1項 速やかに届け出る／第121条第1項第10号 二万円以下の罰金又は科料）</li>
+      <li>警察庁「<a href="https://www.npa.go.jp/policies/application/license_renewal/japan.html" target="_blank" rel="noopener">日本在住で日本の運転免許証をお持ちの方</a>」／「<a href="https://www.npa.go.jp/bureau/traffic/r4kaisei_main.html" target="_blank" rel="noopener">マイナンバーカードと運転免許証の一体化</a>」</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/326AC0000000185" target="_blank" rel="noopener">道路運送車両法</a>」（第12条第1項 変更登録＝15日以内）／「<a href="https://laws.e-gov.go.jp/law/337AC0000000145" target="_blank" rel="noopener">自動車の保管場所の確保等に関する法律</a>」（第7条 保管場所の変更＝15日以内）</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/newpage_21539.html" target="_blank" rel="noopener">国民健康保険の加入・脱退について</a>」／e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/333M50000100053" target="_blank" rel="noopener">国民健康保険法施行規則</a>」（第3条・第11条 十四日以内）</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/kokunen/kanyu/20120406.html" target="_blank" rel="noopener">年金に加入している方が引越したときの手続き</a>」</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/411M50000100036" target="_blank" rel="noopener">介護保険法施行規則</a>」（第23条 資格取得の届出＝十四日以内）</li>
+      <li>こども家庭庁「<a href="https://www.cfa.go.jp/policies/kokoseido/jidouteate/annai" target="_blank" rel="noopener">児童手当制度のご案内</a>」（転入した日の翌日から15日以内）</li>
+      <li>日本郵便「<a href="https://www.post.japanpost.jp/service/receive/relocation/" target="_blank" rel="noopener">転居・転送サービス</a>」（転送は届出日から1年間／登録まで3〜7営業日）</li>
+      <li>e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/325AC1000000247" target="_blank" rel="noopener">狂犬病予防法</a>」（第4条第4項 所在地の変更＝30日以内）／厚生労働省「<a href="https://www.mhlw.go.jp/stf/rabies.html" target="_blank" rel="noopener">マイクロチップの装着等の義務化に係る狂犬病予防法の特例に関する対応について</a>」</li>
+      <li>総務省「<a href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/150790_06.html" target="_blank" rel="noopener">個人住民税</a>」／e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/325AC0000000226" target="_blank" rel="noopener">地方税法</a>」（第294条第1項・第318条 賦課期日は1月1日）</li>
+      <li>国税庁「<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/shinkoku/annai/06.htm" target="_blank" rel="noopener">A1-6 所得税・消費税の納税地の異動又は変更に関する手続</a>」（令和5年1月1日以後は届出書の提出が不要）</li>
+      <li>外務省「<a href="https://www.mofa.go.jp/mofaj/toko/passport/pass_4.html" target="_blank" rel="noopener">こんな時、パスポートQ&amp;A</a>」（パスポートの扱いは、このノートでは断定していません。確認先として置いています）</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した日付とチェックは、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    内容の正確性には努めていますが、最終的な判断は各窓口の案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 一次情報で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「段取りの提案」であって、制度の断定ではない）
+
+   day / from / to は、すべて「引っ越す日」を 0 とした日数。
+   引っ越し前はマイナス、引っ越し後はプラス。
+   ============================================================ */
+
+var STAGES = [
+  {
+    id: "s1", phase: "p1", chip: "1〜2か月前", chipSub: "時間のかかるもの",
+    from: -3650, to: -30,
+    tag: "1〜2か月前",
+    title: "先に動かないと間に合わないもの",
+    lead: "この時期にしかできないことが3つあります。<strong>賃貸の解約予告、子どもの転校、インターネット回線。</strong>" +
+          "どれも「連絡してから実際に動き出すまで」に時間がかかるもので、" +
+          "引っ越しの直前に気づいても取り返しがききません。",
+    tasks: [
+      {
+        id: "h-kaiyaku", title: "賃貸の解約を予告する", due: "契約書で確認", soft: true,
+        body: "<p>解約の予告期間は、法律で一律に決まっているものではありません。" +
+              "<strong>賃貸借契約書の特約で決まります。</strong>" +
+              "1か月前としている契約が多いと言われますが、2か月前・3か月前の契約もあります。" +
+              "このノートでは日数を断定しません。</p>" +
+              "<p>まず契約書の「解約」「解約予告」「明渡し」の条項を読んでください。" +
+              "予告が遅れると、住んでいない期間の家賃を払うことになります。" +
+              "月の途中で出る場合に日割りになるかどうかも、契約書に書いてあります。</p>" +
+              "<p>解約の連絡は、あとで「言った・言わない」にならないよう、" +
+              "書面か、所定の解約通知書で出しておくと確実です。</p>",
+        where: "<b>出す先</b>　管理会社または貸主（契約書に連絡先が書かれています）",
+        share: "退去の立ち会い日も一緒に決めておくと、引っ越し当日の段取りが組みやすくなります。"
+      },
+      {
+        id: "h-tenkou", title: "学校の転校を伝える",
+        body: "<p>公立の小中学校は、いまの学校に転校することを伝えて必要な書類を受け取り、" +
+              "引っ越し後に転入届を出したうえで、新しい市区町村の教育委員会・学校で手続きをします。</p>" +
+              "<p><strong>書類の名前も、渡す順番も、自治体によって違います。</strong>" +
+              "このノートでは書きません。いまの学校の担任か事務室、" +
+              "または引っ越し先の市区町村の教育委員会に、早めに電話して手順を聞いてください。</p>" +
+              "<p>私立・高校は学校ごとに扱いが違い、転入学試験や受け入れ枠の有無から確認が要ります。" +
+              "受け入れ時期が学期の区切りに限られることもあるので、いちばん早く動くべき項目です。</p>",
+        share: "学年の途中で移る場合、教科書が違うことがあります。転校先で使う教科書を早めに聞いておくと落ち着きます。"
+      },
+      {
+        id: "h-net", title: "インターネット回線を手配する", due: "早めに", soft: true,
+        body: "<p>引っ越しで「間に合わなかった」がいちばん起きやすいのがここです。" +
+              "移転手続きでも新規契約でも、<strong>工事の日程が取れるまでに時間がかかります。</strong>" +
+              "3月から4月にかけては特に混みます。</p>" +
+              "<p>確かめる順番は、まず<strong>新居でいまの回線が使えるか</strong>" +
+              "（提供エリアに入っているか、建物にすでに設備があるか）。" +
+              "使えないなら新規契約になり、さらに時間がかかります。" +
+              "集合住宅は、建物の管理側の許可が要ることもあります。</p>" +
+              "<p>在宅勤務やオンライン授業があるなら、<strong>開通までの空白期間をどうするか</strong>" +
+              "（モバイル回線でしのぐなど）も一緒に決めておいてください。</p>"
+      },
+      {
+        id: "h-sodaigomi", title: "粗大ごみの収集を予約する",
+        body: "<p>粗大ごみの出し方（予約が要るか、手数料、シールの買い方、持ち込みができるか）は" +
+              "<strong>自治体ごとに違います。</strong>このノートでは書きません。</p>" +
+              "<p>気をつけたいのは日程です。引っ越し直前は予約が埋まりやすく、" +
+              "<strong>次の収集日が引っ越しのあとになってしまうこと</strong>があります。" +
+              "捨てるものが決まった時点で予約してください。</p>" +
+              "<p>テレビ・エアコン・冷蔵庫・洗濯機といった家電や、パソコンは、" +
+              "粗大ごみとして出せない扱いになっていることがあります。" +
+              "出し方は自治体の案内で確認してください。</p>",
+        share: "「捨てる／持っていく」を家族で先に決めておくと、荷造りが半分になります。"
+      }
+    ]
+  },
+
+  {
+    id: "s2", phase: "p1", chip: "2週間前〜前日", chipSub: "住所を動かす前",
+    from: -30, to: 0,
+    tag: "2週間前〜前日",
+    title: "出ていく側の手続き",
+    lead: "転出届と、止める・移すものの連絡です。" +
+          "<strong>転出届は「あらかじめ」出すのが住民基本台帳法の定め</strong>で（第24条）、" +
+          "日数での期限は条文にありません。マイナンバーカードがあれば、窓口に行かずに出せます。",
+    tasks: [
+      {
+        id: "h-tenshutsu", title: "転出届を出す", due: "あらかじめ", hard: true,
+        body: "<p>別の市区町村へ引っ越すときは、いま住んでいる市区町村に転出届を出します。" +
+              "住民基本台帳法第24条は「<strong>転出をする者は、あらかじめ、その氏名、転出先及び転出の予定年月日を" +
+              "市町村長に届け出なければならない</strong>」と定めています。</p>" +
+              "<p>条文に「◯日前から」「◯日以内」という日数はありません。" +
+              "実際に何日前から受け付けるか、引っ越したあとでも受け付けるかは市区町村の運用によります。" +
+              "このノートでは断定しません。その市区町村の案内を見てください。</p>" +
+              "<p><strong>同じ市区町村の中での引っ越し（転居）のときは、転出届は要りません。</strong>" +
+              "引っ越したあとの転居届だけです。</p>",
+        where: "<b>出す先</b>　いま住んでいる市区町村の窓口（またはマイナポータル）<br>" +
+               "<b>持ちもの</b>　自治体によって違います。窓口の名前も違います",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/342AC0000000081" target="_blank" rel="noopener">住民基本台帳法</a>」（第24条）'
+      },
+      {
+        id: "h-oss", title: "マイナンバーカードがあれば、転出届はオンラインで出せる",
+        body: "<p>マイナンバーカード（またはスマホ用電子証明書）を持っていれば、マイナポータルの" +
+              "<strong>引越し手続オンラインサービス</strong>から転出届を提出し、" +
+              "あわせて転入先の市区町村に来庁の予定日を連絡できます。" +
+              "2023年2月6日から全市区町村でサービスが始まっています。</p>" +
+              "<p>これを使うと、<strong>引っ越し前に旧住所の市区町村へ行くのは原則不要</strong>になります。" +
+              "ただし<strong>転入届のために、新しい住所の市区町村の窓口へ行くことは必要です。</strong>" +
+              "窓口ではマイナンバーカードを提示して届出をします。</p>" +
+              "<p>ひとつ知っておきたいこと。マイナポータルから転出届を出すと、" +
+              "<strong>転出予定日に、マイナンバーカードの署名用電子証明書が自動的に失効します。</strong>" +
+              "e-Taxなどで使っている人は、新しい住所の市区町村の窓口で発行し直してください。</p>",
+        where: "<b>必要なもの</b>　有効な電子証明書が搭載されたマイナンバーカード、またはスマホ用電子証明書。日本国内での引っ越しであること",
+        src: 'デジタル庁「<a href="https://www.digital.go.jp/policies/moving_onestop_service" target="_blank" rel="noopener">引越し手続オンラインサービス</a>」／' +
+             'マイナポータル「<a href="https://myna.go.jp/html/moving_oss_procedure_list.html" target="_blank" rel="noopener">引越し関連手続一覧</a>」'
+      },
+      {
+        id: "h-lifeline", title: "電気・ガス・水道に連絡する",
+        body: "<p>いまの住まいの<strong>使用停止</strong>と、新居の<strong>使用開始</strong>を、" +
+              "それぞれの会社に連絡します。検針票や請求書に書かれているお客さま番号が手元にあると早いです。</p>" +
+              "<p>ガスは開栓に立ち会いが要るのがふつうで、日時の予約が必要です。" +
+              "<strong>引っ越し当日の夕方は枠が埋まりやすい</strong>ので、日取りが決まったら早めに押さえてください。" +
+              "水道は使用開始の連絡が要る地域と、そうでない地域があります。</p>" +
+              "<p>受付の方法（Webか電話か）、何日前までに連絡が要るかは、会社・地域で違います。" +
+              "このノートでは書きません。契約している会社の案内で確認してください。</p>",
+        share: "電気・ガス・水道・ネットの「停止」と「開始」を1枚の表にして、連絡済みかを埋めていくと抜けません。"
+      },
+      {
+        id: "h-yubin", title: "郵便局に転居届を出す", due: "転送は1年", soft: true,
+        body: "<p>郵便局に転居届を出すと、<strong>旧住所あての郵便物等が、届出日から1年間、" +
+              "新しい住所に無料で転送されます</strong>（転送開始希望日からではありません）。</p>" +
+              "<p>申し込みは、郵便局の窓口、ポスト投函、e転居（Webサイト・郵便局アプリ）から。</p>" +
+              "<p><strong>転居届を提出してから登録までに3〜7営業日かかります。</strong>" +
+              "引っ越し当日に出すと、その間の郵便物は旧住所に届いてしまいます。" +
+              "1〜2週間前に出しておくのが安全です。</p>",
+        where: "<b>必要なもの</b>　運転免許証、健康保険証の資格確認書、運転経歴証明書、在留カード、マイナンバーカード、特別永住者証明書のいずれか",
+        src: '日本郵便「<a href="https://www.post.japanpost.jp/service/receive/relocation/" target="_blank" rel="noopener">転居・転送サービス</a>」'
+      },
+      {
+        id: "h-jusho", title: "金融機関・カード・保険の住所を変える",
+        body: "<p>銀行、証券、クレジットカード、生命保険・損害保険、携帯電話、通販サイト。" +
+              "多くはアプリやWebで変えられます。</p>" +
+              "<p>郵便の転送は1年で切れます。<strong>転送が切れたあとに届かなくなって困るのが、この種類の郵便物です。</strong>" +
+              "とくに次のものは、住所が古いままだと実害が出ます。</p>" +
+              "<ul>" +
+              "<li>クレジットカードの<strong>更新カード</strong>（本人限定受取で、転送されないことがあります）</li>" +
+              "<li>保険の契約内容のお知らせ、満期の通知</li>" +
+              "<li>証券会社の取引報告書</li>" +
+              "<li>確定申告に使う<strong>控除証明書</strong>（毎年秋に届きます）</li>" +
+              "</ul>" +
+              "<p>手続きの方法と必要書類は会社ごとに違います。このノートでは書きません。</p>",
+        share: "引き落とし口座の通帳を1年分さかのぼって見ると、忘れている契約が出てきます。そこから1社ずつ消し込むと漏れません。"
+      }
+    ]
+  },
+
+  {
+    id: "s3", phase: "p2", chip: "14日以内", chipSub: "引っ越したあと",
+    from: 0, to: 15,
+    tag: "引っ越し後14日以内",
+    title: "新しい市区町村の窓口で",
+    lead: "<strong>このノートでいちばんはっきりした期限です。</strong>" +
+          "転入届・転居届は引っ越した日から14日以内。国民健康保険も介護保険も14日以内。" +
+          "児童手当は15日以内。多くは同じ庁舎の中で済むので、<strong>一度で全部やってしまうのがいちばん楽</strong>です。",
+    tasks: [
+      {
+        id: "h-tennyu", title: "転入届（または転居届）を出す", due: "14日以内", hard: true,
+        body: "<p>別の市区町村から引っ越してきたときは<strong>転入届</strong>、" +
+              "同じ市区町村の中で引っ越したときは<strong>転居届</strong>です。</p>" +
+              "<p>住民基本台帳法は、転入は「<strong>転入をした日から十四日以内</strong>」（第22条）、" +
+              "転居は「<strong>転居をした日から十四日以内</strong>」（第23条）と定めています。" +
+              "起算点は届出の日でも契約の日でもなく、<strong>実際に新しい住所に住み始めた日</strong>です。</p>" +
+              "<p>正当な理由がなくて届け出ない者は、<strong>5万円以下の過料に処する</strong>とされています" +
+              "（第52条第2項）。総務省も同じ注意を出しています。</p>" +
+              "<p>マイナンバーカードを持っている人が転出届を出している場合、" +
+              "最初の転入届には転出証明書を添えなくてよいことになっています（第24条の2）。" +
+              "カードを持っていってください。</p>",
+        where: "<b>出す先</b>　新しい住所の市区町村の窓口<br>" +
+               "<b>持ちもの</b>　<strong>自治体によって違います。</strong>行く前にその市区町村のページを見るか、電話で聞いてください",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/342AC0000000081" target="_blank" rel="noopener">住民基本台帳法</a>」（第22条・第23条・第24条の2・第52条第2項）／' +
+             '総務省「<a href="https://www.soumu.go.jp/menu_kyotsuu/important/topics081127.html" target="_blank" rel="noopener">住所の異動届は正しく行われていますか？</a>」'
+      },
+      {
+        id: "h-mynumber", title: "マイナンバーカードの継続利用の手続きをする", due: "90日以内", hard: true,
+        body: "<p>転入届を出したあと、マイナンバーカードの住所を書き換えて、引き続き使えるようにする手続きです。" +
+              "マイナポータルの案内では「<strong>転入届を提出した日から90日以内に" +
+              "マイナンバーカードの継続利用の手続きをしてください</strong>」とされています。" +
+              "その際に、署名用電子証明書の発行もあわせて申請できます。</p>" +
+              "<p>もうひとつ。同じ案内には「<strong>14日以内に手続きを行わないと、マイナンバーカードは失効します</strong>」" +
+              "とあります。カードを使い続けるためにも、まず転入届です。</p>" +
+              "<p>手続きには暗証番号が要ります。思い出せない場合はその場で再設定になるので、" +
+              "本人確認書類を持っていってください。</p>",
+        where: "<b>出す先</b>　新しい住所の市区町村の窓口（転入届と同じ日にできることが多いです）",
+        src: 'マイナポータル「<a href="https://myna.go.jp/html/moving_oss_procedure_list.html" target="_blank" rel="noopener">引越し関連手続一覧</a>」'
+      },
+      {
+        id: "h-kokuho", title: "国民健康保険の手続きをする", due: "14日以内", hard: true,
+        body: "<p>会社の健康保険ではなく国民健康保険に入っている人は、引っ越しのたびに手続きが要ります。" +
+              "厚生労働省は「国民健康保険の被保険者となったとき、脱退するときなどは、" +
+              "<strong>14日以内に</strong>、お住まいの市町村の国民健康保険の窓口まで関係書類を提出する必要があります」" +
+              "としています。</p>" +
+              "<p>国民健康保険法施行規則でも、資格を取得したときの届出（第3条）と、" +
+              "住所を変えて資格を失ったときの届出（第11条）を、いずれも<strong>十四日以内</strong>と定めています。" +
+              "つまり<strong>出ていく側と入る側の両方</strong>に14日があります。</p>" +
+              "<p>会社の健康保険に入っている人（扶養に入っている家族を含む）は、勤務先に住所変更を届け出ます。" +
+              "市区町村の窓口ではありません。</p>",
+        where: "<b>出す先</b>　市区町村の国民健康保険の窓口（国民健康保険組合の場合はその窓口）<br>" +
+               "<b>持ちもの</b>　提出が必要な書類は自治体・組合で違うので、そのページで確認してください",
+        src: '厚生労働省「<a href="https://www.mhlw.go.jp/stf/newpage_21539.html" target="_blank" rel="noopener">国民健康保険の加入・脱退について</a>」／' +
+             'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/333M50000100053" target="_blank" rel="noopener">国民健康保険法施行規則</a>」（第3条・第11条）'
+      },
+      {
+        id: "h-nenkin", title: "国民年金の住所変更",
+        body: "<p>日本年金機構は「<strong>マイナンバーと基礎年金番号が結びついている被保険者であれば、" +
+              "原則、住所変更に関する届出は不要です</strong>」としています。多くの人はこれに当てはまります。</p>" +
+              "<p>結びついていない場合は、国民年金第1号被保険者は市区役所・町村役場に変更届を出します。" +
+              "厚生年金の被保険者は勤務先に、国民年金第3号被保険者は配偶者の勤務先に申し出ます。</p>" +
+              "<p>年金を受け取っている人の住所変更も、マイナンバーが収録されていれば原則不要です。" +
+              "自分がどちらかわからないときは、年金事務所かねんきんダイヤルに電話するのがいちばん早いです。</p>",
+        nodue: "日本年金機構のこのページには、日数での期限は書かれていません。このノートでも日数は書きません。",
+        src: '日本年金機構「<a href="https://www.nenkin.go.jp/service/kokunen/kanyu/20120406.html" target="_blank" rel="noopener">年金に加入している方が引越したときの手続き</a>」'
+      },
+      {
+        id: "h-kaigo", title: "介護保険の手続き", due: "14日以内", hard: true,
+        body: "<p>65歳以上の方（第1号被保険者）は、介護保険法施行規則第23条により、" +
+              "資格を取得したときは<strong>十四日以内に</strong>届書を市町村に提出することとされています。" +
+              "転入届と同じ窓口でできることがほとんどです。介護保険被保険者証も持っていきます。</p>" +
+              "<p><strong>要介護・要支援の認定を受けている人が別の市区町村へ引っ越す場合は、" +
+              "認定を引き継ぐための手続きが要ります。</strong>" +
+              "旧住所の市区町村で受給資格証明書を受け取り、それを新しい住所の市区町村に出す、という流れです。" +
+              "引き継がないと、認定を一から取り直すことになりかねません。</p>" +
+              "<p>受給資格証明書をいつ受け取るか、何日以内に出すかの案内は自治体で違います。" +
+              "<strong>転出の前に、旧住所の介護保険の窓口かケアマネジャーに聞いてください。</strong></p>",
+        where: "<b>出す先</b>　市区町村の介護保険の窓口",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/411M50000100036" target="_blank" rel="noopener">介護保険法施行規則</a>」（第23条）'
+      },
+      {
+        id: "h-jidouteate", title: "児童手当の認定請求をする", due: "15日以内", hard: true,
+        body: "<p>他の市区町村から転入したときは、新しい住所の市区町村に<strong>認定請求書</strong>を出す必要があります。" +
+              "こども家庭庁は「<strong>転入した日（転出予定日）の翌日から15日以内に" +
+              "転入先の市区町村へ申請が必要です</strong>」としています。</p>" +
+              "<p><strong>申請が遅れると、原則、遅れた月分の手当を受けられなくなります。</strong>" +
+              "さかのぼって出るものではありません。ここは転入届と同じ日に済ませてしまうのが確実です。</p>" +
+              "<p>公務員の場合は、市区町村ではなく勤務先への申請になります。</p>",
+        where: "<b>出す先</b>　新しい住所の市区町村（公務員は勤務先）<br>" +
+               "<b>持ちもの</b>　必要書類は自治体で違います",
+        src: 'こども家庭庁「<a href="https://www.cfa.go.jp/policies/kokoseido/jidouteate/annai" target="_blank" rel="noopener">児童手当制度のご案内</a>」',
+        share: "保育園、子どもの医療費助成、学童は、制度の名前も申請先も自治体ごとに違います。転入届のときに「子育てで必要な手続きはありますか」とまとめて聞くのが早いです。"
+      },
+      {
+        id: "h-inkan", title: "印鑑登録をし直す",
+        body: "<p>印鑑登録は、法律ではなく<strong>市区町村の条例</strong>にもとづく制度です。" +
+              "別の市区町村へ転出すると旧住所での登録は使えなくなる、という取扱いが一般的ですが、" +
+              "<strong>いつ失効するか、印鑑登録証（カード）を返すのか、" +
+              "新しい登録に何が要るか、手数料がいくらかは自治体で違います。</strong>" +
+              "このノートでは断定しません。</p>" +
+              "<p>実務上いちばん困るのは、<strong>印鑑証明書が要る予定があるとき</strong>です。" +
+              "住宅の購入、自動車の登録、相続の手続きなどが引っ越しと重なるなら、" +
+              "いつからいつまで印鑑証明書が取れなくなるのかを、" +
+              "先に旧住所・新住所の両方の窓口で確認してください。</p>" +
+              "<p>新しい住所での登録は、転入届と同じ日にできることが多いです。" +
+              "登録する印鑑を持っていくのを忘れずに。</p>",
+        nodue: "印鑑登録は市区町村の条例で決まるため、このノートでは期限も持ちものも書いていません。"
+      }
+    ]
+  },
+
+  {
+    id: "s4", phase: "p3", chip: "そのあと", chipSub: "免許・車・ペット",
+    from: 15, to: 120,
+    tag: "落ち着いてから",
+    title: "住民票が動いたあとに進めるもの",
+    lead: "新しい住所の住民票が取れるようになってから進める手続きです。" +
+          "<strong>期限がはっきりあるもの（車は15日、犬は30日）と、" +
+          "日数の定めがないもの（運転免許証）</strong>が混ざっています。",
+    tasks: [
+      {
+        id: "h-menkyo", title: "運転免許証の住所を変える", due: "速やかに", hard: true,
+        body: "<p>道路交通法第94条第1項は「免許を受けた者は、…変更を生じたときは、" +
+              "<strong>速やかに住所地を管轄する公安委員会に届け出て、" +
+              "免許証に変更に係る事項の記載を受けなければならない</strong>」と定めています。" +
+              "<strong>「◯日以内」という日数の定めはありません。</strong></p>" +
+              "<p>ただし罰則はあります。この規定に違反した者は" +
+              "<strong>二万円以下の罰金又は科料</strong>に処するとされています（第121条第1項第10号）。</p>" +
+              "<p>マイナ免許証（マイナンバーカードと一体化した免許証）<strong>だけ</strong>を持っている人には、" +
+              "住所・氏名の変更手続がワンストップ化され、" +
+              "<strong>市町村に届け出れば警察への変更届出が不要</strong>になる仕組みがあります。" +
+              "従来の免許証もあわせて持っている場合は対象外です。</p>",
+        where: "<b>出す先</b>　住所地の運転免許センター・運転免許試験場、運転免許関係手続を行っている一部の警察署<br>" +
+               "<b>持ちもの</b>　住民票の写し、本人あての郵便物など、住所を確認できる書類のいずれか一つ",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/335AC0000000105" target="_blank" rel="noopener">道路交通法</a>」（第94条第1項・第121条第1項第10号）／' +
+             '警察庁「<a href="https://www.npa.go.jp/policies/application/license_renewal/japan.html" target="_blank" rel="noopener">日本在住で日本の運転免許証をお持ちの方</a>」／' +
+             '「<a href="https://www.npa.go.jp/bureau/traffic/r4kaisei_main.html" target="_blank" rel="noopener">マイナンバーカードと運転免許証の一体化</a>」',
+        share: "免許証は身分証として使う場面が多いので、住所が古いままだと銀行や携帯の窓口で止まります。早いほうが結局楽です。"
+      },
+      {
+        id: "h-kuruma", title: "自動車の登録と、車庫の届出を変える", due: "15日以内", hard: true,
+        body: "<p>自動車を持っている場合、期限のある手続きが2つあります。</p>" +
+              "<ul>" +
+              "<li><strong>変更登録（車検証）</strong>：道路運送車両法第12条第1項は、所有者の住所や" +
+              "使用の本拠の位置に変更があったときは「<strong>その事由があつた日から十五日以内に</strong>」" +
+              "国土交通大臣の行う変更登録の申請をしなければならない、と定めています。</li>" +
+              "<li><strong>保管場所（車庫）の変更届出</strong>：自動車の保管場所の確保等に関する法律第7条は、" +
+              "保管場所の位置を変更したときは「<strong>変更した日から十五日以内に</strong>」" +
+              "変更後の保管場所の位置を管轄する警察署長に届け出る、としています。</li>" +
+              "</ul>" +
+              "<p>実務では、保管場所の手続き（車庫証明・届出）を先に済ませてから変更登録に進みます。" +
+              "軽自動車は手続き先も書類も違うので、そちらの案内で確認してください。</p>" +
+              "<p>住所が変わるとナンバープレートが変わることがあります。その場合は車を持ち込むことになります。</p>",
+        where: "<b>出す先</b>　変更登録は運輸支局／保管場所の届出は新しい保管場所を管轄する警察署",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/326AC0000000185" target="_blank" rel="noopener">道路運送車両法</a>」（第12条第1項）／' +
+             '「<a href="https://laws.e-gov.go.jp/law/337AC0000000145" target="_blank" rel="noopener">自動車の保管場所の確保等に関する法律</a>」（第7条）'
+      },
+      {
+        id: "h-pet", title: "犬を飼っているなら、登録の変更を届け出る", due: "30日以内", hard: true,
+        body: "<p>狂犬病予防法第4条は、登録を受けた犬について" +
+              "<strong>所在地を変更したときは30日以内に</strong>、" +
+              "その旨を届け出なければならないと定めています。" +
+              "旧住所の市町村が交付した鑑札と引き換えに、新しい鑑札が交付されます。</p>" +
+              "<p>マイクロチップを装着して所有者情報を登録している犬については、" +
+              "狂犬病予防法の特例の扱いがあります。" +
+              "引っ越し先の市町村が特例の対象かどうかで手続きが変わるので、窓口で確認してください。</p>" +
+              "<p>猫やそのほかの動物には、この登録の制度はありません。</p>",
+        where: "<b>出す先</b>　新しい所在地を管轄する市町村（保健所や生活衛生の窓口のことが多いです）<br>" +
+               "<b>持ちもの</b>　旧住所の鑑札、狂犬病予防注射済票（自治体で案内が違います）",
+        src: 'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/325AC1000000247" target="_blank" rel="noopener">狂犬病予防法</a>」（第4条）／' +
+             '厚生労働省「<a href="https://www.mhlw.go.jp/stf/rabies.html" target="_blank" rel="noopener">マイクロチップの装着等の義務化に係る狂犬病予防法の特例に関する対応について</a>」'
+      },
+      {
+        id: "h-passport", title: "パスポートは、どうなるか確かめる",
+        body: "<p>住所が変わっただけのときに手続きが要るのか、" +
+              "本籍の都道府県が変わったときはどうなるのか。" +
+              "パスポートは場合によって扱いが分かれます。<strong>このノートでは断定しません。</strong></p>" +
+              "<p>外務省の" +
+              '<a href="https://www.mofa.go.jp/mofaj/toko/passport/pass_4.html" target="_blank" rel="noopener">' +
+              "「こんな時、パスポートQ&amp;A」</a>で、自分の場合がどれに当たるかを確かめてください。" +
+              "窓口は都道府県のパスポートセンターです。</p>" +
+              "<p>海外へ行く予定が決まっているなら、早めに見ておいたほうが安全です。</p>",
+        nodue: "このノートでは、パスポートについて期限も要否も書いていません。確認先だけ置いています。"
+      }
+    ]
+  },
+
+  {
+    id: "s5", phase: "p4", chip: "年をまたぐ", chipSub: "住民税・確定申告",
+    from: 120, to: 3650,
+    tag: "年をまたぐとき",
+    title: "住民税と、確定申告",
+    lead: "引っ越した直後には出てこないのに、年が変わってから効いてくる話です。" +
+          "<strong>住民税がどこに納まるかは、1月1日にどこに住んでいたかで決まります。</strong>",
+    tasks: [
+      {
+        id: "h-juminzei", title: "住民税は、1月1日の住所地で課税される", due: "1月1日", hard: true,
+        body: "<p>総務省は個人住民税について「<strong>1月1日現在において当該市町村に住所を有する者に対して" +
+              "課税される</strong>」としています。地方税法でも、市町村民税の賦課期日は" +
+              "「当該年度の初日の属する年の<strong>一月一日</strong>」と定められており（第318条）、" +
+              "納税義務者は「市町村内に住所を有する個人」です（第294条第1項）。</p>" +
+              "<p>つまり<strong>1月2日に引っ越しても、その年度の住民税は前の市区町村に納めます。</strong>" +
+              "新しい市区町村から納税通知書が来ないのは、異常ではありません。" +
+              "あとから旧住所の市区町村の通知が転送されてくるので、捨てないでください。</p>" +
+              "<p>給与から天引き（特別徴収）されている人は勤務先が処理します。" +
+              "ただし<strong>勤務先に住所変更を伝えていないと、書類が届かず手続きが止まります。</strong></p>",
+        src: '総務省「<a href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/150790_06.html" target="_blank" rel="noopener">個人住民税</a>」／' +
+             'e-Gov法令検索「<a href="https://laws.e-gov.go.jp/law/325AC0000000226" target="_blank" rel="noopener">地方税法</a>」（第294条第1項・第318条）'
+      },
+      {
+        id: "h-kakutei", title: "確定申告の提出先が変わる",
+        body: "<p>所得税の確定申告書は、原則として住所地を所轄する税務署に出します。" +
+              "引っ越すと、所轄の税務署が変わります。</p>" +
+              "<p>国税庁によると、<strong>令和5年1月1日以後は、" +
+              "所得税・消費税の「納税地の異動又は変更に関する届出書」の提出は不要</strong>になりました。" +
+              "代わりに、異動後の納税地を記載した申告書を提出します。</p>" +
+              "<p>年の途中で納税地が変わった場合で、国税当局からの各種文書の送付先を" +
+              "変更後の納税地にしたいときは、申出書を出すことができます。</p>",
+        where: "<b>出す先</b>　引っ越し後の住所地を所轄する税務署",
+        src: '国税庁「<a href="https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/shinkoku/annai/06.htm" target="_blank" rel="noopener">A1-6 所得税・消費税の納税地の異動又は変更に関する手続</a>」',
+        share: "秋に届く控除証明書（生命保険料、国民年金保険料など）は、住所変更が済んでいないと旧住所に行きます。申告前にあわてないよう、秋までに各社の住所を直しておくと楽です。"
+      },
+      {
+        id: "h-atokatazuke", title: "1年たったら、転送が切れる前に見直す",
+        body: "<p>郵便の転送は、転居届の届出日から1年間です。" +
+              "<strong>1年が切れる前に、まだ旧住所のままの登録が残っていないかを一度見直してください。</strong></p>" +
+              "<p>見落としが出やすいのは、年に1回しか郵便が来ないものです。" +
+              "年会費のかかるサービス、同窓会や町内会の名簿、株主優待、" +
+              "ふるさと納税のワンストップ特例の書類、車検の案内、保険の更新通知。</p>" +
+              "<p>この1年のあいだに転送されてきた封筒の差出人を並べてみると、" +
+              "住所を直し忘れている先がそのまま一覧になります。</p>",
+        share: "転送されてきた封筒には転送のシールが貼られています。それを1か所にためておくと、見直しのときの材料になります。"
+      }
+    ]
+  }
+];
+
+/* 期限一覧 */
+var DEADLINES = [
+  { g: "g1", w: "あらかじめ", t: "転出届", s: "別の市区町村へ移るとき。日数の定めはない（住民基本台帳法第24条）" },
+  { g: "g1", w: "1年", t: "郵便物の転送", s: "転居届の届出日から1年間。登録までに3〜7営業日" },
+  { g: "g2", w: "14日", t: "転入届・転居届", s: "引っ越した日から。届け出ないと5万円以下の過料" },
+  { g: "g2", w: "14日", t: "国民健康保険", s: "加入・脱退のどちらも" },
+  { g: "g2", w: "14日", t: "介護保険（第1号被保険者）", s: "資格取得の届出" },
+  { g: "g2", w: "15日", t: "児童手当の認定請求", s: "転入した日（転出予定日）の翌日から" },
+  { g: "g3", w: "15日", t: "自動車の変更登録", s: "住所等に変更があった日から" },
+  { g: "g3", w: "15日", t: "保管場所（車庫）の変更届出", s: "保管場所を変更した日から" },
+  { g: "g3", w: "30日", t: "犬の登録（所在地の変更）", s: "狂犬病予防法第4条" },
+  { g: "g3", w: "90日", t: "マイナンバーカードの継続利用", s: "転入届を提出した日から" },
+  { g: "g4", w: "速やかに", t: "運転免許証の記載事項変更", s: "日数の定めはない。違反は2万円以下の罰金又は科料" },
+  { g: "g4", w: "1月1日", t: "住民税", s: "その年の1月1日に住所があった市区町村が課税する" }
+];
+
+/* 「つぎに来る期限」に出すもの。
+   day = 引っ越す日を0とした日数。マイナスは引っ越し前。昇順に並べておく */
+var MILESTONES = [
+  { day: -60, t: "賃貸の解約予告",                 s: "予告期間は契約で決まります。契約書で確認してください" },
+  { day: -30, t: "インターネット回線の手配",       s: "工事の日程が取れるまでに時間がかかります" },
+  { day: -14, t: "転出届（別の市区町村へ移るとき）", s: "住民基本台帳法は「あらかじめ」と定めています" },
+  { day: -10, t: "郵便局の転居届",                 s: "登録までに3〜7営業日。転送は届出日から1年間" },
+  { day: -7,  t: "電気・ガス・水道の連絡",         s: "ガスの開栓は立ち会いの予約が要るのがふつうです" },
+  { day: 14,  t: "転入届・転居届／国民健康保険／介護保険", s: "引っ越した日から14日以内" },
+  { day: 15,  t: "児童手当の認定請求／自動車の変更登録・車庫の届出", s: "児童手当は転入した日の翌日から15日以内" },
+  { day: 30,  t: "犬の登録（所在地の変更）",       s: "30日以内（狂犬病予防法第4条）" },
+  { day: 90,  t: "マイナンバーカードの継続利用",   s: "転入届を提出した日から90日以内" }
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_DATE = "hikkoshi.date.v1";
+var KEY_CHK  = "hikkoshi.checks.v1";
+var KEY_TH   = "hikkoshi.theme.v1";
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+var state = {
+  date: load(KEY_DATE, ""),
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+function fmtJP(d) {
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+}
+function addDays(d, n) {
+  var x = new Date(d.getTime());
+  x.setDate(x.getDate() + n);
+  return x;
+}
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* a から b までの満月数。年・月は日数の割り算ではなく暦どおりに数える
+   （365日を「0年12か月」と出す事故を避けるため） */
+function monthsBetween(a, b) {
+  var m = (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+  if (b.getDate() < a.getDate()) m--;
+  if (m < 0) m = 0;
+  return m;
+}
+function monthLabel(m) {
+  if (m < 12) return m + "か月";
+  var y = Math.floor(m / 12);
+  var rm = m % 12;
+  return y + "年" + (rm > 0 ? rm + "か月" : "");
+}
+
+/* 経過（または残り）の言い換え。
+   n < 0 … 引っ越しはまだ先　n === 0 … 当日　n > 0 … 引っ越し後 */
+function elapsedLabel(n, from) {
+  if (n === 0) return "引っ越し当日";
+
+  var t = today0();
+
+  /* 引っ越し前は「あと◯日」だけにする。
+     「あと1か月ごろ（60日）」のように、満月数と日数がちぐはぐに見えるのを避けるため */
+  if (n < 0) return "あと" + (-n) + "日";
+
+  if (n < 31) return n + "日目";
+  return monthLabel(monthsBetween(from, t)) + "ごろ（" + n + "日目）";
+}
+
+/* ============================================================
+   描画
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         '<b>' + esc(s.chip) + '</b>' + esc(s.chipSub) +
+         '<span class="here">いま</span></button>';
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(s, t) {
+  var done = !!state.checks[t.id];
+  var due = "";
+  if (t.due) due = '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + t.id + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + t.id + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.nodue) h += '<span class="nodue">' + esc(t.nodue) + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  if (t.share) h += '<div class="share"><b>先にやっておくと楽なこと</b>' + esc(t.share) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s, s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+function renderDeadlines() {
+  var h = "";
+  for (var i = 0; i < DEADLINES.length; i++) {
+    var d = DEADLINES[i];
+    h += '<div class="row ' + d.g + '"><div class="w">' + esc(d.w) + "</div>" +
+         '<div class="t">' + esc(d.t) + "<span>" + esc(d.s) + "</span></div></div>";
+  }
+  document.getElementById("deadlineTable").innerHTML = h;
+}
+
+/* ---- 今日の位置 ---- */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var dateIn   = document.getElementById("dateIn");
+var clearBtn = document.getElementById("clearBtn");
+var hint     = document.getElementById("hint");
+var track    = document.getElementById("track");
+var trackPin = document.getElementById("trackPin");
+var nextup   = document.getElementById("nextup");
+var nextList = document.getElementById("nextList");
+
+/* 帯の位置。区切りは 2か月前 / 2週間前 / 当日 / 2週間後 / 3か月後 の4区間 */
+var BAND = [-60, -14, 0, 14, 90];
+function pinPercent(n) {
+  if (n <= BAND[0]) return 0;
+  if (n >= BAND[4]) return 100;
+  for (var i = 0; i < 4; i++) {
+    if (n <= BAND[i + 1]) {
+      var within = (n - BAND[i]) / (BAND[i + 1] - BAND[i]);
+      return (i + within) * 25;
+    }
+  }
+  return 100;
+}
+
+/* いまがどのステージか。範囲の外なら、手前なら最初、先なら最後 */
+function stageIndexFor(n) {
+  for (var i = 0; i < STAGES.length; i++) {
+    if (n >= STAGES[i].from && n < STAGES[i].to) return i;
+  }
+  return n < STAGES[0].from ? 0 : STAGES.length - 1;
+}
+
+/* つぎに来る期限。引っ越し前（マイナス）と引っ越し後（プラス）を同じ列に並べる。
+   過ぎたものは直近の1件だけ上に出す
+   （全部を「◯日すぎ」で埋めると、次に何が来るのかが見えなくなるため） */
+function nextRows(d, n) {
+  var rows = [], overdue = null;
+  for (var m = 0; m < MILESTONES.length; m++) {
+    var ms = MILESTONES[m];
+    var left = ms.day - n;
+    if (left < 0) {
+      if (left >= -60) overdue = { ms: ms, left: left, on: addDays(d, ms.day) };
+      continue;
+    }
+    if (rows.length < 3) rows.push({ ms: ms, left: left, on: addDays(d, ms.day) });
+  }
+  if (overdue) rows.unshift(overdue);
+  return rows;
+}
+
+function renderToday() {
+  var d = parseDate(state.date);
+  if (!d) {
+    dayBig.textContent = "日付を入れてください";
+    daySub.textContent = "";
+    clearBtn.hidden = true;
+    track.hidden = true;
+    nextup.classList.remove("on");
+    hint.textContent = "予定の日で大丈夫です。未来の日付も入れられます。入れた日付はこの端末のブラウザにだけ保存され、サーバーには送られません。";
+    var chips0 = rail.querySelectorAll(".chip");
+    for (var k = 0; k < chips0.length; k++) chips0[k].classList.remove("now");
+    return;
+  }
+
+  var n = daysBetween(d, today0());
+  dayBig.textContent = elapsedLabel(n, d);
+  daySub.textContent = fmtJP(d) + (n < 0 ? " に引っ越す予定" : " に引っ越し");
+  clearBtn.hidden = false;
+  hint.textContent = "この日付はこの端末のブラウザにだけ保存されています。";
+
+  track.hidden = false;
+  trackPin.style.left = pinPercent(n) + "%";
+
+  /* いまのステージに印 */
+  var chips = rail.querySelectorAll(".chip");
+  var hereIdx = stageIndexFor(n);
+  for (var j = 0; j < chips.length; j++) chips[j].classList.toggle("now", j === hereIdx);
+
+  var rows = nextRows(d, n);
+  if (!rows.length) {
+    nextList.innerHTML = '<div class="nx far"><div class="nx-when">—</div>' +
+      '<div class="nx-what">このノートに載っている期限は、すべて過ぎています' +
+      "<span>住民税は毎年1月1日の住所地で決まります。そこだけ覚えておいてください。</span></div></div>";
+    nextup.classList.add("on");
+    return;
+  }
+
+  var h = "";
+  for (var r = 0; r < rows.length; r++) {
+    var row = rows[r];
+    var cls = row.left < 0 ? "over" : (row.left <= 30 ? "soon" : "far");
+    var when = row.left < 0
+      ? '<b>' + Math.abs(row.left) + "</b>日すぎ"
+      : (row.left === 0 ? "<b>きょう</b>" : "あと<b>" + row.left + "</b>日");
+    h += '<div class="nx ' + cls + '">' +
+         '<div class="nx-when">' + when + "</div>" +
+         '<div class="nx-what">' + esc(row.ms.t) +
+         "<span>" + fmtJP(row.on) + "ごろ　" + esc(row.ms.s) + "</span></div></div>";
+  }
+  nextList.innerHTML = h;
+  nextup.classList.add("on");
+}
+
+/* ---- 進捗 ---- */
+function renderProgress() {
+  var total = 0, done = 0;
+  for (var i = 0; i < STAGES.length; i++) {
+    for (var j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = +b.dataset.i;
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  var id = b.dataset.chk;
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest(".task");
+  if (card) card.classList.toggle("done", !!state.checks[id]);
+  renderProgress();
+});
+
+/* このノートは未来の日付が主役なので、未来日を弾かない */
+document.getElementById("setBtn").addEventListener("click", function () {
+  var v = dateIn.value;
+  var d = parseDate(v);
+  if (!d) { hint.textContent = "日付を選んでください。"; return; }
+  state.date = v;
+  save(KEY_DATE, v);
+  renderToday();
+  openCurrentStage();
+});
+
+clearBtn.addEventListener("click", function () {
+  state.date = "";
+  dateIn.value = "";
+  save(KEY_DATE, "");
+  renderToday();
+});
+
+dateIn.addEventListener("change", function () {
+  if (parseDate(dateIn.value)) document.getElementById("setBtn").click();
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+  themeBtn.textContent = next === "" ? "配色" : (next === "light" ? "明るい" : "暗い");
+});
+
+/* ============================================================
+   初期化
+   ============================================================ */
+
+/* 日付が入っていれば、いまの時期を開いておく */
+function openCurrentStage() {
+  var d = parseDate(state.date);
+  if (!d) return;
+  var i = stageIndexFor(daysBetween(d, today0()));
+  state.stage = i;
+  renderStage();
+  var chip = rail.querySelector('.chip[data-i="' + i + '"]');
+  if (chip) chip.scrollIntoView({ block: "nearest", inline: "center" });
+}
+
+buildRail();
+renderStage();
+renderDeadlines();
+
+/* 進捗バーを期限一覧の下に足す */
+(function () {
+  var sec = document.getElementById("deadlineTable").parentNode;
+  var p = document.createElement("div");
+  p.className = "prog";
+  p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                '<span class="prog-bar"><i id="progFill"></i></span>';
+  sec.appendChild(p);
+})();
+
+if (state.date) dateIn.value = state.date;
+renderToday();
+renderProgress();
+openCurrentStage();
+</script>

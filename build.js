@@ -48,7 +48,14 @@ const NOTES = [
     ready: true,
   },
   { slug: "disaster", title: "防災の備蓄ノート", desc: "家族構成から必要量を出して、期限を追う。", ready: false },
-  { slug: "moving",   title: "引っ越しノート",   desc: "転出・転入の14日から、ライフライン、免許証まで。", ready: false },
+  {
+    src: "hikkoshi.html",
+    slug: "moving",
+    title: "引っ越しノート",
+    dist: "引っ越しノート.html",
+    desc: "引っ越す日を入れると、前後の期限が並びます。転入届の14日、免許証、ライフラインまで。",
+    ready: true,
+  },
 ];
 
 /* このリポジトリの外にある姉妹ノート。索引からリンクするだけ */
