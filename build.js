@@ -25,6 +25,7 @@ const NOTES = [
   {
     src: "okuyami.html",
     slug: "inheritance",
+    group: "now",
     title: "おくやみノート",
     dist: "おくやみノート.html",
     desc: "身近な人が亡くなったあとの手続きを、期限の順に。死亡届の7日から、相続登記の3年まで。",
@@ -33,6 +34,7 @@ const NOTES = [
   {
     src: "kaigo.html",
     slug: "care",
+    group: "now",
     title: "介護のノート",
     dist: "介護のノート.html",
     desc: "親の介護が始まったら。まず地域包括支援センターへ。認定、ケアプラン、費用、仕事との両立まで。",
@@ -41,6 +43,7 @@ const NOTES = [
   {
     src: "taishoku.html",
     slug: "leaving",
+    group: "now",
     title: "退職のノート",
     dist: "退職のノート.html",
     desc: "退職日を入れると期限が並びます。健康保険の20日、失業給付、住民税、退職金の税。",
@@ -49,6 +52,7 @@ const NOTES = [
   {
     src: "kakutei.html",
     slug: "tax",
+    group: "ever",
     title: "確定申告ノート",
     dist: "確定申告ノート.html",
     desc: "還付申告、副業の申告、事業所得。何を集めて、いつまでに出すか。期限は自動で数えます。",
@@ -57,6 +61,7 @@ const NOTES = [
   {
     src: "bousai.html",
     slug: "disaster",
+    group: "ever",
     title: "防災の備蓄ノート",
     dist: "防災の備蓄ノート.html",
     desc: "家族構成を入れると必要量が出ます。買ったものの期限を追って、入れ替え時期を知らせます。",
@@ -69,21 +74,37 @@ const NOTES = [
     dist: "引っ越しノート.html",
     desc: "引っ越す日を入れると、前後の期限が並びます。転入届の14日、免許証、ライフラインまで。",
     ready: true,
+    group: "now",
+  },
+  {
+    src: "pregnancy40.html",
+    slug: "pregnancy",
+    title: "妊娠40週ノート",
+    dist: "妊娠40週ノート.html",
+    desc: "妊娠0週から40週まで。赤ちゃんの育ち、からだ、この週にすること、健診と手続き。",
+    ready: true,
+    group: "baby",
+  },
+  {
+    src: "postpartum365.html",
+    slug: "postpartum",
+    title: "産後365日ノート",
+    dist: "産後365日ノート.html",
+    desc: "出産当日から1歳まで。予防接種、健診、離乳食、授乳とおむつの記録。",
+    ready: true,
+    group: "baby",
   },
 ];
 
-/* このリポジトリの外にある姉妹ノート。索引からリンクするだけ */
-const OUTSIDE = [
-  {
-    href: "https://ksaga115.github.io/PregnancyNotes/",
-    title: "妊娠40週ノート",
-    desc: "妊娠0週から40週まで。赤ちゃんの育ち、からだ、この週にすること。",
-  },
-  {
-    href: "https://ksaga115.github.io/PregnancyNotes/postpartum/",
-    title: "産後365日ノート",
-    desc: "出産当日から1歳まで。予防接種、健診、離乳食、授乳の記録。",
-  },
+/* 索引でのまとまり。性質が違うものをフラットに並べると不揃いに見えるので、
+   「いつ開くノートなのか」で分ける。 */
+const GROUPS = [
+  { key: "now",  title: "いま、手続きに追われているとき",
+    note: "日付を入れると、いま何日目で次にどの期限が来るのかが出ます。" },
+  { key: "ever", title: "毎年くるもの、ふだんから備えるもの",
+    note: "一度作っておくと、毎年・折にふれて開くことになります。" },
+  { key: "baby", title: "子どもが生まれるとき",
+    note: "妊娠0週から、1歳の誕生日まで。" },
 ];
 
 const SITE = "くらしのノート";
@@ -216,14 +237,21 @@ function indexHTML(forDocs) {
   };
 
   let cards = "";
-  for (const n of NOTES) {
-    cards += card(n.ready ? (forDocs ? n.slug + "/index.html" : n.dist) : "", n, n.ready ? "" : "soon");
+  for (const g of GROUPS) {
+    const mine = NOTES.filter(function (n) { return n.group === g.key; });
+    if (!mine.length) continue;
+    cards += '<section class="grp">';
+    cards += "<h2>" + esc(g.title) + "</h2>";
+    cards += '<p class="grp-note">' + esc(g.note) + "</p>";
+    cards += '<div class="grid">';
+    for (const n of mine) {
+      cards += card(n.ready ? (forDocs ? n.slug + "/index.html" : n.dist) : "", n, n.ready ? "" : "soon");
+    }
+    cards += "</div></section>";
   }
-  let out = "";
-  for (const n of OUTSIDE) out += card(n.href, n, "");
 
   const raw = fs.readFileSync(path.join(SRC, "index.html"), "utf8");
-  return wrap(raw.replace("%%CARDS%%", cards).replace("%%OUTSIDE%%", out), { desc: OG_DESC });
+  return wrap(raw.replace("%%CARDS%%", cards), { desc: OG_DESC });
 }
 
 /* ---------- 実行 ---------- */

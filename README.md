@@ -5,18 +5,28 @@
 
 ### 📁 [索引](https://ksaga115.github.io/LifeNotes/)
 
+**いま、手続きに追われているとき**
+
 | ノート | 内容 |
 |---|---|
 | [おくやみノート](https://ksaga115.github.io/LifeNotes/inheritance/) | 身近な人が亡くなったあとの手続き。死亡届の7日から、相続登記の3年まで |
 | [介護のノート](https://ksaga115.github.io/LifeNotes/care/) | まず地域包括支援センターへ。認定、ケアプラン、費用、仕事との両立 |
 | [退職のノート](https://ksaga115.github.io/LifeNotes/leaving/) | 健康保険の3択（任意継続は20日以内）、失業給付、住民税、退職金の税 |
-| [確定申告ノート](https://ksaga115.github.io/LifeNotes/tax/) | 還付申告／副業・雑所得／フリーランス。期限は今日から自動で数えます |
-| [防災の備蓄ノート](https://ksaga115.github.io/LifeNotes/disaster/) | 家族構成から必要量を計算。買ったものの期限を追って入れ替えを知らせます |
 | [引っ越しノート](https://ksaga115.github.io/LifeNotes/moving/) | 引っ越す日を入れると、前後の期限が並びます |
 
-姉妹ページ（別リポジトリ）：
-[妊娠40週ノート](https://ksaga115.github.io/PregnancyNotes/) ／
-[産後365日ノート](https://ksaga115.github.io/PregnancyNotes/postpartum/)
+**毎年くるもの、ふだんから備えるもの**
+
+| ノート | 内容 |
+|---|---|
+| [確定申告ノート](https://ksaga115.github.io/LifeNotes/tax/) | 還付申告／副業・雑所得／フリーランス。期限は今日から自動で数えます |
+| [防災の備蓄ノート](https://ksaga115.github.io/LifeNotes/disaster/) | 家族構成から必要量を計算。買ったものの期限を追って入れ替えを知らせます |
+
+**子どもが生まれるとき**
+
+| ノート | 内容 |
+|---|---|
+| [妊娠40週ノート](https://ksaga115.github.io/LifeNotes/pregnancy/) | 妊娠0週から40週まで。赤ちゃんの育ち、からだ、この週にすること |
+| [産後365日ノート](https://ksaga115.github.io/LifeNotes/postpartum/) | 出産当日から1歳まで。予防接種、健診、離乳食、授乳の記録 |
 
 iPhone なら Safari で開いて **共有 → ホーム画面に追加**、Android なら **メニュー → ホーム画面に追加**。
 アプリのように全画面で開けます。アカウント登録もインストールも要りません。
@@ -58,6 +68,11 @@ iPhone なら Safari で開いて **共有 → ホーム画面に追加**、Andr
 後の期限（転入届14日、児童手当15日、犬30日）が同じ列に並びます。
 **転出届は「あらかじめ」で条文に日数の定めがない**（住民基本台帳法24条）など、
 よくある誤記を条文まで当たって直してあります。
+
+**妊娠40週ノート／産後365日ノート** — 予定日または生まれた日を入れると、いま何週何日か、
+生後何日目かが出ます。すべての時期・すべての項目に「パートナーができること」が入っています。
+もともと別のリポジトリにありましたが、型が同じなのでここにまとめました
+（旧 URL は転送されるので、共有済みのリンクはそのまま使えます）。
 
 ## この一連のノートの決めごと
 
@@ -106,6 +121,8 @@ src/            ソース（<title> から始まる body 断片）
   kakutei.html    確定申告ノート
   bousai.html     防災の備蓄ノート
   hikkoshi.html   引っ越しノート
+  pregnancy40.html    妊娠40週ノート
+  postpartum365.html  産後365日ノート
 build.js        docs/ と dist/ を生成する
 docs/           GitHub Pages で公開する形（これが本命）
 dist/           1ファイルで渡す形（.gitignore 済み）

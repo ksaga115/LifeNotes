@@ -1,0 +1,1354 @@
+<title>産後365日ノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ground:#F2F3F0; --surface:#FFFFFF; --surface-2:#FAFAF8;
+  --ink:#232A2E; --ink-2:#4B565C; --muted:#7C868C;
+  --line:#E2E5E0; --line-2:#EDEFEB;
+  --s-hosp:#3F6285;  --s-hosp-bg:#E5EBF1;
+  --s-pp:#7A6A9E;    --s-pp-bg:#EBE7F2;
+  --s-early:#4C8560; --s-early-bg:#E3EFE7;
+  --s-late:#A87B22;  --s-late-bg:#F4ECD8;
+  --alert:#B34A3F; --alert-bg:#F7E7E4;
+  --ok:#3D7C5B;
+  --pa:#4A6A88; --pa-bg:#E8EEF4;
+  --shadow:0 1px 2px rgba(35,42,46,.05), 0 8px 24px -16px rgba(35,42,46,.25);
+  --display:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#15181A; --surface:#1E2225; --surface-2:#242A2D;
+    --ink:#E7EAE6; --ink-2:#BAC2C0; --muted:#8B9491;
+    --line:#333A3D; --line-2:#2A3033;
+    --s-hosp:#8FB0CE; --s-hosp-bg:#20303E;
+    --s-pp:#A99BC9;   --s-pp-bg:#2C2739;
+    --s-early:#74BB8C;--s-early-bg:#1E3325;
+    --s-late:#D6AC51; --s-late-bg:#38301A;
+    --alert:#E5877A; --alert-bg:#3A2622; --ok:#79C79C;
+    --pa:#93B4D0; --pa-bg:#22303C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#15181A; --surface:#1E2225; --surface-2:#242A2D;
+  --ink:#E7EAE6; --ink-2:#BAC2C0; --muted:#8B9491;
+  --line:#333A3D; --line-2:#2A3033;
+  --s-hosp:#8FB0CE; --s-hosp-bg:#20303E;
+  --s-pp:#A99BC9;   --s-pp-bg:#2C2739;
+  --s-early:#74BB8C;--s-early-bg:#1E3325;
+  --s-late:#D6AC51; --s-late-bg:#38301A;
+  --alert:#E5877A; --alert-bg:#3A2622; --ok:#79C79C;
+  --pa:#93B4D0; --pa-bg:#22303C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;font-weight:700}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:560px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.mark{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.mark svg{display:block;flex:none}
+.bar .spacer{flex:1}
+.ghost{font:inherit;font-size:12.5px;font-family:var(--body);background:var(--surface);color:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer;white-space:nowrap}
+.ghost:hover{border-color:var(--muted)}
+
+.today{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+.today .eyebrow{font-size:11.5px;letter-spacing:.14em;color:var(--muted);font-weight:500}
+.today-main{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:2px}
+.today-week{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+.today-sub{font-size:13px;color:var(--ink-2)}
+.setup{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.setup label{font-size:12.5px;color:var(--muted)}
+input[type="date"],input[type="number"]{font:inherit;font-size:14px;font-family:var(--body);background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0;max-width:100%}
+input[type="number"]{width:88px;font-variant-numeric:tabular-nums}
+.solid{font:inherit;font-size:13px;font-family:var(--body);font-weight:500;background:var(--ink);color:var(--ground);border:0;border-radius:999px;padding:7px 14px;cursor:pointer}
+.solid:hover{opacity:.88}
+.calc{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.7}
+
+.track{margin-top:14px}
+.track-bar{position:relative;height:10px;border-radius:999px;background:var(--line-2);overflow:hidden}
+.track-seg{position:absolute;top:0;bottom:0}
+.track-pin{position:absolute;top:-4px;width:2px;height:18px;background:var(--ink);border-radius:2px}
+.track-pin.today-pin{background:var(--alert)}
+.track-scale{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:5px;font-variant-numeric:tabular-nums}
+
+/* ---------- きょうの記録 ---------- */
+.rec{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.rec-head{display:flex;align-items:baseline;gap:8px;padding:14px 16px 0}
+.rec-head h2{font-size:15px}
+.rec-head .d{font-size:11.5px;color:var(--muted);margin-left:auto;font-variant-numeric:tabular-nums}
+.counters{display:grid;gap:10px;padding:12px 16px 14px}
+.ctr{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+.ctr .nm{font-family:var(--display);font-size:13.5px;font-weight:500;width:3.4em}
+.pips{display:flex;gap:3px;flex-wrap:wrap;align-items:center;min-height:12px}
+.pip{width:9px;height:9px;border-radius:50%;background:var(--line);flex:none}
+.pip.on{background:var(--ctr-c)}
+.ctr .n{font-family:var(--display);font-size:17px;font-variant-numeric:tabular-nums;color:var(--ctr-c);min-width:2.4em;text-align:right}
+.ctr-btns{display:flex;gap:6px}
+.ctr-btns{display:flex;gap:8px;align-items:stretch}
+.big{flex:1;min-width:0;font:inherit;font-family:var(--display);font-size:16px;font-weight:700;line-height:1;white-space:nowrap;background:var(--ctr-c);color:var(--surface);border:0;border-radius:12px;height:48px;padding:0 14px;cursor:pointer}
+.big:active{transform:scale(.98)}
+.undo{flex:none;font:inherit;font-size:15px;font-family:var(--body);background:var(--surface-2);color:var(--muted);border:1px solid var(--line);border-radius:12px;width:48px;height:48px;cursor:pointer}
+.undo:disabled{opacity:.3;cursor:default}
+.since{display:flex;align-items:baseline;gap:8px;padding:10px 16px;border-top:1px solid var(--line-2);background:var(--surface-2);font-size:12.5px;color:var(--muted)}
+.since b{font-family:var(--display);font-size:16px;color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+.growth{padding:12px 16px;border-top:1px solid var(--line-2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.growth .gl{font-size:12px;color:var(--muted)}
+.growth .last{font-size:12px;color:var(--ink-2);width:100%;font-variant-numeric:tabular-nums}
+
+.rail-wrap{margin-top:22px}
+.rail-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.rail-head h2{font-size:15px}
+.rail-head .hint{font-size:11.5px;color:var(--muted)}
+.rail{display:flex;gap:6px;align-items:flex-end;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding:4px 16px 10px;margin-inline:-16px;scrollbar-width:thin}
+.rail::-webkit-scrollbar{height:4px}
+.rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.mgroup{display:flex;flex-direction:column;gap:4px;flex:none}
+.mgroup-label{font-size:10.5px;color:var(--muted);letter-spacing:.06em;padding-left:2px;white-space:nowrap}
+.mgroup-weeks{display:flex;gap:4px}
+.chip{position:relative;scroll-snap-align:center;flex:none;width:46px;height:46px;border-radius:12px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);font-family:var(--display);font-weight:500;font-size:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-variant-numeric:tabular-nums;padding:0}
+.chip .u{font-family:var(--body);font-size:9px;color:var(--muted);line-height:1}
+.chip[data-g="hosp"]{border-bottom:3px solid var(--s-hosp)}
+.chip[data-g="pp"]{border-bottom:3px solid var(--s-pp)}
+.chip[data-g="early"]{border-bottom:3px solid var(--s-early)}
+.chip[data-g="late"]{border-bottom:3px solid var(--s-late)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.chip[aria-pressed="true"] .u{color:var(--ground);opacity:.7}
+.chip.is-today::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--alert);position:absolute;top:4px;right:5px}
+
+.panel{margin-top:8px;background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.panel-top{padding:18px 18px 16px;background:var(--stage-bg);border-bottom:1px solid var(--line)}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:500;letter-spacing:.06em;color:var(--stage);background:var(--surface);border:1px solid color-mix(in srgb,var(--stage) 35%,transparent);border-radius:999px;padding:3px 10px}
+.panel-week{display:flex;align-items:baseline;gap:8px;margin-top:10px;flex-wrap:wrap}
+.panel-week .n{font-family:var(--display);font-weight:700;font-size:38px;line-height:1.05;color:var(--stage)}
+.panel-week .m{font-size:13px;color:var(--ink-2);margin-left:auto;text-align:right}
+.countdown{font-size:12.5px;color:var(--muted);margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line-2)}
+.stat{padding:12px 8px;text-align:center;border-right:1px solid var(--line-2)}
+.stat:last-child{border-right:0}
+.stat .k{font-size:10.5px;color:var(--muted);letter-spacing:.06em}
+.stat .v{font-family:var(--display);font-size:13.5px;font-weight:500;margin-top:2px;font-variant-numeric:tabular-nums}
+.rows{padding:4px 18px 18px}
+.row{padding:14px 0;border-bottom:1px solid var(--line-2)}
+.row:last-child{border-bottom:0;padding-bottom:4px}
+.row h3{font-size:13px;color:var(--stage);letter-spacing:.04em;margin-bottom:3px}
+.row p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.row.point{background:var(--surface-2);margin:10px -10px 0;padding:12px;border-radius:12px;border-bottom:0}
+.row.point h3{color:var(--ink)}
+.row.point p{color:var(--ink)}
+.row.pa-row{background:var(--pa-bg);margin:8px -10px 0;padding:12px;border-radius:12px;border-bottom:0}
+.row.pa-row h3{color:var(--pa);display:flex;align-items:center;gap:6px}
+.row.pa-row h3 svg{flex:none}
+.row.pa-row p{color:var(--ink)}
+.nav{display:flex;gap:8px;padding:0 18px 18px}
+.nav button{flex:1;font:inherit;font-size:13px;font-family:var(--body);background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line);border-radius:12px;padding:9px;cursor:pointer}
+.nav button:hover:not(:disabled){border-color:var(--muted)}
+.nav button:disabled{opacity:.35;cursor:default}
+
+section{margin-top:34px}
+.sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+.sec-head h2{font-size:17px}
+.sec-head .note{font-size:11.5px;color:var(--muted);margin-left:auto;text-align:right}
+.stages{display:grid;gap:8px}
+.stage-card{display:grid;grid-template-columns:auto 1fr;gap:0 14px;align-items:baseline;text-align:left;width:100%;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--stage);border-radius:14px;padding:12px 14px;font:inherit;color:var(--ink)}
+.stage-card:hover{border-color:var(--muted);border-left-color:var(--stage)}
+.stage-card .nm{font-family:var(--display);font-weight:700;font-size:15px;color:var(--stage)}
+.stage-card .rg{font-size:12px;color:var(--muted);text-align:right}
+.stage-card .ds{grid-column:1/-1;font-size:13px;color:var(--ink-2);margin-top:3px;line-height:1.65}
+
+.tscroll{overflow-x:auto}
+table.tb{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+table.tb th,table.tb td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line-2);vertical-align:top}
+table.tb thead th{font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:500;background:var(--surface-2)}
+table.tb tbody tr:last-child td{border-bottom:0}
+table.tb td.wk{font-family:var(--display);white-space:nowrap;color:var(--ink)}
+table.tb td.ex{color:var(--ink-2);font-size:13px;min-width:160px}
+.pill{display:inline-block;font-size:10.5px;letter-spacing:.04em;border-radius:5px;padding:0 6px;white-space:nowrap;border:1px solid}
+.pill.teiki{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent);background:color-mix(in srgb,var(--ok) 8%,transparent)}
+.pill.nini{color:var(--muted);border-color:var(--line)}
+.pill.hou{color:var(--s-hosp);border-color:color-mix(in srgb,var(--s-hosp) 40%,transparent)}
+
+.todo-group{background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;overflow:hidden}
+.todo-head{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;border-left:4px solid var(--stage);padding:12px 14px;font:inherit;color:var(--ink);cursor:pointer;text-align:left}
+.todo-head .tt{font-family:var(--display);font-weight:700;font-size:14.5px}
+.todo-head .rg{font-size:11.5px;color:var(--muted)}
+.todo-head .cnt{margin-left:auto;font-size:12px;color:var(--stage);font-variant-numeric:tabular-nums;white-space:nowrap}
+.todo-head .car{color:var(--muted);transition:transform .18s ease}
+.todo-group[data-open="true"] .car{transform:rotate(90deg)}
+.todo-list{list-style:none;margin:0;padding:0 14px 8px}
+.todo-list > li{border-top:1px solid var(--line-2)}
+.todo-list label{display:flex;gap:10px;align-items:flex-start;padding:10px 2px 4px;cursor:pointer;font-size:14px;color:var(--ink-2)}
+.todo-list input{appearance:none;-webkit-appearance:none;flex:none;margin:3px 0 0;width:19px;height:19px;border:1.5px solid var(--muted);border-radius:6px;background:var(--surface);cursor:pointer;position:relative}
+.todo-list input:checked{background:var(--stage);border-color:var(--stage)}
+.todo-list input:checked::after{content:"";position:absolute;left:6px;top:2px;width:4px;height:9px;border:solid var(--surface);border-width:0 2px 2px 0;transform:rotate(42deg)}
+.todo-list input:checked + span{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+.more{display:inline-flex;align-items:center;gap:4px;margin:0 0 8px 29px;font:inherit;font-family:var(--body);font-size:11.5px;color:var(--stage);background:none;border:0;padding:2px 0;cursor:pointer;letter-spacing:.04em}
+.more .car{transition:transform .18s ease;font-size:9px}
+.more[aria-expanded="true"] .car{transform:rotate(90deg)}
+.detail{margin:0 0 12px 29px;padding:12px 13px;background:var(--surface-2);border:1px solid var(--line-2);border-radius:11px;font-size:13px;line-height:1.8;color:var(--ink-2)}
+.detail > *:first-child{margin-top:0}
+.detail h4{font-size:11.5px;letter-spacing:.06em;color:var(--stage);margin:14px 0 3px}
+.detail p{margin:0}
+.detail ul{margin:2px 0 0;padding-left:17px}
+.detail li{margin-bottom:2px}
+.cols{display:grid;gap:8px;margin-top:6px}
+.col{border-radius:9px;padding:9px 11px;border:1px solid var(--line-2);background:var(--surface)}
+.col .ct{font-size:11px;font-weight:700;font-family:var(--display);letter-spacing:.04em;display:flex;align-items:center;gap:6px}
+.col.ng .ct{color:var(--alert)}
+.col.ok .ct{color:var(--ok)}
+.col .dot{width:7px;height:7px;border-radius:50%;flex:none}
+.col.ng .dot{background:var(--alert)}
+.col.ok .dot{background:var(--ok)}
+.col ul{padding-left:15px;margin-top:3px}
+.pa{margin-top:14px;padding:10px 12px;border-radius:10px;background:var(--pa-bg);border:1px solid color-mix(in srgb,var(--pa) 25%,transparent)}
+.pa .pt{display:flex;align-items:center;gap:6px;font-family:var(--display);font-weight:700;font-size:11.5px;letter-spacing:.06em;color:var(--pa)}
+.pa .pt svg{flex:none}
+.pa p{margin:2px 0 0;color:var(--ink)}
+.src{margin-top:12px;padding-top:9px;border-top:1px dashed var(--line);font-size:11px;line-height:1.7;color:var(--muted)}
+.src .sl{font-weight:500;letter-spacing:.06em;margin-right:4px}
+.src a{color:var(--muted);text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--line)}
+.src a:hover{color:var(--ink-2)}
+.src span.sep{opacity:.5;margin:0 4px}
+
+.alert{background:var(--alert-bg);border:1px solid color-mix(in srgb,var(--alert) 28%,transparent);border-radius:16px;padding:16px}
+.alert h2{font-size:15px;color:var(--alert);margin-bottom:8px}
+.alert h3{font-size:13px;color:var(--alert);margin:16px 0 6px;letter-spacing:.04em}
+.alert ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2)}
+.alert li{margin-bottom:6px}
+.alert li:last-child{margin-bottom:0}
+.alert li b{color:var(--ink);font-weight:500}
+.alert .tail{font-size:12.5px;color:var(--ink-2);margin:12px 0 0}
+.tel{display:flex;align-items:center;gap:10px;margin-top:12px;padding:11px 13px;background:var(--surface);border-radius:11px;border:1px solid color-mix(in srgb,var(--alert) 22%,transparent)}
+.tel .num{font-family:var(--display);font-size:21px;font-weight:700;color:var(--alert);line-height:1;font-variant-numeric:tabular-nums}
+.tel .lb{font-size:12px;color:var(--ink-2)}
+
+.safe{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px}
+.safe h3{font-size:13px;color:var(--ink);margin-bottom:8px}
+.safe ol{margin:0;padding-left:20px;font-size:14px;color:var(--ink-2)}
+.safe li{margin-bottom:6px}
+.safe li b{color:var(--ink);font-weight:500}
+
+.sources{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.sources p{margin:0 0 8px;font-size:12.5px;color:var(--ink-2)}
+.sources ul{margin:0;padding-left:16px;font-size:12px;color:var(--muted);line-height:1.9}
+.sources a{color:var(--ink-2);text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--line)}
+
+.xlink{display:flex;align-items:center;gap:12px;margin-top:20px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:14px;text-decoration:none;color:var(--ink)}
+.xlink:hover{border-color:var(--muted)}
+.xlink .xt{font-family:var(--display);font-weight:700;font-size:14px}
+.xlink .xd{font-size:12px;color:var(--muted)}
+.xlink .ar{margin-left:auto;color:var(--muted)}
+
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);line-height:1.8}
+:focus-visible{outline:2px solid var(--s-late);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media (min-width:430px){.cols{grid-template-columns:1fr 1fr}}
+@media (max-width:380px){.panel-week .n{font-size:32px}.stat{padding:10px 5px}.big{font-size:15px;padding:0 8px}}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="6.8" cy="7.4" r="1" fill="currentColor"/><circle cx="11.2" cy="7.4" r="1" fill="currentColor"/><path d="M6.9 10.4c.6.7 1.3 1 2.1 1s1.5-.3 2.1-1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+      産後365日ノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="%%HOME%%" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="jump-today" type="button" hidden>今日へ</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="today">
+    <div class="eyebrow" id="today-eyebrow">生まれた日を入れると、今日が何日目かわかります</div>
+    <div class="today-main" id="today-main" hidden>
+      <span class="today-week" id="today-week">—</span>
+      <span class="today-sub" id="today-sub"></span>
+    </div>
+    <div class="setup">
+      <label for="birth">生まれた日</label>
+      <input type="date" id="birth">
+      <button class="solid" id="birth-clear" type="button" hidden>消す</button>
+    </div>
+    <p class="calc" id="calc">入院中の日数、健診の時期、予防接種の開始日が、この日を起点に計算されます。</p>
+    <div class="track">
+      <div class="track-bar">
+        <div class="track-seg" style="left:0%;width:1.6%;background:var(--s-hosp)"></div>
+        <div class="track-seg" style="left:1.6%;width:14.8%;background:var(--s-pp)"></div>
+        <div class="track-seg" style="left:16.4%;width:41.1%;background:var(--s-early)"></div>
+        <div class="track-seg" style="left:57.5%;width:42.5%;background:var(--s-late)"></div>
+        <div class="track-pin" id="track-pin" style="left:0%"></div>
+        <div class="track-pin today-pin" id="track-today" style="left:0%" hidden></div>
+      </div>
+      <div class="track-scale"><span>生まれた日</span><span>2か月</span><span>7か月</span><span>1歳</span></div>
+    </div>
+  </div>
+
+  <div class="rec" id="rec">
+    <div class="rec-head"><h2>きょうの記録</h2><span class="d" id="rec-date"></span></div>
+    <div class="counters">
+      <div class="ctr" style="--ctr-c:var(--s-early)">
+        <span class="nm">授乳</span>
+        <span class="pips" id="pips-feed"></span>
+        <span class="n" id="n-feed">0</span>
+      </div>
+      <div class="ctr-btns" style="--ctr-c:var(--s-early)">
+        <button class="big" type="button" id="add-feed" aria-label="授乳を1回追加">＋ 授乳</button>
+        <button class="undo" type="button" id="undo-feed" aria-label="授乳を1回取り消す">−</button>
+      </div>
+      <div class="ctr" style="--ctr-c:var(--s-late)">
+        <span class="nm">おむつ</span>
+        <span class="pips" id="pips-diaper"></span>
+        <span class="n" id="n-diaper">0</span>
+      </div>
+      <div class="ctr-btns" style="--ctr-c:var(--s-late)">
+        <button class="big" type="button" id="add-diaper" aria-label="おむつを1回追加">＋ おむつ</button>
+        <button class="undo" type="button" id="undo-diaper" aria-label="おむつを1回取り消す">−</button>
+      </div>
+    </div>
+    <div class="since"><span>最後の授乳から</span><b id="since-feed">—</b></div>
+    <div class="growth">
+      <span class="gl">体重</span>
+      <input type="number" id="g-w" inputmode="decimal" step="10" min="0" max="30000" placeholder="g" aria-label="体重（グラム）">
+      <span class="gl">身長</span>
+      <input type="number" id="g-h" inputmode="decimal" step="0.1" min="0" max="120" placeholder="cm" aria-label="身長（センチ）">
+      <button class="solid" type="button" id="g-save">記録</button>
+      <span class="last" id="g-last"></span>
+    </div>
+  </div>
+
+  <div class="rail-wrap">
+    <div class="rail-head"><h2>時期を選ぶ</h2><span class="hint">横にスワイプ</span></div>
+    <div class="rail" id="rail" role="tablist" aria-label="産後の時期"></div>
+  </div>
+
+  <div class="panel" id="panel">
+    <div class="panel-top">
+      <span class="badge" id="p-group">産褥期</span>
+      <div class="panel-week">
+        <span class="n" id="p-title">産後2週</span>
+        <span class="m" id="p-sub"></span>
+      </div>
+      <div class="countdown" id="p-range"></div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="k">体重の目安</div><div class="v" id="p-s0">—</div></div>
+      <div class="stat"><div class="k">授乳</div><div class="v" id="p-s1">—</div></div>
+      <div class="stat"><div class="k">睡眠</div><div class="v" id="p-s2">—</div></div>
+    </div>
+    <div class="rows">
+      <div class="row"><h3>赤ちゃんの様子</h3><p id="p-baby"></p></div>
+      <div class="row"><h3>ママのからだ</h3><p id="p-mom"></p></div>
+      <div class="row point"><h3>この時期にすること</h3><p id="p-todo"></p></div>
+      <div class="row pa-row"><h3><svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.5" cy="4.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="11.5" cy="5.5" r="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.4 14c0-2.6 1.8-4.2 4.1-4.2S9.6 11.4 9.6 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11 9.9c2 .1 3.6 1.5 3.6 4.1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>パートナーができること</h3><p id="p-partner"></p></div>
+    </div>
+    <div class="nav">
+      <button type="button" id="prev">← 前へ</button>
+      <button type="button" id="next">次へ →</button>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head"><h2>4つの区分</h2><span class="note">タップでその時期へ</span></div>
+    <div class="stages" id="groups"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>予防接種</h2><span class="note">2026年4月時点</span></div>
+    <div class="tscroll">
+      <table class="tb">
+        <thead><tr><th>時期</th><th>ワクチン</th><th>区分</th></tr></thead>
+        <tbody>
+          <tr><td class="wk">妊娠28〜36週</td><td class="ex">RSウイルス（母子免疫・アブリスボ）1回<br><span style="font-size:12px">母体でできた抗体が赤ちゃんに移り、生まれてすぐの時期を守ります</span></td><td><span class="pill teiki">定期</span></td></tr>
+          <tr><td class="wk">生後2か月</td><td class="ex">ロタウイルス / 五種混合（DPT-IPV-Hib） / 小児用肺炎球菌 / B型肝炎<br><span style="font-size:12px">この4つを同時接種するのが標準です</span></td><td><span class="pill teiki">定期</span></td></tr>
+          <tr><td class="wk">生後3・4か月</td><td class="ex">上の4つの2回目・3回目（ロタは製剤により2回または3回）</td><td><span class="pill teiki">定期</span></td></tr>
+          <tr><td class="wk">生後5〜8か月</td><td class="ex">BCG（標準的な接種時期は生後5〜8か月）</td><td><span class="pill teiki">定期</span></td></tr>
+          <tr><td class="wk">生後6か月〜</td><td class="ex">インフルエンザ（流行期に年1〜2回）</td><td><span class="pill nini">任意</span></td></tr>
+          <tr><td class="wk">1歳</td><td class="ex">MR（麻しん風しん）1期 / 水痘1回目 / 五種混合・小児用肺炎球菌の追加</td><td><span class="pill teiki">定期</span></td></tr>
+          <tr><td class="wk">1歳〜</td><td class="ex">おたふくかぜ（1歳で1回目）</td><td><span class="pill nini">任意</span></td></tr>
+          <tr><td class="wk">1歳3か月ごろ</td><td class="ex">水痘2回目（1回目から3か月以上あけて）</td><td><span class="pill teiki">定期</span></td></tr>
+          <tr><td class="wk">3歳</td><td class="ex">日本脳炎1期</td><td class="ex"><span class="pill teiki">定期</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="calc"><b>ロタウイルスだけは期限があります。</b>初回接種は生後14週6日までに受ける必要があり、これを過ぎると接種できません（腸重積のリスクを避けるため）。生後2か月の接種を遅らせないのは、このためです。</p>
+    <p class="calc">回数・間隔・同時接種の組み方はワクチンや製剤によって違い、自治体の案内で決まる部分もあります。実際のスケジュールは、日本小児科学会の最新の推奨スケジュール表と、かかりつけの小児科で確認してください。</p>
+    <div class="pa">
+      <div class="pt"><svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.5" cy="4.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="11.5" cy="5.5" r="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.4 14c0-2.6 1.8-4.2 4.1-4.2S9.6 11.4 9.6 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11 9.9c2 .1 3.6 1.5 3.6 4.1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>パートナーができること</div>
+      <p>予約と付き添いの係をまるごと引き受けられる領域です。生後2か月から1歳までは接種の予定が集中し、1回でも忘れると後ろが全部ずれます。予約が取れたらすぐ共有カレンダーに入れ、接種後に熱が出たときはどちらが仕事を調整するかも先に決めておく。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>健診のスケジュール</h2><span class="note">赤ちゃんとママ</span></div>
+    <div class="tscroll">
+      <table class="tb">
+        <thead><tr><th>健診</th><th>時期</th><th>位置づけ</th></tr></thead>
+        <tbody>
+          <tr><td class="wk">産婦健康診査</td><td class="ex">産後2週間・産後1か月の2回</td><td class="ex">公費助成の対象。体の回復に加えて、気持ちの状態も見ます</td></tr>
+          <tr><td class="wk">1か月児健診</td><td class="ex">生後1か月</td><td class="ex">国の補助事業として自治体が実施</td></tr>
+          <tr><td class="wk">3〜4か月児健診</td><td class="ex">生後3〜4か月</td><td class="ex">自治体が実施（首すわり、追視などを確認）</td></tr>
+          <tr><td class="wk">9〜10か月児健診</td><td class="ex">生後9〜10か月</td><td class="ex">自治体が実施（はいはい、つかまり立ちなど）</td></tr>
+          <tr><td class="wk">1歳6か月児健診</td><td class="ex">1歳6か月</td><td class="ex"><span class="pill hou">法定</span> 母子保健法で市町村に義務づけ</td></tr>
+          <tr><td class="wk">3歳児健診</td><td class="ex">3歳</td><td class="ex"><span class="pill hou">法定</span> 母子保健法で市町村に義務づけ</td></tr>
+          <tr><td class="wk">5歳児健診</td><td class="ex">5歳</td><td class="ex">国の補助事業。実施する自治体が広がっている段階</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="calc">時期の呼び方（4か月児健診／3〜4か月児健診など）と実施方法は自治体によって違います。案内は住んでいる市区町村から届くので、届いたら日程をすぐ押さえてください。</p>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>離乳食の進め方</h2><span class="note">厚生労働省の支援ガイドより</span></div>
+    <div class="tscroll">
+      <table class="tb">
+        <thead><tr><th>時期</th><th>回数</th><th>かたさの目安</th></tr></thead>
+        <tbody>
+          <tr><td class="wk">5〜6か月<br><span style="font-size:11px;color:var(--muted)">ゴックン期</span></td><td class="ex">1日1回</td><td class="ex">なめらかにすりつぶした状態。10倍がゆ1さじから</td></tr>
+          <tr><td class="wk">7〜8か月<br><span style="font-size:11px;color:var(--muted)">モグモグ期</span></td><td class="ex">1日2回</td><td class="ex">舌でつぶせるかたさ（絹ごし豆腐くらい）</td></tr>
+          <tr><td class="wk">9〜11か月<br><span style="font-size:11px;color:var(--muted)">カミカミ期</span></td><td class="ex">1日3回</td><td class="ex">歯ぐきでつぶせるかたさ（バナナくらい）</td></tr>
+          <tr><td class="wk">12〜18か月<br><span style="font-size:11px;color:var(--muted)">パクパク期</span></td><td class="ex">1日3回＋補食</td><td class="ex">歯ぐきで噛めるかたさ（肉だんごくらい）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert" style="margin-top:12px">
+      <h2>はちみつは1歳まで絶対に与えない</h2>
+      <p style="margin:0;font-size:14px;color:var(--ink-2)">1歳未満の赤ちゃんは腸内環境が整っておらず、はちみつに含まれるボツリヌス菌の芽胞が腸の中で増えて毒素を作り、<b>乳児ボツリヌス症</b>を起こすことがあります。国内で死亡例も報告されています。加熱しても芽胞は死にません。はちみつ入りの飲料、お菓子、パン、離乳食レシピにも注意を。1歳を過ぎれば与えて大丈夫です。</p>
+    </div>
+    <p class="calc">離乳食を始める時期を遅らせても食物アレルギーの予防にはならない、というのが現在の考え方です。初めての食材は、体調のよい平日の午前中に、少量から。何かあったときに小児科が開いている時間帯を選ぶのがポイントです。</p>
+    <div class="pa">
+      <div class="pt"><svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.5" cy="4.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="11.5" cy="5.5" r="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.4 14c0-2.6 1.8-4.2 4.1-4.2S9.6 11.4 9.6 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11 9.9c2 .1 3.6 1.5 3.6 4.1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>パートナーができること</div>
+      <p>作る係より、<b>食べさせて片づける係</b>を引き受けるほうが実際には助かります。離乳食は作るのに30分、食べさせて片づけるのに40分かかるので。まとめて作って小分け冷凍する日を、週末に自分の担当として固定するのもおすすめです。</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>やることチェックリスト</h2><span class="note" id="todo-total"></span></div>
+    <div id="todos"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>赤ちゃんの安全</h2><span class="note">事故と突然死を防ぐ</span></div>
+    <div class="safe">
+      <h3>1歳になるまで、寝かせ方で気をつける3つ</h3>
+      <ol>
+        <li><b>あおむけに寝かせる</b> — 医学的な理由でうつぶせを勧められている場合を除き、寝かせるときは必ずあおむけに。乳幼児突然死症候群（SIDS）の発症率が下がります</li>
+        <li><b>できるだけ母乳で育てる</b> — 母乳で育てられている赤ちゃんのほうが、SIDSの発症率が低いことがわかっています</li>
+        <li><b>たばこをやめる</b> — 妊娠中の喫煙も、周囲の人の喫煙も、SIDSの大きな危険因子です</li>
+      </ol>
+      <h3 style="margin-top:16px">そのほか、この1年で気をつけること</h3>
+      <ol>
+        <li><b>絶対に揺さぶらない</b> — 泣きやまないときに激しく揺さぶると、脳に重い障害が残ることがあります。どうしても無理なときは、安全な場所にあおむけで寝かせて、数分その場を離れていい、と2人で決めておく</li>
+        <li><b>顔まわりに何も置かない</b> — やわらかい布団、枕、ぬいぐるみ、タオルは赤ちゃんの顔の近くに置かない</li>
+        <li><b>ソファや大人用ベッドに寝かせたまま離れない</b> — 寝返りが始まる5か月ごろから転落事故が増えます</li>
+        <li><b>誤飲に注意</b> — トイレットペーパーの芯を通るものは口に入ります。ボタン電池、たばこ、薬、小さいおもちゃは手の届かない場所へ</li>
+        <li><b>やけどと入浴</b> — 湯船に浮かぶ浮き輪や補助具も含め、お風呂で目を離さない。数センチの水でも溺れます</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="alert">
+      <h2>こんなときは受診・相談を（赤ちゃん）</h2>
+      <ul>
+        <li><b>生後3か月未満の発熱</b> — 月齢が低いほど重い感染症のことがあります。38℃以上なら夜間でも相談を</li>
+        <li><b>けいれんが5分以上続く／止まっても意識が戻らない</b></li>
+        <li><b>呼吸が苦しそう</b> — 肩で息をする、ゼーゼーいう、肋骨の間がへこむ</li>
+        <li><b>母乳・ミルクを受けつけない／おしっこが半日以上出ない</b></li>
+        <li><b>ぐったりして目を合わせない、呼んでも反応が鈍い</b></li>
+        <li><b>唇や顔色が青白い、紫っぽい</b></li>
+        <li><b>頭を強く打った</b> — 嘔吐や機嫌の悪さが続くとき</li>
+      </ul>
+      <div class="tel">
+        <span class="num">#8000</span>
+        <span class="lb">子ども医療電話相談。休日・夜間に、小児科の医師や看護師に電話で相談できます。判断に迷ったら、受診する前にここへ。</span>
+      </div>
+
+      <h3>ママの心のサイン</h3>
+      <ul>
+        <li>眠れない、眠る時間があっても眠れない</li>
+        <li>食べられない、味がしない</li>
+        <li>涙が止まらない状態が<b>2週間以上</b>続く</li>
+        <li>赤ちゃんをかわいいと思えない、自分を責め続ける</li>
+        <li>消えてしまいたい、と思うことがある</li>
+      </ul>
+      <p class="tail">産後数日から2週間ごろに気分が不安定になるのは「マタニティブルーズ」で、多くは自然におさまります。でも<b>2週間を超えて続くとき</b>は産後うつの可能性があります。産後2週間・1か月の産婦健診はそれを見つけるための健診でもあるので、つらさは正直に話してください。健診を待てないときは、産院か市区町村のこども家庭センターへ。産後ケア事業（宿泊・日帰り・訪問）も使えます。</p>
+      <div class="pa">
+        <div class="pt"><svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.5" cy="4.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="11.5" cy="5.5" r="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.4 14c0-2.6 1.8-4.2 4.1-4.2S9.6 11.4 9.6 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11 9.9c2 .1 3.6 1.5 3.6 4.1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>パートナーができること</div>
+        <p>産後うつは本人が自覚しにくく、「がんばりが足りない」と自分を責める形で出ることがあります。気づけるのはいちばん近くにいる人です。上のサインが2週間続いていたら、「疲れてるだけだよ」と流さず、産院か自治体の窓口に一緒に連絡してください。予約を取る、同行する、その間赤ちゃんを見る。そこまでやって初めて相談にたどり着きます。産後うつは治療できるもので、本人の性格の問題ではありません。</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>このページの出典</h2><span class="note">2026年9月時点</span></div>
+    <div class="sources">
+      <p><b>制度・公的基準（予防接種、健診、離乳食、給付、安全の指針）</b>は下の公的資料で確認したものです。各チェック項目の「くわしく」の末尾にも、その項目の出典を書いています。</p>
+      <ul>
+        <li>公益社団法人 日本小児科学会「<a href="https://www.jpeds.or.jp/modules/activity/index.php?content_id=138" target="_blank" rel="noopener">日本小児科学会が推奨する予防接種スケジュール</a>」</li>
+        <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/yobou-sesshu/vaccine/rs/index.html" target="_blank" rel="noopener">RSウイルスワクチン（妊婦への定期接種）</a>」／「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/yobou-sesshu/vaccine/rota/index.html" target="_blank" rel="noopener">ロタウイルスワクチン</a>」</li>
+        <li>こども家庭庁「<a href="https://www.cfa.go.jp/policies/boshihoken/nyuyojikenshin" target="_blank" rel="noopener">乳幼児健診に関する取組み</a>」／「<a href="https://mchbook.cfa.go.jp/category04/page04_01.php" target="_blank" rel="noopener">母子健康手帳情報支援サイト</a>」</li>
+        <li>厚生労働省「<a href="https://www.mhlw.go.jp/content/11908000/000496257.pdf" target="_blank" rel="noopener">授乳・離乳の支援ガイド（2019年改定版）</a>」（PDF）</li>
+        <li>消費者庁「<a href="https://www.caa.go.jp/policies/policy/consumer_safety/food_safety/food_safety_portal/microorganism_virus/contents_001/" target="_blank" rel="noopener">ハチミツによる乳児のボツリヌス症</a>」</li>
+        <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/houdou/0000062600.html" target="_blank" rel="noopener">11月は乳幼児突然死症候群（SIDS）の対策強化月間です</a>」</li>
+        <li>厚生労働省「<a href="https://kakarikata.mhlw.go.jp/kakaritsuke/8000.html" target="_blank" rel="noopener">子ども医療電話相談事業（#8000）</a>」</li>
+        <li>こども家庭庁 健やか親子21「<a href="https://sukoyaka21.cfa.go.jp/sango-care/" target="_blank" rel="noopener">産後ケア事業</a>」</li>
+        <li>こども家庭庁「<a href="https://www.cfa.go.jp/policies/kokoseido/jidouteate/annai" target="_blank" rel="noopener">児童手当制度のご案内</a>」／厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussan/index.html" target="_blank" rel="noopener">出産育児一時金等について</a>」</li>
+        <li>厚生労働省「<a href="https://www.mhlw.go.jp/content/11600000/001461102.pdf" target="_blank" rel="noopener">出生後休業支援給付金</a>」（PDF）／「<a href="https://ryouritsu.mhlw.go.jp/qa02_20.html" target="_blank" rel="noopener">両立支援のひろば Q&amp;A</a>」</li>
+      </ul>
+      <p style="margin:10px 0 0">一方で、<b>月齢ごとの体重・睡眠・授乳回数の目安、発達の順序、段取りのコツ、「パートナーができること」</b>は、特定の公的文書に一対一で対応するものではない一般的な目安と実務的な提案です。出典は付けていません。発達には大きな個人差があり、ここに書いた月齢どおりでなくても心配のいらないことがほとんどです。医学的な判断が必要なことは、健診とかかりつけの小児科で確認してください。</p>
+    </div>
+  </section>
+
+  <a class="xlink" href="%%NOTE:pregnancy%%">
+    <span><span class="xt">妊娠40週ノート</span><br><span class="xd">妊娠0週から出産まではこちら</span></span>
+    <span class="ar">→</span>
+  </a>
+
+  <footer>
+    月齢ごとの体重・身長・できることは一般的な目安です。育ち方には大きな個人差があり、目安どおりでないこと自体は問題ではありません。予防接種の回数と間隔、健診の時期と内容、手続きの締切や金額は、ワクチンの製剤・産院・自治体によって変わります。実際の予定は母子健康手帳、自治体からの案内、かかりつけの小児科を優先してください。気になることは、次の健診を待たずに相談を。
+  </footer>
+</div>
+
+<script>
+/* ===================== ステージ ===================== */
+/* from: 生まれた日からの日数 */
+var S = [
+{from:0,g:"hosp",t:"出産当日",sub:"生後0日",
+ st:["出生時 約3,000g","初乳を少しずつ","1日16〜20時間"],
+ baby:"生まれたばかりの赤ちゃんは、まだうまく飲めません。この日は授乳の量より、肌を合わせて抱くことが中心になります。体重はこのあと生理的に一度減ります。",
+ mom:"分娩直後の2時間は出血の量を見るためベッドで安静に。後陣痛（子宮が縮むときの痛み）が始まります。震えやむくみが出ることも。",
+ todo:"眠れるときに眠る。痛み止めは希望していいものだと知っておく。遠慮してがまんする理由はありません。",
+ pa:"写真を撮るより先に、手を握る。そのあと両家への連絡を全部引き受けてください。この日の本人には、スマホを持つ力も残っていません。"},
+
+{from:1,g:"hosp",t:"産後1日",sub:"生後1日",
+ st:["生理的に −5〜10%","1日8〜12回","1日16〜18時間"],
+ baby:"母乳やミルクを少しずつ飲みはじめます。胎便（黒っぽいうんち）が出ます。",
+ mom:"悪露（おろ）が月経より多い量で出ます。歩けるようになると、まず会陰の傷が痛みます。",
+ todo:"授乳の姿勢を助産師に見てもらう。最初からうまくいく人はいないので、何度でも呼んでいい。",
+ pa:"面会のルールを確認して、親族の「今すぐ会いたい」を自分が調整する。本人が断りにくい相手ほど、自分が断る役を引き受けてください。"},
+
+{from:2,g:"hosp",t:"産後2日",sub:"生後2日",
+ st:["体重が最も減るころ","1日8〜12回","1日16〜18時間"],
+ baby:"飲む力がついてきます。黄疸（皮膚が黄色っぽくなる）が出やすい時期で、産院で毎日チェックされます。",
+ mom:"乳房が張りはじめます。会陰切開や帝王切開の傷が、いちばん痛む時期。",
+ todo:"痛みはがまんせず伝える。授乳のたびに水分をとる。",
+ pa:"入院中に足りないものを届ける係。必ず何か出てくるので、連絡が来たらすぐ動ける状態にしておく。ついでに家の片づけも進めておく。"},
+
+{from:3,g:"hosp",t:"産後3日",sub:"生後3日",
+ st:["増えはじめる","1日8〜12回","1日16〜18時間"],
+ baby:"体重が底を打って増えはじめます。うんちが黒から黄色へ変わっていきます。",
+ mom:"母乳の分泌が本格化して、乳房がかたく張ります。理由もなく涙が出る「マタニティブルーズ」が出やすいのもこのころ。",
+ todo:"張って痛いときは冷やす。助産師にケアを頼む。涙が出るのは異常ではないと知っておく。",
+ pa:"「なんで泣いてるの？」と原因を探さない。マタニティブルーズはホルモンの急な変化によるもので、多くは2週間以内におさまります。そばにいて、否定しない。それだけで十分意味があります。"},
+
+{from:4,g:"hosp",t:"産後4日",sub:"生後4日",
+ st:["1日25〜30g増","1日8〜12回","1日16〜18時間"],
+ baby:"新生児聴覚スクリーニングや、先天性代謝異常などの検査（かかとからの採血）が行われます。",
+ mom:"悪露の色が赤から褐色に変わりはじめます。睡眠不足が本格的に効いてくるころ。",
+ todo:"退院後の生活を具体的に決めておく。誰が何をするかを、この日のうちに言葉にしておくと迷いません。",
+ pa:"退院日の段取りを確定。チャイルドシートを車に取り付け、掃除と洗濯を済ませ、食料を買っておく。帰ったその日から生活が始まります。"},
+
+{from:5,g:"hosp",t:"産後5日",sub:"退院ごろ",
+ st:["1日25〜30g増","1日8〜12回","1日16〜18時間"],
+ baby:"退院診察で体重、黄疸、心音を確認します。自然分娩なら産後5日前後、帝王切開なら7〜10日が目安。",
+ mom:"会陰の痛みは残りますが、少しずつ動けるように。退院は回復を意味しません。",
+ todo:"退院時の書類を確認（出生証明書つきの出生届、明細書、直接支払制度の合意文書）。次の健診日も確認を。",
+ pa:"迎えと、家に着いてからの最初の数時間を自分が回す。本人は横になる時間が必要です。抱っこして寝かせるところまで引き受けてください。"},
+
+{from:6,g:"pp",t:"産後1週",sub:"生後6〜13日",
+ st:["1日25〜30g増","1日8〜12回","1日14〜17時間"],
+ baby:"昼夜の区別がなく、2〜3時間おきに泣いて起きます。まだリズムを作ることはできません。",
+ mom:"悪露が続き、体は全治1〜2か月のけがと同じ状態。寝不足がピークに向かいます。",
+ todo:"家事をしない。赤ちゃんが寝たら自分も寝る。1日に1回は、誰かと話す。",
+ pa:"「手伝う」をやめる。家事は自分の担当として全部引き取り、本人には授乳と睡眠だけを残してください。夜の授乳のあとのゲップとおむつを引き受けるだけで、まとまった睡眠を作れます。"},
+
+{from:14,g:"pp",t:"産後2週",sub:"2週間健診",
+ st:["出生体重に戻るころ","1日8〜12回","1日14〜17時間"],
+ baby:"生まれたときの体重に戻る子が多い時期。起きている時間が少しずつ増えます。",
+ mom:"2週間健診（産婦健康診査）があります。体の回復に加えて、気持ちの状態も聞かれます。",
+ todo:"2週間健診へ。つらさは正直に話す。ここで話したことが、産後ケア事業などの支援につながります。",
+ pa:"2週間健診に同行できるなら同行を。産後うつはこのころから出やすく、本人が自覚しにくいのが特徴です。「眠れない」「食べられない」「かわいいと思えない」という言葉が出たら、それは相談すべきサインです。"},
+
+{from:21,g:"pp",t:"産後3週",sub:"生後21〜29日",
+ st:["1日25〜30g増","1日8〜12回","1日14〜17時間"],
+ baby:"目でものを追いはじめます。泣き方に違いが出てきて、少しずつ読み取れるように。",
+ mom:"悪露が減ってきます。動きすぎると量が増えるので、体からのサインとして見ておく。",
+ todo:"短い時間でも外の空気を吸う。赤ちゃんの外出はまだ最小限に。",
+ pa:"「泣きやまない」がいちばんつらい時期です。絶対に揺さぶらないこと。どうしても無理なときは、安全な場所にあおむけで寝かせて数分離れていい、と2人で決めておいてください。"},
+
+{from:30,g:"pp",t:"産後4週",sub:"1か月健診",
+ st:["出生時 +1kg前後","1日8〜12回","1日14〜17時間"],
+ baby:"1か月健診。体重、身長、頭囲、黄疸、股関節などを確認します。ここでOKが出れば、少しずつ外出できます。",
+ mom:"1か月健診（産婦健康診査）で子宮の戻りと傷を確認。医師の許可が出れば入浴や運動を再開できます。",
+ todo:"1か月健診へ。赤ちゃんとママの両方に健診があります。生後2か月からの予防接種を、このタイミングで予約。",
+ pa:"1か月健診は赤ちゃんとママの2人分で時間がかかります。可能なら同行を。予防接種の予約を自分が取り、共有カレンダーに入れる係になってください。"},
+
+{from:42,g:"pp",t:"産後6週",sub:"産褥期の終わりへ",
+ st:["1日25〜30g増","1日7〜10回","1日14〜17時間"],
+ baby:"声を出して笑うことがあります。目でものを追う動きがはっきりしてきます。",
+ mom:"産褥期（産後8週）の終わりが見えるころ。法律上も、産後8週間は就業が禁止されています（6週以降は本人が請求し医師が認めれば復帰可）。",
+ todo:"体調が戻らない、気分が落ちたままなら、この時点で受診を。「そのうち治る」で放置しない。",
+ pa:"8週が過ぎても、体が元どおりになるわけではありません。「もう1か月以上たったのに」は禁句です。育休を取っているなら、ここからが本番だと思ってください。"},
+
+{from:60,g:"early",t:"生後2か月",sub:"予防接種デビュー",
+ st:["出生時 +1.5〜2kg","1日7〜10回","1日14〜16時間"],
+ baby:"予防接種が始まります。ロタウイルス、五種混合、小児用肺炎球菌、B型肝炎を同時に接種するのが標準。あやすと笑い、「あー」「うー」と声を出します。",
+ mom:"少しずつ自分の時間が作れるように。ただし睡眠はまだ細切れです。",
+ todo:"予防接種を受ける。ロタウイルスは初回の期限（生後14週6日まで）があるので、絶対に遅らせないこと。",
+ pa:"予防接種の予約と付き添いを。接種後に熱が出たり機嫌が悪くなったりしたとき、どちらが対応するかも先に決めておいてください。"},
+
+{from:90,g:"early",t:"生後3か月",sub:"首がすわるころ",
+ st:["出生時の約2倍","1日6〜8回","1日14〜16時間"],
+ baby:"首がすわってくるころ。体重は生まれたときの約2倍になります。夜にまとまって眠る子も出てきます。",
+ mom:"生理が再開する人もいます。授乳中でも妊娠する可能性はあるので、そのつもりで。",
+ todo:"3〜4か月児健診の案内を確認。首がすわると縦抱きがラクになります。",
+ pa:"首がすわるまでは、抱くときに必ず頭を支える。慣れてきたころがいちばん危ないので、自分の持ち方を一度見直してください。"},
+
+{from:120,g:"early",t:"生後4か月",sub:"3〜4か月児健診",
+ st:["出生時の約2倍","1日6〜8回","1日13〜15時間"],
+ baby:"3〜4か月児健診の時期。首すわり、追視、あやし笑いを確認します。手をなめる、おもちゃをつかむ。",
+ mom:"授乳のリズムが安定してきます。職場復帰を考えはじめる人も。",
+ todo:"3〜4か月児健診へ。保育園を考えるなら、この時期から情報を集めると間に合います。",
+ pa:"健診に同行して、聞かれたことを一緒に聞く。保活は締切が早いので、自治体の申込スケジュールを調べる係を引き受けてください。"},
+
+{from:150,g:"early",t:"生後5か月",sub:"寝返りが始まる",
+ st:["1日15〜20g増","1日5〜7回","1日13〜15時間"],
+ baby:"寝返りを始める子が出てきます。目が離せなくなる第一段階。よだれが増え、食べ物に興味を示します。",
+ mom:"離乳食の準備を考えはじめる時期。道具は少しずつで大丈夫です。",
+ todo:"寝返りを前提にした安全対策（ソファや大人用ベッドに寝かせたまま離れない）。離乳食の道具をそろえる。",
+ pa:"落下事故がいちばん増える時期です。「ちょっとだけ」でソファに寝かせて離れない。おむつ替えの台からも、手を離さない。"},
+
+{from:180,g:"early",t:"生後6か月",sub:"離乳食スタート",
+ st:["1日15〜20g増","1日5〜7回＋離乳食1回","1日13〜15時間"],
+ baby:"離乳食を始めるころ（5〜6か月が目安）。おすわりの練習が始まります。ママからもらった免疫が減り、熱を出しやすくなります。",
+ mom:"離乳食で手間は増えますが、授乳の回数は少しずつ減っていきます。",
+ todo:"なめらかにすりつぶした状態から、1日1回、1さじずつ。初めての食材は、平日の午前中に少量から。",
+ pa:"離乳食は作る係より、食べさせて片づける係を引き受けるほうが助かります。週末にまとめて作って小分け冷凍する日を、自分の担当として固定するのも効きます。"},
+
+{from:210,g:"late",t:"生後7か月",sub:"おすわり・人見知り",
+ st:["1日10〜15g増","1日5〜6回＋離乳食2回","1日12〜15時間"],
+ baby:"支えなしでおすわりができる子も。歯が生えはじめ、寝返りで移動します。人見知りが始まることも。",
+ mom:"夜泣きが始まって、また寝不足になる時期。",
+ todo:"離乳食を1日2回に。舌でつぶせるかたさへ。床から40cmくらいまでの高さにある小さいものを片づける。",
+ pa:"夜泣きは必ず終わります。曜日で夜の担当を分けるなど、どちらかが必ずまとまって眠れる仕組みを作ってください。両方が寝不足だと判断力から先に落ちます。"},
+
+{from:240,g:"late",t:"生後8か月",sub:"はいはい・後追い",
+ st:["1日10〜15g増","1日4〜5回＋離乳食2回","1日12〜15時間"],
+ baby:"ずりばい・はいはいが始まります。後追いで、姿が見えないと泣くように。",
+ mom:"動き回る赤ちゃんに追われて、自分の食事がとれない日が増えます。",
+ todo:"家の中の安全対策を本格的に。階段、コンセント、テーブルクロス、暖房器具、ボタン電池や薬の置き場所。",
+ pa:"安全対策の担当を引き受ける。赤ちゃんの目線の高さまでしゃがんで家の中を一周すると、危ないものが驚くほど見つかります。"},
+
+{from:270,g:"late",t:"生後9か月",sub:"9〜10か月児健診",
+ st:["1日8〜12g増","1日3〜4回＋離乳食3回","1日12〜14時間"],
+ baby:"つかまり立ちを始める子も。9〜10か月児健診の時期です。離乳食は1日3回に。",
+ mom:"4月入園を目指すなら、保育園の申し込みが秋にあることが多い時期です。",
+ todo:"9〜10か月児健診へ。保育園の申し込み。離乳食を3回に増やし、歯ぐきでつぶせるかたさへ。",
+ pa:"保育園の見学と書類は、平日に動ける側が担当を。締切を1日でも過ぎると、その年度は入れないことがあります。ここは本当に期限が絶対です。"},
+
+{from:300,g:"late",t:"生後10か月",sub:"つたい歩き",
+ st:["1日8〜12g増","1日3〜4回＋離乳食3回","1日12〜14時間"],
+ baby:"つたい歩きをする子も。手づかみ食べが始まり、指先が器用になります。バイバイや拍手をまねします。",
+ mom:"職場復帰の準備が具体的になる時期。",
+ todo:"手づかみで食べられるメニューを増やす。慣らし保育の期間を職場と相談しておく。",
+ pa:"慣らし保育の1〜2週間は、どちらかが早く帰る必要があります。その勤務調整を、今のうちに上司と話しておいてください。"},
+
+{from:330,g:"late",t:"生後11か月",sub:"ひとり立ちも",
+ st:["1日8〜12g増","1日2〜3回＋離乳食3回","1日12〜14時間"],
+ baby:"ひとり立ちする子も出てきます。意味のある言葉（まんま、など）が出ることも。",
+ mom:"卒乳・断乳を考えはじめる人も。急いで決めなくて大丈夫です。",
+ todo:"1歳になったら受けるワクチン（MR、水痘など）を、先に予約しておく。",
+ pa:"1歳の誕生日の段取りは自分が作る。この1年、赤ちゃんの写真は山ほどあるのに、2人が写っている写真はほとんどないはずです。"},
+
+{from:365,g:"late",t:"1歳",sub:"365日",
+ st:["出生時の約3倍","離乳食＋補食","1日11〜14時間"],
+ baby:"体重は生まれたときの約3倍に。歩きはじめ、言葉が出てきます。MRと水痘の予防接種が始まります。はちみつも、1歳を過ぎれば与えて大丈夫です。",
+ mom:"育休が終わる区切り。まずここまで来たことを、認めていいところです。",
+ todo:"1歳の予防接種（MR1期、水痘、五種混合・小児用肺炎球菌の追加）。次の1歳6か月児健診までは、しばらく間が空きます。",
+ pa:"ここからは「手伝う人」ではなく、同じだけ担当する人として運用を組み直す。保育園の送りか迎えのどちらかを固定で持つのが、いちばん確実です。"}
+];
+
+var GROUPS = [
+ {key:"hosp", name:"入院中",   range:"生まれた日〜5日ごろ", jump:0,   desc:"体を休めることが最優先の数日。授乳はまだうまくいかないのが普通で、マタニティブルーズが出やすいのもこの時期です。"},
+ {key:"pp",   name:"産褥期",   range:"産後1週〜8週",       jump:14,  desc:"体は全治1〜2か月のけがと同じ状態です。2週間健診と1か月健診があり、産後うつが見つかるのもこの時期。ここで無理をしないことが、そのあと1年を左右します。"},
+ {key:"early",name:"乳児前期", range:"生後2〜6か月",       jump:60,  desc:"予防接種が始まり、首がすわり、寝返りをして、離乳食が始まります。できることが一気に増え、同時に目が離せなくなる時期。"},
+ {key:"late", name:"乳児後期", range:"生後7か月〜1歳",     jump:270, desc:"はいはい、つかまり立ち、つたい歩き。事故の対策が本格的に必要になります。保育園の申し込みと職場復帰の準備も重なります。"}
+];
+
+/* ===================== チェックリスト ===================== */
+var TODOS = [
+{id:"p1", key:"hosp", title:"産後すぐ〜退院まで", range:"生まれた日〜1週", items:[
+
+["q11","出生届を出す（生後14日以内）",[
+ {h:"期限と場所",p:"生まれた日を1日目として14日以内。届け先は本籍地・住所地・出生地のいずれかの役所で、里帰り先でも出せます。休日窓口でも受け付けています。"},
+ {h:"持ちもの",li:["出生届（右半分の出生証明書は産院が記入して渡してくれます）","母子健康手帳","届出人の本人確認書類","印鑑（不要な自治体も増えています）"]},
+ {h:"名前が決まらないとき",p:"名前が空欄のままでも届け出はできますが、あとから「追完届」が必要になり手間が増えます。使える漢字（常用漢字と人名用漢字）かどうかは、役所で確認できます。"},
+ {partner:"母親は産後で動けないので、これは自分が行くものと考えてください。産院から出生証明書つきの出生届を受け取るところから自分の担当に。児童手当と健康保険の手続きも同じ日にまとめられないか、事前に役所へ電話で聞いておくと1回で済みます。"}
+]],
+
+["q12","赤ちゃんを健康保険に加入させる",[
+ {h:"いつまで",p:"1か月健診までに間に合わせるのが目安です。国民健康保険は14日以内が原則。"},
+ {h:"どこで",p:"会社員なら勤務先（扶養に入れる手続き）、自営業などは役所の国保窓口。出生届のあとに手続きします。"},
+ {h:"なぜ急ぐか",p:"このあとの乳幼児医療費助成の申請に、赤ちゃんの保険証が必要になるからです。ここが遅れると、後ろの手続きが全部止まります。"},
+ {partner:"自分の扶養に入れるなら、自分の会社での手続きです。総務に必要書類を先に聞いておけば、出生届の日にそのまま出せます。"}
+]],
+
+["q13","乳幼児医療費助成を申請する",[
+ {h:"内容",p:"子どもの医療費の自己負担分を自治体が助成する制度です。対象年齢や自己負担額は自治体によってかなり違います。"},
+ {h:"順番",p:"赤ちゃんの健康保険証ができてから役所へ。保険証、母子手帳、マイナンバー、振込口座がわかるものを持っていきます。"},
+ {partner:"出生届・健康保険と合わせて動ける部分です。保険証が出るタイミングだけ後ろにずれるので、2回目の役所行きは自分が引き受けると決めておくと確実。"}
+]],
+
+["q14","児童手当を申請する（出生後15日以内）",[
+ {h:"金額（月額）",li:["3歳未満 — 15,000円（第3子以降は30,000円）","3歳〜18歳の年度末まで — 10,000円（第3子以降は30,000円）"]},
+ {h:"所得制限",p:"2024年10月の改正で所得制限は撤廃され、世帯収入にかかわらず満額受け取れます。支給は偶数月（2・4・6・8・10・12月）の年6回。"},
+ {h:"期限に注意",p:"申請した月の翌月分からの支給で、原則さかのぼれません。出生日の翌日から15日以内に申請すれば、出生した月の分から受け取れる扱い（15日特例）。遅れるとそのぶん丸ごともらえなくなります。"},
+ {partner:"請求者は「生計の中心になる人」なので、収入が多いほうが請求者になるのが一般的です。期限が短いので、出生届と同じ日に済ませるつもりで自分が動いてください。"},
+ {src:[["こども家庭庁 児童手当制度のご案内","https://www.cfa.go.jp/policies/kokoseido/jidouteate/annai"]]}
+]],
+
+["q15","出産育児一時金の差額を確認する",[
+ {h:"直接支払制度",p:"産院が健康保険に直接請求してくれる方式。退院時は、原則50万円を超えた差額だけを払います。ほとんどの産院がこれです。"},
+ {h:"差額の申請",p:"出産費用が50万円を下回った場合、差額は自分で健康保険に申請して受け取ります。明細書と合意文書が必要なので、退院時の書類は捨てずに保管を。"},
+ {partner:"退院時に渡される書類（明細書、直接支払制度の合意文書）を受け取って保管する係を引き受けてください。数か月後に必要になります。"},
+ {src:[["厚生労働省 出産育児一時金等について","https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryouhoken/shussan/index.html"]]}
+]],
+
+["q16","上の子・ペットの預け先と家の段取りを回す",[
+ {h:"入院中",p:"上の子は生活のリズムが崩れやすい時期です。保育園や学校への連絡、送り迎えの担当、寝る前の対応を、あらかじめ割り振っておく。"},
+ {h:"退院後",p:"上の子の赤ちゃん返りは、ほぼ必ず起きます。叱るより、「上の子と2人だけの時間」を1日10分でも作るほうが早くおさまります。"},
+ {partner:"ここは完全に自分の領域です。母親は赤ちゃんから手が離せないので、上の子の担当を丸ごと引き受けると決めてしまうほうが、結果的に全員がラクになります。"}
+]]
+]},
+
+{id:"p2", key:"pp", title:"産後1〜2か月", range:"1週〜8週", items:[
+
+["q21","2週間健診・1か月健診を受ける（ママ）",[
+ {h:"何を見る健診か",p:"産婦健康診査として公費助成の対象になっている健診です。子宮の戻り、傷の治り、血圧や体重に加えて、気持ちの状態を確認します。"},
+ {h:"正直に話す",p:"この健診は、産後うつを早く見つけるためのものでもあります。「眠れない」「涙が止まらない」「かわいいと思えない」は、伝えるべき情報です。がんばって元気そうに振る舞う必要はありません。"},
+ {h:"つながる先",p:"ここで話したことが、産後ケア事業（宿泊・日帰り・訪問）や、市区町村のこども家庭センターの支援につながります。"},
+ {partner:"同行できるなら同行を。本人が「大丈夫です」と答えてしまいがちなので、隣で「夜は2時間も続けて寝られていません」と事実を足せるのは同居している人だけです。"},
+ {src:[["こども家庭庁 健やか親子21 産後ケア事業","https://sukoyaka21.cfa.go.jp/sango-care/"]]}
+]],
+
+["q22","1か月児健診を受ける（赤ちゃん）",[
+ {h:"見るところ",p:"体重・身長・頭囲の増え方、黄疸、心音、股関節、おへそ、原始反射など。ビタミンK2シロップを飲ませることもあります。"},
+ {h:"ここを過ぎると",p:"問題がなければ、少しずつ外出できるようになります。とはいえ人混みはまだ避けて。"},
+ {partner:"赤ちゃんとママの2人分の健診で、待ち時間も長くなります。同行して荷物と抱っこを引き受けるだけで、まったく違います。"},
+ {src:[["こども家庭庁 乳幼児健診に関する取組み","https://www.cfa.go.jp/policies/boshihoken/nyuyojikenshin"]]}
+]],
+
+["q23","生後2か月からの予防接種を予約する",[
+ {h:"いつ予約するか",p:"1か月健診のころに、小児科へ予約を入れておきます。生後2か月の誕生日にあたる日から接種できます。"},
+ {h:"最初の4つ",p:"ロタウイルス、五種混合（DPT-IPV-Hib）、小児用肺炎球菌、B型肝炎。同時接種が標準で、同時に打っても効果が下がったり副反応が増えたりしないことがわかっています。"},
+ {h:"ロタの期限",p:"ロタウイルスワクチンの初回接種は、生後14週6日までに受ける必要があります。これを過ぎると接種できません。ここだけは日付を押さえてください。"},
+ {partner:"予約と付き添いを自分の担当に。接種のあと数日は熱が出ることがあるので、その日のあとに大事な予定を入れないようにするのも役割です。"},
+ {src:[["日本小児科学会 推奨する予防接種スケジュール","https://www.jpeds.or.jp/modules/activity/index.php?content_id=138"],["厚生労働省 ロタウイルスワクチン","https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/yobou-sesshu/vaccine/rota/index.html"]]}
+]],
+
+["q24","産後ケア事業を調べて、使えるようにしておく",[
+ {h:"どんな制度",p:"退院直後の母子に、心身のケアと育児のサポートを行う市区町村の事業です。宿泊型、日帰り型、訪問型があり、標準的な利用期間は7日までとされています。"},
+ {h:"使っていい",p:"「限界の人が使うもの」ではありません。眠れていない、授乳がうまくいかない、話す相手がいない。それだけで十分な利用理由になります。"},
+ {h:"先に申し込む",p:"自治体によっては事前の申請や面談が必要で、使いたいときにすぐ使えないことがあります。元気なうちに窓口で手続きを済ませておくのがコツです。"},
+ {partner:"調べて申し込むところまでを引き受けてください。本人は「私が甘えているだけでは」と考えて、自分からは言い出しにくいものです。「もう申し込んであるから、行っておいで」と言える状態にしておくのがいちばん効きます。"},
+ {src:[["こども家庭庁 健やか親子21 産後ケア事業","https://sukoyaka21.cfa.go.jp/sango-care/"]]}
+]],
+
+["q25","育児休業給付の手続きを進める",[
+ {h:"育児休業給付金",p:"雇用保険から。開始から180日までは休業前賃金の67%、その後は50%。手続きは基本的に会社を通して行います。"},
+ {h:"出生後休業支援給付金",p:"2025年4月から。父母がともに14日以上の育休を取るなどの要件を満たすと13%が上乗せされ、育児休業給付の67%と合わせて80%に。育休中は社会保険料が免除され給付金は非課税なので、手取りでは休業前の10割相当になります（最大28日分）。"},
+ {h:"産後パパ育休",p:"子の出生後8週間以内に4週間まで。2回に分けて取れますが、分割する場合は最初にまとめて申し出る必要があります。申出は原則2週間前まで。"},
+ {partner:"ここは自分の手続きです。「取れそうなら取る」では、たいてい取れません。給付の要件が14日以上なので、最低でも2週間。産後2〜4週のいちばんきついところに当てるのが効果的です。"},
+ {src:[["厚生労働省 出生後休業支援給付金（PDF）","https://www.mhlw.go.jp/content/11600000/001461102.pdf"],["厚生労働省 両立支援のひろば Q&A","https://ryouritsu.mhlw.go.jp/qa02_20.html"]]}
+]],
+
+["q26","赤ちゃんのマイナンバーカードと口座を作る",[
+ {h:"マイナンバー",p:"出生届を出すと、住民票がつくられて番号が割り当てられます。カードは任意ですが、医療費助成や各種手続きで使う場面が増えています。"},
+ {h:"口座",p:"児童手当やお祝い金を分けて管理するために、子ども名義の口座を作る家庭が多いです。作るなら早めのほうが、あとで記録を整理しやすくなります。"},
+ {partner:"平日の窓口が必要な手続きです。外に出られるほうが動く、という原則でいくと、この時期は自分です。"}
+]]
+]},
+
+{id:"p3", key:"early", title:"生後2〜6か月", range:"2〜6か月", items:[
+
+["q31","予防接種のスケジュールを管理する",[
+ {h:"集中する時期",p:"生後2か月から1歳までは接種の予定が次々に入ります。1回ずれると後ろが全部ずれるので、カレンダー管理が必須です。"},
+ {h:"BCG",p:"標準的な接種時期は生後5〜8か月。自治体で集団接種の日が決まっていることもあるので、案内を確認してください。"},
+ {h:"当日いけないとき",p:"発熱しているときは延期します。予約を取り直すことになるので、次の候補日を先に押さえておくとスムーズです。"},
+ {partner:"共有カレンダーに全部入れて、前日にリマインドが出るようにしておく。これは在宅でもできる、はっきり効果のある担当です。"},
+ {src:[["日本小児科学会 推奨する予防接種スケジュール","https://www.jpeds.or.jp/modules/activity/index.php?content_id=138"]]}
+]],
+
+["q32","3〜4か月児健診を受ける",[
+ {h:"見るところ",p:"首すわり、目で物を追う（追視）、あやすと笑う、体重と身長の増え方、股関節の開き具合など。"},
+ {h:"できていなくても",p:"発達には大きな個人差があります。その場で「まだですね」と言われても、経過を見ましょうという意味のことがほとんどです。不安なことはその場で聞いておく。"},
+ {partner:"同行して、聞きたいことを2人分メモしていく。健診は聞きたいことを忘れがちな場です。"},
+ {src:[["こども家庭庁 乳幼児健診に関する取組み","https://www.cfa.go.jp/policies/boshihoken/nyuyojikenshin"]]}
+]],
+
+["q33","寝返り後の安全対策をする",[
+ {h:"いつから",p:"5か月ごろから寝返りが始まります。「まだしないから大丈夫」と思っていた日に、初めての寝返りが起きるのが典型的なパターンです。"},
+ {h:"具体的に",li:["ソファや大人用ベッドに寝かせたまま離れない","おむつ替えの台では、必ず片手を体に添える","ベビーベッドの柵は毎回上げる","やわらかい布団、枕、ぬいぐるみを顔の近くに置かない","寝かせるときはあおむけに（1歳まで）"]},
+ {partner:"家の中の安全対策は担当を分けやすい領域です。赤ちゃんの目線までしゃがんで一周すると、落ちるもの・口に入るものが見えてきます。"},
+ {src:[["厚生労働省 乳幼児突然死症候群（SIDS）対策","https://www.mhlw.go.jp/stf/houdou/0000062600.html"]]}
+]],
+
+["q34","離乳食を始める準備をする",[
+ {h:"始める時期",p:"生後5〜6か月ごろが目安。首がすわって支えれば座れる、食べ物に興味を示す、スプーンを口に入れても舌で押し出さない。このあたりがサインです。"},
+ {h:"始め方",p:"なめらかにすりつぶした10倍がゆを1さじから。1日1回、午前中に。初めての食材は1種類ずつ、少量から。"},
+ {h:"アレルギーについて",p:"離乳食の開始を遅らせても食物アレルギーの予防にはならない、というのが現在の考え方です。心配な食材こそ、小児科が開いている平日の午前中に少量から試すのが安全です。"},
+ {h:"絶対に与えないもの",p:"はちみつは1歳になるまで与えないでください。乳児ボツリヌス症の原因になり、加熱しても防げません。はちみつ入りのお菓子や飲料にも注意を。"},
+ {partner:"道具をそろえる、まとめて作って冷凍する、食べさせて片づける。作る係より、この3つのどれかを固定で引き受けるほうが現実的に助かります。"},
+ {src:[["厚生労働省 授乳・離乳の支援ガイド（PDF）","https://www.mhlw.go.jp/content/11908000/000496257.pdf"],["消費者庁 ハチミツによる乳児のボツリヌス症","https://www.caa.go.jp/policies/policy/consumer_safety/food_safety/food_safety_portal/microorganism_virus/contents_001/"]]}
+]],
+
+["q35","保育園の情報を集めはじめる",[
+ {h:"時期",p:"4月入園を目指す場合、申し込みは前年の秋（10〜12月ごろ）が多く、見学はその前に済ませる必要があります。生後4〜6か月から動きはじめると間に合います。"},
+ {h:"調べること",li:["自治体の申込時期と締切、選考の点数（利用調整基準）","認可・認可外・小規模・企業主導型などの種類","通勤経路上にあるか、自転車で行ける距離か","慣らし保育の期間（1〜2週間が多い）","延長保育の時間と料金"]},
+ {h:"注意",p:"選考の仕組みも締切も自治体ごとに大きく違います。ここに書いたのは一般的な流れなので、必ず住んでいる市区町村の案内で確認してください。"},
+ {partner:"見学は平日の日中です。1回でも自分が行くと、選ぶときの会話がまったく変わります。申込書類の作成も引き受けやすい仕事です。"}
+]]
+]},
+
+{id:"p4", key:"late", title:"生後7か月〜1歳", range:"7か月〜1歳", items:[
+
+["q41","はいはい後の事故対策をする",[
+ {h:"誤飲",p:"トイレットペーパーの芯（直径約4cm）を通るものは、口に入って詰まる可能性があります。ボタン電池、たばこ、薬、硬貨、小さいおもちゃ、磁石は手の届かない場所へ。"},
+ {h:"転落・転倒",li:["階段の上と下にゲートをつける","ベランダや窓ぎわに踏み台になるものを置かない","テーブルクロスは使わない（引っぱって上のものが落ちる）"]},
+ {h:"やけど・水の事故",p:"電気ポット、炊飯器の蒸気、ストーブ。お風呂は数センチの水でも溺れるので、絶対に目を離さない。浮き輪や入浴補助具があっても同じです。"},
+ {partner:"ここは分担しやすく、効果がはっきり出る領域です。週末に1時間、家の中を赤ちゃんの目線で点検する日を作ってください。"}
+]],
+
+["q42","9〜10か月児健診を受ける",[
+ {h:"見るところ",p:"おすわり、はいはい、つかまり立ち、指でつまむ動き、人見知り、名前を呼んだときの反応、離乳食の進み方など。"},
+ {h:"相談しやすい場",p:"離乳食が進まない、夜泣きがひどい、といったことも聞ける場です。健診は「できているか試される場」ではなく、相談していい場所です。"},
+ {partner:"平日の日中が多い健診です。この回は自分が行く、と決めてしまうと、本人に半日の自由時間を作れます。"},
+ {src:[["こども家庭庁 乳幼児健診に関する取組み","https://www.cfa.go.jp/policies/boshihoken/nyuyojikenshin"]]}
+]],
+
+["q43","保育園に申し込む",[
+ {h:"締切が絶対",p:"4月入園の申し込みは秋が多く、1日でも過ぎると次の年度まで待つことになりかねません。自治体の案内が出たらすぐ日程を押さえてください。"},
+ {h:"そろえるもの",li:["申込書と希望園の順位（書き方で結果が変わることがあります）","就労証明書（勤務先に依頼。発行まで2週間かかることも）","課税証明書など、自治体が指定する書類"]},
+ {h:"注意",p:"選考方法、点数の付け方、締切はすべて自治体ごとに違います。必ず住んでいる市区町村の案内で確認してください。"},
+ {partner:"就労証明書は両親分が必要なことが多く、自分の会社への依頼が遅れると全部が止まります。まず自分のぶんを先に出してください。"}
+]],
+
+["q44","1歳の予防接種を予約する",[
+ {h:"1歳になったらすぐ",p:"MR（麻しん風しん）1期、水痘の1回目、五種混合と小児用肺炎球菌の追加接種。おたふくかぜは任意接種です。"},
+ {h:"なぜ急ぐか",p:"麻しん（はしか）は感染力が非常に強く、1歳前の赤ちゃんは免疫がありません。1歳になったらできるだけ早く受けるのが勧められています。"},
+ {h:"水痘の2回目",p:"1回目から3か月以上あけて接種します。忘れやすいので、1回目のときに2回目の予約も入れておくのがおすすめです。"},
+ {partner:"誕生日の少し前に予約を入れておく係を。お祝いの準備と同時に、これも自分のタスクに入れてください。"},
+ {src:[["日本小児科学会 推奨する予防接種スケジュール","https://www.jpeds.or.jp/modules/activity/index.php?content_id=138"]]}
+]],
+
+["q45","卒乳・断乳について考える",[
+ {h:"決まりはない",p:"1歳でやめる必要も、続ける必要もありません。WHOは2歳以上まで続けることも勧めていますが、家庭の事情や復職に合わせて決めていいものです。"},
+ {h:"急にやめるとき",p:"乳房が張って痛み、乳腺炎になることがあります。断乳を急ぐ場合は、産院や助産院に相談しながら進めるほうが安全です。"},
+ {partner:"「もうやめたら？」も「まだ続けたら？」も、どちらも本人が決めることです。周囲から言われて悩んでいるなら、その声を自分が受け止めてください。夜間の寝かしつけを代われると、断乳はぐっとラクになります。"}
+]],
+
+["q46","職場復帰の準備をする",[
+ {h:"慣らし保育",p:"最初は2時間から始めて、1〜2週間かけて通常の保育時間に近づけていきます。この期間はフルタイムで働けません。"},
+ {h:"決めておくこと",li:["送りと迎えの担当（固定にするほうが揉めません）","発熱で呼び出されたとき、どちらが行くか。その順番","病児保育やファミリーサポートの登録（先にしておく）","時短勤務にするか、その場合の期間"]},
+ {h:"心の準備",p:"入園後の数か月は、感染症をもらって頻繁に休むことになります。最初から「そういうもの」と職場に伝えておくほうが、結果的にうまくいきます。"},
+ {partner:"呼び出しの一番手を自分にする、という選択肢を先に出してください。ここを母親の役割として固定してしまうと、その後の何年もが決まります。病児保育の登録も、いま済ませておく担当です。"}
+]]
+]}
+];
+
+/* ===================== state ===================== */
+var LS = "pp365.v1";
+var state = {birth:"", checked:{}, log:{}, growth:[], sel:14};
+var dbRef = null;
+
+function loadLocal(){
+  try{
+    var raw = localStorage.getItem(LS);
+    if(!raw) return;
+    var o = JSON.parse(raw);
+    if(!o || typeof o !== "object") return;
+    if(typeof o.birth === "string") state.birth = o.birth;
+    if(o.checked && typeof o.checked === "object") state.checked = o.checked;
+    if(o.log && typeof o.log === "object") state.log = o.log;
+    if(Array.isArray(o.growth)) state.growth = o.growth;
+  }catch(e){}
+}
+function prune(){
+  var keys = Object.keys(state.log).sort();
+  while(keys.length > 7){ delete state.log[keys.shift()]; }
+  if(state.growth.length > 40) state.growth = state.growth.slice(-40);
+}
+function payload(){ return {birth:state.birth, checked:state.checked, log:state.log, growth:state.growth}; }
+function saveLocal(){ try{ localStorage.setItem(LS, JSON.stringify(payload())); }catch(e){} }
+function persist(){
+  prune();
+  saveLocal();
+  if(dbRef){ dbRef.set(payload()).catch(function(){}); }
+}
+
+/* ===================== helpers ===================== */
+var DAY = 86400000;
+function todayDate(){ var d=new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function parseD(s){
+  if(!s) return null;
+  var p = String(s).split("-");
+  if(p.length !== 3) return null;
+  var d = new Date(Number(p[0]), Number(p[1])-1, Number(p[2]));
+  return isNaN(d.getTime()) ? null : d;
+}
+function fmt(d){ return (d.getMonth()+1) + "月" + d.getDate() + "日"; }
+function dayKey(d){
+  var m = String(d.getMonth()+1);
+  var dd = String(d.getDate());
+  return d.getFullYear() + "-" + (m.length<2?"0":"") + m + "-" + (dd.length<2?"0":"") + dd;
+}
+function daysSinceBirth(){
+  var b = parseD(state.birth);
+  if(!b) return null;
+  return Math.round((todayDate() - b) / DAY);
+}
+function stageIndexFor(day){
+  var idx = 0;
+  for(var i=0;i<S.length;i++){ if(day >= S[i].from) idx = i; }
+  return idx;
+}
+function groupOf(key){
+  for(var i=0;i<GROUPS.length;i++){ if(GROUPS[i].key === key) return GROUPS[i]; }
+  return GROUPS[0];
+}
+function trackPct(day){
+  var d = Math.max(0, Math.min(365, day));
+  return (d / 365 * 100);
+}
+
+/* ===================== レール ===================== */
+var rail = document.getElementById("rail");
+(function(){
+  var frag = document.createDocumentFragment();
+  var box = null, cur = "";
+  S.forEach(function(s, i){
+    if(s.g !== cur){
+      cur = s.g;
+      var grp = document.createElement("div");
+      grp.className = "mgroup";
+      var lab = document.createElement("div");
+      lab.className = "mgroup-label";
+      lab.textContent = groupOf(s.g).name;
+      box = document.createElement("div");
+      box.className = "mgroup-weeks";
+      grp.appendChild(lab); grp.appendChild(box);
+      frag.appendChild(grp);
+    }
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "chip";
+    b.id = "chip-" + i;
+    b.dataset.i = String(i);
+    b.dataset.g = s.g;
+    b.setAttribute("aria-pressed","false");
+    b.setAttribute("aria-label", s.t);
+    var parts = s.t.match(/^(.*?)(\d+)(.*)$/);
+    var n = document.createElement("span");
+    var u = document.createElement("span");
+    u.className = "u";
+    if(parts){ n.textContent = parts[2]; u.textContent = parts[3] || parts[1]; }
+    else { n.textContent = s.t; u.textContent = ""; }
+    if(s.t === "1歳"){ n.textContent = "1"; u.textContent = "歳"; }
+    if(s.t === "出産当日"){ n.textContent = "0"; u.textContent = "日"; }
+    b.appendChild(n); b.appendChild(u);
+    box.appendChild(b);
+  });
+  rail.appendChild(frag);
+})();
+rail.addEventListener("click", function(e){
+  var b = e.target.closest(".chip");
+  if(b) select(Number(b.dataset.i), true);
+});
+
+/* ===================== 区分カード ===================== */
+(function(){
+  var host = document.getElementById("groups");
+  GROUPS.forEach(function(g){
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "stage-card";
+    b.style.setProperty("--stage", "var(--s-" + g.key + ")");
+    var nm = document.createElement("span"); nm.className = "nm"; nm.textContent = g.name;
+    var rg = document.createElement("span"); rg.className = "rg"; rg.textContent = g.range;
+    var ds = document.createElement("span"); ds.className = "ds"; ds.textContent = g.desc;
+    b.appendChild(nm); b.appendChild(rg); b.appendChild(ds);
+    b.addEventListener("click", function(){
+      select(stageIndexFor(g.jump), true);
+      document.getElementById("panel").scrollIntoView({behavior:"smooth", block:"center"});
+    });
+    host.appendChild(b);
+  });
+})();
+
+/* ===================== 詳細ブロック ===================== */
+var PA_ICON = '<svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><circle cx="5.5" cy="4.5" r="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="11.5" cy="5.5" r="2" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.4 14c0-2.6 1.8-4.2 4.1-4.2S9.6 11.4 9.6 14" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11 9.9c2 .1 3.6 1.5 3.6 4.1" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>';
+function paBlock(text){
+  var d = document.createElement("div"); d.className = "pa";
+  var t = document.createElement("div"); t.className = "pt";
+  t.innerHTML = PA_ICON;
+  t.appendChild(document.createTextNode("パートナーができること"));
+  var p = document.createElement("p"); p.textContent = text;
+  d.appendChild(t); d.appendChild(p);
+  return d;
+}
+function srcBlock(list){
+  var d = document.createElement("div"); d.className = "src";
+  var lab = document.createElement("span"); lab.className = "sl"; lab.textContent = "出典";
+  d.appendChild(lab);
+  list.forEach(function(s, i){
+    if(i){ var sep = document.createElement("span"); sep.className="sep"; sep.textContent="/"; d.appendChild(sep); }
+    var a = document.createElement("a");
+    a.href = s[1]; a.target = "_blank"; a.rel = "noopener"; a.textContent = s[0];
+    d.appendChild(a);
+  });
+  return d;
+}
+function buildDetail(blocks){
+  var box = document.createElement("div");
+  box.className = "detail";
+  blocks.forEach(function(b){
+    if(b.partner){ box.appendChild(paBlock(b.partner)); return; }
+    if(b.src){ box.appendChild(srcBlock(b.src)); return; }
+    if(b.h){ var h = document.createElement("h4"); h.textContent = b.h; box.appendChild(h); }
+    if(b.p){ var p = document.createElement("p"); p.textContent = b.p; box.appendChild(p); }
+    if(b.li){
+      var ul = document.createElement("ul");
+      b.li.forEach(function(t){ var li = document.createElement("li"); li.textContent = t; ul.appendChild(li); });
+      box.appendChild(ul);
+    }
+  });
+  return box;
+}
+
+/* ===================== チェックリスト ===================== */
+(function(){
+  var host = document.getElementById("todos");
+  TODOS.forEach(function(g, gi){
+    var box = document.createElement("div");
+    box.className = "todo-group";
+    box.dataset.open = gi === 0 ? "true" : "false";
+    box.style.setProperty("--stage", "var(--s-" + g.key + ")");
+
+    var head = document.createElement("button");
+    head.type = "button"; head.className = "todo-head";
+    head.setAttribute("aria-expanded", gi === 0 ? "true" : "false");
+    var car = document.createElement("span"); car.className = "car"; car.textContent = "▸";
+    var tt = document.createElement("span"); tt.className = "tt"; tt.textContent = g.title;
+    var rg = document.createElement("span"); rg.className = "rg"; rg.textContent = g.range;
+    var cnt = document.createElement("span"); cnt.className = "cnt"; cnt.id = "cnt-" + g.id;
+    head.appendChild(car); head.appendChild(tt); head.appendChild(rg); head.appendChild(cnt);
+
+    var ul = document.createElement("ul");
+    ul.className = "todo-list";
+    ul.hidden = gi !== 0;
+
+    g.items.forEach(function(it){
+      var li = document.createElement("li");
+      var lab = document.createElement("label");
+      lab.setAttribute("for", it[0]);
+      var inp = document.createElement("input");
+      inp.type = "checkbox"; inp.id = it[0];
+      inp.addEventListener("change", function(){
+        if(inp.checked) state.checked[it[0]] = true; else delete state.checked[it[0]];
+        renderCounts(); persist();
+      });
+      var sp = document.createElement("span"); sp.textContent = it[1];
+      lab.appendChild(inp); lab.appendChild(sp);
+      li.appendChild(lab);
+
+      var blocks = it[2] || [];
+      if(blocks.length){
+        var more = document.createElement("button");
+        more.type = "button"; more.className = "more";
+        more.setAttribute("aria-expanded","false");
+        var mc = document.createElement("span"); mc.className = "car"; mc.textContent = "▸";
+        more.appendChild(mc);
+        more.appendChild(document.createTextNode("くわしく"));
+        var det = buildDetail(blocks);
+        det.hidden = true;
+        det.id = "det-" + it[0];
+        more.setAttribute("aria-controls", det.id);
+        more.addEventListener("click", function(){
+          var open = det.hidden;
+          det.hidden = !open;
+          more.setAttribute("aria-expanded", open ? "true" : "false");
+          more.lastChild.textContent = open ? "とじる" : "くわしく";
+        });
+        li.appendChild(more);
+        li.appendChild(det);
+      }
+      ul.appendChild(li);
+    });
+
+    head.addEventListener("click", function(){
+      var open = box.dataset.open !== "true";
+      box.dataset.open = open ? "true" : "false";
+      head.setAttribute("aria-expanded", open ? "true" : "false");
+      ul.hidden = !open;
+    });
+
+    box.appendChild(head); box.appendChild(ul);
+    host.appendChild(box);
+  });
+})();
+
+/* ===================== render ===================== */
+function renderChecks(){
+  TODOS.forEach(function(g){
+    g.items.forEach(function(it){
+      var el = document.getElementById(it[0]);
+      if(el) el.checked = !!state.checked[it[0]];
+    });
+  });
+  renderCounts();
+}
+function renderCounts(){
+  var all = 0, done = 0;
+  TODOS.forEach(function(g){
+    var d = 0;
+    g.items.forEach(function(it){ if(state.checked[it[0]]) d++; });
+    all += g.items.length; done += d;
+    var el = document.getElementById("cnt-" + g.id);
+    if(el) el.textContent = d + "/" + g.items.length;
+  });
+  document.getElementById("todo-total").textContent = "全体 " + done + "/" + all;
+}
+
+function select(i, scroll){
+  i = Math.max(0, Math.min(S.length - 1, i));
+  state.sel = i;
+  var s = S[i], g = groupOf(s.g);
+  var panel = document.getElementById("panel");
+  panel.style.setProperty("--stage", "var(--s-" + s.g + ")");
+  panel.style.setProperty("--stage-bg", "var(--s-" + s.g + "-bg)");
+
+  document.getElementById("p-group").textContent = g.name;
+  document.getElementById("p-title").textContent = s.t;
+  document.getElementById("p-sub").textContent = s.sub;
+  document.getElementById("p-s0").textContent = s.st[0];
+  document.getElementById("p-s1").textContent = s.st[1];
+  document.getElementById("p-s2").textContent = s.st[2];
+  document.getElementById("p-baby").textContent = s.baby;
+  document.getElementById("p-mom").textContent = s.mom;
+  document.getElementById("p-todo").textContent = s.todo;
+  document.getElementById("p-partner").textContent = s.pa;
+
+  var to = (i < S.length - 1) ? (S[i+1].from - 1) : null;
+  var range = to === null ? ("生まれた日から" + s.from + "日目以降")
+    : (s.from === to ? ("生まれた日から" + s.from + "日目")
+                     : ("生まれた日から" + s.from + "〜" + to + "日目"));
+  var b = parseD(state.birth);
+  if(b){
+    var d0 = new Date(b.getTime() + s.from * DAY);
+    range += " · " + fmt(d0) + "ごろ";
+  }
+  document.getElementById("p-range").textContent = range;
+
+  document.getElementById("track-pin").style.left = trackPct(s.from) + "%";
+  document.getElementById("prev").disabled = i === 0;
+  document.getElementById("next").disabled = i === S.length - 1;
+
+  var chips = rail.querySelectorAll(".chip");
+  for(var k=0;k<chips.length;k++){
+    chips[k].setAttribute("aria-pressed", Number(chips[k].dataset.i) === i ? "true" : "false");
+  }
+  if(scroll){
+    var c = document.getElementById("chip-" + i);
+    if(c) c.scrollIntoView({behavior:"smooth", block:"nearest", inline:"center"});
+  }
+}
+
+function renderToday(){
+  var input = document.getElementById("birth");
+  input.value = state.birth || "";
+  document.getElementById("birth-clear").hidden = !state.birth;
+
+  var main = document.getElementById("today-main");
+  var eyebrow = document.getElementById("today-eyebrow");
+  var jump = document.getElementById("jump-today");
+  var pin = document.getElementById("track-today");
+  var calc = document.getElementById("calc");
+
+  var chips = rail.querySelectorAll(".chip");
+  for(var i=0;i<chips.length;i++) chips[i].classList.remove("is-today");
+
+  var day = daysSinceBirth();
+  if(day === null){
+    main.hidden = true; jump.hidden = true; pin.hidden = true;
+    eyebrow.textContent = "生まれた日を入れると、今日が何日目かわかります";
+    calc.textContent = "入院中の日数、健診の時期、予防接種の開始日が、この日を起点に計算されます。";
+    return;
+  }
+  if(day < 0){
+    main.hidden = true; jump.hidden = true; pin.hidden = true;
+    eyebrow.textContent = "まだ生まれる前の日付です";
+    calc.textContent = "生まれた日を入れてください。出産前のことは妊娠40週ノートにまとめてあります。";
+    return;
+  }
+
+  main.hidden = false;
+  eyebrow.textContent = "きょう";
+  var months = Math.floor(day / 30.44);
+  var label = day < 30 ? ("生後" + day + "日") : ("生後" + months + "か月");
+  document.getElementById("today-week").textContent = label;
+  var s = S[stageIndexFor(day)];
+  var g = groupOf(s.g);
+  var sub = g.name + " · " + s.t;
+  if(day >= 30) sub += " · 生後" + day + "日目";
+  if(day <= 56) sub += " · 産後" + Math.floor(day/7) + "週" + (day%7) + "日";
+  document.getElementById("today-sub").textContent = sub;
+
+  calc.textContent = "生まれた日 " + fmt(parseD(state.birth)) + " から数えています。" +
+    (day <= 365 ? ("1歳の誕生日まであと" + (365 - day) + "日。") : "1歳を過ぎました。");
+
+  jump.hidden = false;
+  pin.hidden = false;
+  pin.style.left = trackPct(day) + "%";
+  var c = document.getElementById("chip-" + stageIndexFor(day));
+  if(c) c.classList.add("is-today");
+}
+
+/* ===================== きょうの記録 ===================== */
+function todayLog(){
+  var k = dayKey(todayDate());
+  if(!state.log[k]) state.log[k] = {feed:0, diaper:0, lastFeed:""};
+  return state.log[k];
+}
+function pips(host, n, max){
+  host.textContent = "";
+  var show = Math.max(max, n);
+  for(var i=0;i<show;i++){
+    var d = document.createElement("span");
+    d.className = "pip" + (i < n ? " on" : "");
+    host.appendChild(d);
+  }
+}
+function elapsed(iso){
+  if(!iso) return "—";
+  var t = new Date(iso).getTime();
+  if(isNaN(t)) return "—";
+  var m = Math.floor((Date.now() - t) / 60000);
+  if(m < 0) return "—";
+  if(m < 60) return m + "分";
+  return Math.floor(m/60) + "時間" + (m%60) + "分";
+}
+function renderRec(){
+  var l = todayLog();
+  document.getElementById("rec-date").textContent = fmt(todayDate());
+  pips(document.getElementById("pips-feed"), l.feed, 10);
+  pips(document.getElementById("pips-diaper"), l.diaper, 10);
+  document.getElementById("n-feed").textContent = l.feed;
+  document.getElementById("n-diaper").textContent = l.diaper;
+  document.getElementById("undo-feed").disabled = l.feed <= 0;
+  document.getElementById("undo-diaper").disabled = l.diaper <= 0;
+  document.getElementById("since-feed").textContent = elapsed(l.lastFeed);
+  var last = state.growth.length ? state.growth[state.growth.length-1] : null;
+  document.getElementById("g-last").textContent = last
+    ? ("前回 " + last.d.slice(5).replace("-","月") + "日 · " + (last.w ? last.w + "g" : "") + (last.w && last.h ? " · " : "") + (last.h ? last.h + "cm" : ""))
+    : "体重・身長を記録しておくと、健診のときに役立ちます";
+}
+document.getElementById("add-feed").addEventListener("click", function(){
+  var l = todayLog();
+  l.feed++;
+  l.lastFeed = new Date().toISOString();
+  renderRec(); persist();
+});
+document.getElementById("undo-feed").addEventListener("click", function(){
+  var l = todayLog();
+  if(l.feed > 0) l.feed--;
+  renderRec(); persist();
+});
+document.getElementById("add-diaper").addEventListener("click", function(){
+  var l = todayLog(); l.diaper++; renderRec(); persist();
+});
+document.getElementById("undo-diaper").addEventListener("click", function(){
+  var l = todayLog(); if(l.diaper > 0) l.diaper--; renderRec(); persist();
+});
+document.getElementById("g-save").addEventListener("click", function(){
+  var w = parseFloat(document.getElementById("g-w").value);
+  var h = parseFloat(document.getElementById("g-h").value);
+  if(isNaN(w) && isNaN(h)) return;
+  state.growth.push({d: dayKey(todayDate()), w: isNaN(w) ? null : w, h: isNaN(h) ? null : h});
+  document.getElementById("g-w").value = "";
+  document.getElementById("g-h").value = "";
+  renderRec(); persist();
+});
+setInterval(function(){
+  var l = todayLog();
+  document.getElementById("since-feed").textContent = elapsed(l.lastFeed);
+}, 30000);
+
+/* ===================== events ===================== */
+document.getElementById("prev").addEventListener("click", function(){ select(state.sel - 1, true); });
+document.getElementById("next").addEventListener("click", function(){ select(state.sel + 1, true); });
+document.getElementById("birth").addEventListener("change", function(e){
+  state.birth = e.target.value || "";
+  renderToday(); persist();
+  jumpToToday(false);
+});
+document.getElementById("birth-clear").addEventListener("click", function(){
+  state.birth = "";
+  renderToday(); persist();
+});
+function jumpToToday(scrollPanel){
+  var day = daysSinceBirth();
+  if(day === null || day < 0) return;
+  select(stageIndexFor(day), true);
+  if(scrollPanel) document.getElementById("panel").scrollIntoView({behavior:"smooth", block:"center"});
+}
+document.getElementById("jump-today").addEventListener("click", function(){ jumpToToday(true); });
+document.addEventListener("keydown", function(e){
+  if(e.target && /input|textarea|select|button/i.test(e.target.tagName)) return;
+  if(e.key === "ArrowLeft") select(state.sel - 1, true);
+  if(e.key === "ArrowRight") select(state.sel + 1, true);
+});
+
+/* ===================== boot ===================== */
+(function boot(){
+  loadLocal();
+  renderChecks();
+  renderToday();
+  renderRec();
+  var day = daysSinceBirth();
+  select(day !== null && day >= 0 ? stageIndexFor(day) : 7, false);
+  var c = document.getElementById("chip-" + state.sel);
+  if(c) c.scrollIntoView({block:"nearest", inline:"center"});
+})();
+
+/* ===================== 共有の保存（あれば） ===================== */
+(function(){
+  if(!(window.claude && typeof window.claude.use === "function")) return;
+  window.claude.use("db").then(function(db){
+    if(!db) return;
+    dbRef = db.doc("state/main");
+    dbRef.onSnapshot(function(snap){
+      if(!snap.exists) return;
+      var v = snap.data() || {};
+      var changed = false;
+      if(typeof v.birth === "string" && v.birth !== state.birth){ state.birth = v.birth; changed = true; }
+      if(v.checked && typeof v.checked === "object" && JSON.stringify(v.checked) !== JSON.stringify(state.checked)){
+        state.checked = Object.assign({}, v.checked); changed = true;
+      }
+      if(v.log && typeof v.log === "object" && JSON.stringify(v.log) !== JSON.stringify(state.log)){
+        state.log = Object.assign({}, v.log); changed = true;
+      }
+      if(Array.isArray(v.growth) && JSON.stringify(v.growth) !== JSON.stringify(state.growth)){
+        state.growth = v.growth.slice(); changed = true;
+      }
+      if(changed){ saveLocal(); renderChecks(); renderToday(); renderRec(); }
+    }, function(){ dbRef = null; });
+  }).catch(function(){});
+})();
+</script>
