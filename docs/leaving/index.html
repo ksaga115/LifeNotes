@@ -1,0 +1,1567 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="退職日を入れると期限が並びます。健康保険の20日、失業給付、住民税、退職金の税。">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="退職のノート">
+<meta property="og:type" content="website">
+<meta property="og:title" content="退職のノート">
+<meta property="og:description" content="退職日を入れると期限が並びます。健康保険の20日、失業給付、住民税、退職金の税。">
+<title>退職のノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+</head>
+<body>
+<style>
+html{color-scheme:light dark}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+:root{
+  --ground:#F3F3F0;
+  --surface:#FFFFFF;
+  --surface-2:#FAFAF8;
+  --ink:#242826;
+  --ink-2:#4D5451;
+  --muted:#7E8683;
+  --line:#E3E5E1;
+  --line-2:#EEEFEC;
+  --p1:#4A6A88;
+  --p2:#43806B;
+  --p3:#96703A;
+  --p4:#6E6386;
+  --p1-bg:#E7EDF3;
+  --p2-bg:#E3EEE9;
+  --p3-bg:#F3EBDC;
+  --p4-bg:#EBE8F0;
+  --alert:#A9503F;
+  --alert-bg:#F6E8E4;
+  --ok:#3D7C5B;
+  --share:#4A6A88;
+  --share-bg:#E8EEF4;
+  --shadow:0 1px 2px rgba(36,40,38,.05), 0 8px 24px -16px rgba(36,40,38,.25);
+  --display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho","Yu Gothic UI",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#161917; --surface:#1F2321; --surface-2:#262B29;
+    --ink:#E8EAE6; --ink-2:#BBC2BE; --muted:#8C9490;
+    --line:#343A37; --line-2:#2B302E;
+    --p1:#93B4D0; --p2:#71BB9F; --p3:#CFA463; --p4:#A99DC2;
+    --p1-bg:#22303C; --p2-bg:#1F3730; --p3-bg:#352D1C; --p4-bg:#2C2739;
+    --alert:#DE8371; --alert-bg:#3A2622; --ok:#79C79C;
+    --share:#93B4D0; --share-bg:#22303C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#161917; --surface:#1F2321; --surface-2:#262B29;
+  --ink:#E8EAE6; --ink-2:#BBC2BE; --muted:#8C9490;
+  --line:#343A37; --line-2:#2B302E;
+  --p1:#93B4D0; --p2:#71BB9F; --p3:#CFA463; --p4:#A99DC2;
+  --p1-bg:#22303C; --p2-bg:#1F3730; --p3-bg:#352D1C; --p4-bg:#2C2739;
+  --alert:#DE8371; --alert-bg:#3A2622; --ok:#79C79C;
+  --share:#93B4D0; --share-bg:#22303C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--body);font-size:15px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;font-weight:700}
+a{color:inherit}
+
+/* ---------- header ---------- */
+.bar{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:30;
+  background:color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+}
+.bar-in{max-width:560px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.mark{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.mark svg{display:block;flex:none}
+.bar .spacer{flex:1}
+.ghost{
+  font:inherit;font-size:12.5px;font-family:var(--body);
+  background:var(--surface);color:var(--ink-2);
+  border:1px solid var(--line);border-radius:999px;
+  padding:5px 12px;cursor:pointer;white-space:nowrap;
+}
+.ghost:hover{border-color:var(--muted)}
+
+/* ---------- 冒頭 ---------- */
+.lede{margin-top:18px;font-size:14px;color:var(--ink-2);line-height:1.85}
+.lede strong{font-weight:700;color:var(--ink)}
+
+/* ---------- 今日 ---------- */
+.today{
+  margin-top:16px;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:16px;box-shadow:var(--shadow);
+}
+.eyebrow{font-size:11.5px;letter-spacing:.14em;color:var(--muted);font-weight:500}
+.today-main{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-top:2px}
+.today-day{font-family:var(--display);font-size:30px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+.today-sub{font-size:13px;color:var(--ink-2)}
+.setup{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+input[type="date"]{
+  font:inherit;font-size:14px;font-family:var(--body);
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0;max-width:100%;
+}
+.solid{
+  font:inherit;font-size:13px;font-family:var(--body);font-weight:500;
+  background:var(--ink);color:var(--ground);
+  border:0;border-radius:999px;padding:7px 14px;cursor:pointer;
+}
+.solid:hover{opacity:.88}
+.hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.7}
+
+/* 次の期限 */
+.nextup{margin-top:14px;border-top:1px solid var(--line-2);padding-top:12px;display:none}
+.nextup.on{display:block}
+.nextup h4{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:500;font-family:var(--body)}
+.nx{display:flex;gap:10px;align-items:flex-start;margin-top:8px}
+.nx-when{
+  flex:none;min-width:64px;text-align:center;border-radius:10px;padding:5px 6px;
+  font-size:11px;line-height:1.35;font-weight:700;font-variant-numeric:tabular-nums;
+}
+.nx-when b{display:block;font-size:17px;font-family:var(--display)}
+.nx-what{font-size:13.5px;line-height:1.6}
+.nx-what span{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.nx.over .nx-when{background:var(--alert-bg);color:var(--alert)}
+.nx.soon .nx-when{background:var(--p1-bg);color:var(--p1)}
+.nx.far .nx-when{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+
+/* ---------- 時間の帯 ---------- */
+.track{margin-top:16px}
+.track-bar{position:relative;height:10px;border-radius:999px;background:var(--line-2);display:flex;overflow:hidden}
+.track-seg{flex:1;border-right:1px solid var(--ground)}
+.track-seg:last-child{border-right:0}
+.track-pin{position:absolute;top:-4px;width:2px;height:18px;background:var(--alert);border-radius:2px;transition:left .3s}
+.track-scale{display:flex;font-size:10px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
+.track-scale span{flex:1;text-align:center}
+
+/* ---------- レール ---------- */
+.rail-wrap{margin-top:24px}
+.rail-head{display:flex;align-items:baseline;gap:10px;margin-bottom:8px}
+.rail-head h2{font-size:17px}
+.rail-head .eyebrow{margin-left:auto}
+.rail{
+  display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;
+  padding-bottom:8px;margin-inline:-16px;padding-inline:16px;
+  scrollbar-width:none;
+}
+.rail::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;scroll-snap-align:center;cursor:pointer;font:inherit;
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:9px 13px;min-width:106px;text-align:center;font-size:12px;color:var(--ink-2);
+}
+.chip b{display:block;font-family:var(--display);font-size:14.5px;color:var(--ink);font-weight:700}
+.chip[aria-current="true"]{box-shadow:var(--shadow)}
+.chip.p1[aria-current="true"]{border-color:var(--p1);background:var(--p1-bg)}
+.chip.p2[aria-current="true"]{border-color:var(--p2);background:var(--p2-bg)}
+.chip.p3[aria-current="true"]{border-color:var(--p3);background:var(--p3-bg)}
+.chip.p4[aria-current="true"]{border-color:var(--p4);background:var(--p4-bg)}
+.chip .here{display:none;font-size:10px;color:var(--alert);font-weight:700;margin-top:2px}
+.chip.now .here{display:block}
+
+/* ---------- ステージ本体 ---------- */
+.stage{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:18px 16px;box-shadow:var(--shadow);
+}
+.stage-tag{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;
+  border-radius:999px;padding:3px 10px;
+}
+.stage.p1 .stage-tag{background:var(--p1-bg);color:var(--p1)}
+.stage.p2 .stage-tag{background:var(--p2-bg);color:var(--p2)}
+.stage.p3 .stage-tag{background:var(--p3-bg);color:var(--p3)}
+.stage.p4 .stage-tag{background:var(--p4-bg);color:var(--p4)}
+.stage h3{font-size:20px;margin-top:8px;line-height:1.45}
+.stage .lead{font-size:13.5px;color:var(--ink-2);margin-top:8px;line-height:1.85}
+
+/* 手続きカード */
+.task{border-top:1px solid var(--line-2);padding-top:13px;margin-top:13px}
+.task-head{display:flex;gap:10px;align-items:flex-start}
+.chk{
+  flex:none;width:22px;height:22px;margin-top:3px;border-radius:7px;
+  border:1.5px solid var(--line);background:var(--surface-2);cursor:pointer;
+  display:grid;place-items:center;padding:0;
+}
+.chk svg{width:13px;height:13px;opacity:0;stroke:var(--ok);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.chk[aria-pressed="true"]{border-color:var(--ok);background:transparent}
+.chk[aria-pressed="true"] svg{opacity:1}
+.task-title{flex:1;font-size:15px;font-weight:700;line-height:1.55;font-family:var(--display)}
+.task.done .task-title{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.due{
+  display:inline-block;font-size:11.5px;font-weight:700;border-radius:6px;
+  padding:1px 8px;white-space:nowrap;vertical-align:1.5px;margin-left:2px;
+  background:var(--alert-bg);color:var(--alert);font-family:var(--body);
+}
+.due.soft{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.task-body{margin-left:32px;font-size:13.5px;color:var(--ink-2);line-height:1.85;margin-top:5px}
+.task-body p{margin:0 0 7px}
+.task-body p:last-child{margin-bottom:0}
+.task-body ul{margin:4px 0 7px;padding-left:1.15em}
+.task-body li{margin-bottom:3px}
+.where{
+  display:block;margin-top:7px;font-size:12.5px;color:var(--ink-2);
+  background:var(--surface-2);border:1px solid var(--line-2);border-radius:9px;padding:7px 10px;
+}
+.where b{font-family:var(--body);font-weight:700;color:var(--ink)}
+
+/* 出典 */
+.src{display:block;margin-top:7px;font-size:11.5px;color:var(--muted);line-height:1.65}
+.src a{color:var(--p1);text-underline-offset:2px}
+.src::before{content:"出典 ";letter-spacing:.06em}
+
+/* 分担カード */
+.share{
+  margin:10px 0 0 32px;background:var(--share-bg);border-radius:11px;padding:9px 12px;
+  font-size:12.5px;color:var(--ink-2);line-height:1.8;
+}
+.share b{display:block;font-size:11px;letter-spacing:.08em;color:var(--share);font-weight:700;margin-bottom:2px}
+
+/* たたむ */
+details.more{margin-left:32px;margin-top:6px}
+details.more>summary{
+  list-style:none;cursor:pointer;font-size:12.5px;color:var(--p1);
+  display:inline-flex;align-items:center;gap:4px;
+}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"くわしく"}
+details.more[open]>summary::before{content:"閉じる"}
+details.more>summary::after{content:"\25BE";font-size:10px;transition:transform .2s}
+details.more[open]>summary::after{transform:rotate(180deg)}
+
+/* ---------- 注意帯 ---------- */
+.warn{
+  margin-top:16px;background:var(--alert-bg);border-radius:14px;padding:14px 15px;
+  font-size:13px;line-height:1.85;color:var(--ink-2);
+}
+.warn b{color:var(--alert);font-family:var(--display);font-size:14px;display:block;margin-bottom:3px}
+
+/* ---------- セクション ---------- */
+.sec{margin-top:32px}
+.sec>h2{font-size:17px}
+.sec>p.note{font-size:13px;color:var(--ink-2);margin:6px 0 0;line-height:1.85}
+.table{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;box-shadow:var(--shadow);
+}
+.row{display:flex;gap:10px;padding:11px 14px;border-top:1px solid var(--line-2);align-items:flex-start}
+.row:first-child{border-top:0}
+.row .w{flex:none;width:78px;font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.5}
+.row .t{flex:1;font-size:13.5px;line-height:1.6}
+.row .t span{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.row.g1 .w{color:var(--p1)} .row.g2 .w{color:var(--p2)}
+.row.g3 .w{color:var(--p3)} .row.g4 .w{color:var(--p4)}
+
+/* 進捗 */
+.prog{margin-top:14px;font-size:12.5px;color:var(--muted);display:flex;align-items:center;gap:10px}
+.prog-bar{flex:1;height:6px;border-radius:999px;background:var(--line-2);overflow:hidden}
+.prog-bar i{display:block;height:100%;background:var(--ok);width:0;transition:width .3s}
+
+/* ---------- 相談先 ---------- */
+.help{
+  margin-top:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:16px;box-shadow:var(--shadow);font-size:13.5px;line-height:1.85;
+}
+.help dl{margin:0}
+.help dt{font-weight:700;font-family:var(--display);margin-top:12px}
+.help dt:first-child{margin-top:0}
+.help dd{margin:2px 0 0;color:var(--ink-2);font-size:13px}
+
+/* ---------- 出典一覧 ---------- */
+.sources{margin-top:32px;font-size:12.5px;color:var(--ink-2);line-height:1.9}
+.sources h2{font-size:15px;margin-bottom:8px}
+.sources ul{margin:0;padding-left:1.1em}
+.sources li{margin-bottom:5px}
+.sources a{color:var(--p1)}
+
+footer{
+  margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted);line-height:1.9;
+}
+footer a{color:var(--p1)}
+
+/* ---------- このノート固有 ---------- */
+
+/* 健康保険の3つを並べる表 */
+.cmp{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:12.5px}
+.cmp th,.cmp td{padding:6px 8px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top;line-height:1.6}
+.cmp th{font-weight:500;color:var(--muted);font-size:11px;letter-spacing:.06em;white-space:nowrap}
+.cmp td:first-child{font-weight:700;white-space:nowrap}
+.cmp td:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+.cmp tr:last-child td{border-bottom:0}
+
+/* 持ちものの箇条書きを詰める */
+.task-body ul.tight{margin:4px 0 7px}
+.task-body ul.tight li{margin-bottom:1px}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M3.2 6.4h11.6v8.2H3.2z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" opacity=".5"/>
+        <path d="M6.9 6.4V4.6a1 1 0 011-1h2.2a1 1 0 011 1v1.8" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"/>
+        <path d="M3.2 9.8h11.6" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".5"/>
+      </svg>
+      退職のノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="../" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">
+    会社を辞めるとき・辞めたあとの手続きを、<strong>退職日を起点に、期限の順に</strong>並べたノートです。
+    退職日を入れると、いま何日目で、次に何の期限が来るのかが出ます。
+    これから辞める人は、予定の退職日を入れてかまいません。
+    広告も関連記事もありません。入れた日付とチェックは、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- 今日 -->
+  <section class="today">
+    <div class="eyebrow">きょうの位置</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">日付を入れてください</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <input type="date" id="dateIn" aria-label="退職日">
+      <button class="solid" id="setBtn" type="button">この日から数える</button>
+      <button class="ghost" id="clearBtn" type="button" hidden>消す</button>
+    </div>
+    <p class="hint" id="hint">
+      入れるのは<strong>退職日</strong>（最終出社日ではなく、在籍の最後の日）です。
+      入れた日付はこの端末のブラウザにだけ保存されます。サーバーには送られません。
+    </p>
+
+    <div class="track" id="track" hidden>
+      <div class="track-bar" id="trackBar">
+        <div class="track-seg" style="background:var(--p1)"></div>
+        <div class="track-seg" style="background:var(--p2)"></div>
+        <div class="track-seg" style="background:var(--p3)"></div>
+        <div class="track-seg" style="background:var(--p4)"></div>
+        <div class="track-pin" id="trackPin" style="left:0"></div>
+      </div>
+      <div class="track-scale">
+        <span>退職日</span><span>20日</span><span>3か月</span><span>6か月</span><span>1年</span>
+      </div>
+    </div>
+
+    <div class="nextup" id="nextup">
+      <h4>つぎに来る期限</h4>
+      <div id="nextList"></div>
+    </div>
+  </section>
+
+  <!-- 最初に読む -->
+  <div class="warn">
+    <b>最初にこれだけは</b>
+    退職後の手続きで、いちばん短くて、いちばん取り返しがつかないのが
+    <strong>健康保険の選択</strong>です。
+    <strong>任意継続の申出は、退職日の翌日から20日以内。</strong>
+    国民健康保険への加入と、国民年金第1号への切替えは<strong>14日以内</strong>です。
+    どれを選ぶかで保険料がかなり変わるので、<strong>まず保険料を2つ問い合わせて、比べてから決めてください。</strong>
+    失業給付やお金の整理は、そのあとで間に合います。
+  </div>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>時期ごとにすること</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="時期"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 期限一覧 -->
+  <section class="sec">
+    <h2>期限の一覧</h2>
+    <p class="note">
+      起算点は手続きごとに違います（「退職日の翌日から」「事実発生から」「求職の申込みのあと」など）。
+      下の表はそれぞれの正式な起算点で書いています。
+    </p>
+    <div class="table" id="deadlineTable"></div>
+  </section>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>迷ったときの相談先</h2>
+    <p class="note">どこに聞けばいいかわからない、が一番よくあるつまずきです。窓口は分かれています。</p>
+    <div class="help">
+      <dl>
+        <dt>市区町村の国民健康保険の窓口</dt>
+        <dd>国民健康保険への加入、保険料の試算、減免や軽減の相談。
+          前の年の所得がわかるもの（源泉徴収票など）と、離職票を持っていくと話が早いです。</dd>
+        <dt>市区町村の国民年金の窓口</dt>
+        <dd>国民年金第1号への切替え、保険料の免除・納付猶予の申請。
+          国民健康保険と同じ庁舎にあることが多いので、まとめて行けます。</dd>
+        <dt>年金事務所・ねんきんダイヤル</dt>
+        <dd>年金記録の確認、切替えの手続き、免除の審査の進み具合。
+          基礎年金番号がわかるものを手元に置いて電話してください。</dd>
+        <dt>協会けんぽの都道府県支部／健康保険組合</dt>
+        <dd>任意継続の条件と、あなたの場合の保険料額。
+          会社の健康保険が<strong>健康保険組合</strong>だった場合は、窓口も条件も組合です。
+          保険証や資格確認書に書いてある名前が、そのまま問い合わせ先になります。</dd>
+        <dt>ハローワーク</dt>
+        <dd>失業給付の手続き、求職の申込み、職業訓練。
+          離職票が届かない、離職票に書かれた離職理由に納得がいかない、といった相談もここです。</dd>
+        <dt>市区町村の住民税（市民税・町民税）の担当課</dt>
+        <dd>退職後にいくら、いつ払うことになるか。納付が難しいときの相談も同じ窓口です。</dd>
+        <dt>税務署</dt>
+        <dd>確定申告・還付申告。還付だけなら年明けすぐから受け付けています。
+          何を持っていけばいいかは、電話でも教えてもらえます。</dd>
+        <dt>会社の人事・総務</dt>
+        <dd>離職票、源泉徴収票、退職金、企業年金、住民税の徴収方法。
+          <strong>ここでしか確かめられないことが、かなりあります。</strong>
+          在職中に聞けることは、在職中に聞いておいてください。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        ここに書いてあるのは<strong>全国共通の仕組みと、法令で決まっている期限</strong>です。
+        実際にいくらかかるか、いくら戻るかは、あなたの前の年の所得、家族の人数、住んでいる市区町村、
+        会社が入っていた健康保険によって変わります。
+      </p>
+      <p style="margin:0 0 10px">
+        <strong>市区町村ごとに違うもの</strong>（国民健康保険料の額、住民税の納期、窓口の名前）、
+        <strong>加入先ごとに違うもの</strong>（健康保険組合の任意継続の条件や付加給付）、
+        <strong>会社ごとに違うもの</strong>（退職金の有無、企業年金、住民税をどう徴収するか）は、
+        このページでは金額を書かず、「どこに聞けばいいか」だけ書いています。
+      </p>
+      <p style="margin:0">
+        制度・金額・期限は<strong>厚生労働省・ハローワーク・日本年金機構・全国健康保険協会・国税庁・総務省</strong>で
+        確認して書き、その項目に出典リンクを置いています。
+        出典のない記述は、段取りの提案です。どこまで信じるかを、読む人が決められるようにしてあります。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>全国健康保険協会「<a href="https://www.kyoukaikenpo.or.jp/g3/sb3270/" target="_blank" rel="noopener">任意継続（退職後の健康保険）</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/newpage_21539.html" target="_blank" rel="noopener">国民健康保険の加入・脱退について</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/web/t_doc?dataId=00tb6232&amp;dataType=1&amp;pageNo=1" target="_blank" rel="noopener">非自発的失業者の国民健康保険料（税）軽減制度において軽減対象期間内に被用者保険の適用がある被保険者の取扱いについて（保国発第610001号）</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/kounen/tekiyo/hihokensha1/20141202.html" target="_blank" rel="noopener">従業員（健康保険・厚生年金保険の被保険者）が家族を被扶養者にするとき、被扶養者に異動があったときの手続き</a>」</li>
+      <li>日本年金機構「<a href="https://www.nenkin.go.jp/service/kokunen/kanyu/20140710-03.html" target="_blank" rel="noopener">会社を退職したときの国民年金の手続き</a>」／「<a href="https://www.nenkin.go.jp/tokusetsu/taishoku_menjo.html" target="_blank" rel="noopener">【転職をご検討中の方へ】国民年金の加入、保険料免除・納付猶予制度のご案内</a>」</li>
+      <li>ハローワークインターネットサービス「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_basicbenefit.html" target="_blank" rel="noopener">基本手当について</a>」／「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_procedure.html" target="_blank" rel="noopener">雇用保険の具体的な手続き</a>」／「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_benefitdays.html" target="_blank" rel="noopener">基本手当の所定給付日数</a>」／「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_stepup.html" target="_blank" rel="noopener">就職促進給付</a>」／「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_guide.html" target="_blank" rel="noopener">雇用保険手続きのご案内</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000160564_00045.html" target="_blank" rel="noopener">令和7年4月以降に教育訓練等を受ける場合、給付制限が解除され、基本手当を受給できます</a>」</li>
+      <li>東京労働局・東京ハローワーク「<a href="https://jsite.mhlw.go.jp/tokyo-hellowork/list/iidabashi/jigyounushi/koyouhoken_01.html" target="_blank" rel="noopener">事業主が行う雇用保険の手続きに必要な書類</a>」（資格喪失届・離職証明書の提出期限）</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/portability.html" target="_blank" rel="noopener">離職・転職時等の年金資産の持ち運び（ポータビリティ）</a>」</li>
+      <li>総務省「<a href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-inhabitant-tax.html" target="_blank" rel="noopener">外国人の方の個人住民税について</a>」（住民税の仕組み・退職時の普通徴収と一括徴収）</li>
+      <li>国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1420.htm" target="_blank" rel="noopener">No.1420 退職金を受け取ったとき（退職所得）</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2020.htm" target="_blank" rel="noopener">No.2020 確定申告</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2030.htm" target="_blank" rel="noopener">No.2030 還付申告</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1130.htm" target="_blank" rel="noopener">No.1130 社会保険料控除</a>」</li>
+      <li>国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/hotei/7411.htm" target="_blank" rel="noopener">No.7411 「給与所得の源泉徴収票」の提出範囲と提出枚数等</a>」／「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/hotei/7421.htm" target="_blank" rel="noopener">No.7421 「退職所得の源泉徴収票」の提出範囲と提出枚数等</a>」</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した日付とチェックは、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    内容の正確性には努めていますが、最終的な判断は各窓口の案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 一次情報で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「段取りの提案」であって、制度の断定ではない）
+   ============================================================ */
+
+var S_KYOKAI  = '全国健康保険協会「<a href="https://www.kyoukaikenpo.or.jp/g3/sb3270/" target="_blank" rel="noopener">任意継続（退職後の健康保険）</a>」';
+var S_KOKUHO  = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/newpage_21539.html" target="_blank" rel="noopener">国民健康保険の加入・脱退について</a>」';
+var S_KEIGEN  = '厚生労働省「<a href="https://www.mhlw.go.jp/web/t_doc?dataId=00tb6232&amp;dataType=1&amp;pageNo=1" target="_blank" rel="noopener">非自発的失業者の国民健康保険料（税）軽減制度において軽減対象期間内に被用者保険の適用がある被保険者の取扱いについて（保国発第610001号）</a>」';
+var S_FUYO    = '日本年金機構「<a href="https://www.nenkin.go.jp/service/kounen/tekiyo/hihokensha1/20141202.html" target="_blank" rel="noopener">家族を被扶養者にするとき、被扶養者に異動があったときの手続き</a>」';
+var S_KOKUNEN = '日本年金機構「<a href="https://www.nenkin.go.jp/service/kokunen/kanyu/20140710-03.html" target="_blank" rel="noopener">会社を退職したときの国民年金の手続き</a>」';
+var S_MENJO   = '日本年金機構「<a href="https://www.nenkin.go.jp/tokusetsu/taishoku_menjo.html" target="_blank" rel="noopener">【転職をご検討中の方へ】国民年金の加入、保険料免除・納付猶予制度のご案内</a>」';
+var S_KIHON   = 'ハローワーク「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_basicbenefit.html" target="_blank" rel="noopener">基本手当について</a>」';
+var S_TETSUZU = 'ハローワーク「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_procedure.html" target="_blank" rel="noopener">雇用保険の具体的な手続き</a>」';
+var S_NISSU   = 'ハローワーク「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_benefitdays.html" target="_blank" rel="noopener">基本手当の所定給付日数</a>」';
+var S_STEPUP  = 'ハローワーク「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_stepup.html" target="_blank" rel="noopener">就職促進給付</a>」';
+var S_GUIDE   = 'ハローワーク「<a href="https://www.hellowork.mhlw.go.jp/insurance/insurance_guide.html" target="_blank" rel="noopener">雇用保険手続きのご案内</a>」';
+var S_SEIGEN  = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000160564_00045.html" target="_blank" rel="noopener">令和7年4月以降に教育訓練等を受ける場合、給付制限が解除され、基本手当を受給できます</a>」';
+var S_10KA    = '東京労働局・東京ハローワーク「<a href="https://jsite.mhlw.go.jp/tokyo-hellowork/list/iidabashi/jigyounushi/koyouhoken_01.html" target="_blank" rel="noopener">事業主が行う雇用保険の手続きに必要な書類</a>」';
+var S_PORTA   = '厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/nenkin/nenkin/portability.html" target="_blank" rel="noopener">離職・転職時等の年金資産の持ち運び（ポータビリティ）</a>」';
+var S_JUMIN   = '総務省「<a href="https://www.soumu.go.jp/main_sosiki/jichi_zeisei/czaisei/czaisei_seido/individual-inhabitant-tax.html" target="_blank" rel="noopener">外国人の方の個人住民税について</a>」';
+var S_1420    = '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1420.htm" target="_blank" rel="noopener">No.1420 退職金を受け取ったとき（退職所得）</a>」';
+var S_2020    = '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2020.htm" target="_blank" rel="noopener">No.2020 確定申告</a>」';
+var S_2030    = '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/2030.htm" target="_blank" rel="noopener">No.2030 還付申告</a>」';
+var S_1130    = '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1130.htm" target="_blank" rel="noopener">No.1130 社会保険料控除</a>」';
+var S_7411    = '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/hotei/7411.htm" target="_blank" rel="noopener">No.7411 「給与所得の源泉徴収票」の提出範囲と提出枚数等</a>」';
+var S_7421    = '国税庁「<a href="https://www.nta.go.jp/taxes/shiraberu/taxanswer/hotei/7421.htm" target="_blank" rel="noopener">No.7421 「退職所得の源泉徴収票」の提出範囲と提出枚数等</a>」';
+
+var STAGES = [
+  {
+    id: "s0", phase: "p1", chip: "辞める前", chipSub: "在職中に",
+    from: -36500, to: 0,
+    tag: "準備",
+    title: "会社にいるうちに済ませておく",
+    lead: "退職後の手続きは、ほとんどが「紙を持って窓口に行く」だけです。" +
+          "その紙をもらう相手が、辞めたあとは連絡しづらくなります。" +
+          "<strong>在職中の1日でできることが、あとの何週間かを軽くします。</strong>",
+    tasks: [
+      {
+        id: "x-yukyu", title: "年次有給休暇の残りを確かめる",
+        body: "<p>まず、残っている日数を給与明細か人事に確認してください。" +
+              "<strong>いつまでに何日消化するかは、退職日を決める前に話しておくほうが揉めません。</strong></p>" +
+              "<p><strong>最終出社日と退職日は別です。</strong>" +
+              "有給を最後にまとめて使うと、出社は終わっているのに在籍は続きます。" +
+              "このノートで数えるのは、在籍の最後の日である<strong>退職日</strong>のほうです。" +
+              "健康保険も厚生年金も、退職日までは会社のものが続きます。</p>",
+        ask: "退職日をいつにするか。月末と月の途中では、その月の社会保険料の扱いが変わります。人事に「私の場合どうなるか」を聞いてください。"
+      },
+      {
+        id: "x-rishoku", title: "離職票をもらう約束をしておく", due: "会社が10日以内に届出", soft: true,
+        body: "<p>失業給付の手続きには<strong>雇用保険被保険者離職票</strong>が要ります。" +
+              "これは会社がハローワークに届け出て、交付されるものです。自分では作れません。</p>" +
+              "<p>会社は、被保険者でなくなった日の翌日から起算して<strong>10日以内</strong>に、" +
+              "雇用保険被保険者資格喪失届をハローワークに提出することになっています。" +
+              "離職票は、そのあと会社経由で手もとに届きます。</p>" +
+              "<p><strong>「離職票をお願いします」と、口頭とメールの両方で伝えてください。</strong>" +
+              "郵送先の住所も一緒に渡しておくこと。転職先が決まっている人にも、" +
+              "「要らないですよね」と省かれることがあります。要ると言えばもらえます。</p>",
+        src: S_10KA
+      },
+      {
+        id: "x-gensen", title: "源泉徴収票をもらう", due: "退職の日以後1か月以内", hard: true,
+        body: "<p>会社には交付する義務があります。" +
+              "給与所得の源泉徴収票は、<strong>年の中途で退職した方の場合は、退職の日以後1か月以内</strong>に" +
+              "交付しなければならないとされています。</p>" +
+              "<p>退職金を受け取った場合は、<strong>退職所得の源泉徴収票</strong>も" +
+              "<strong>退職後1か月以内</strong>にすべての受給者に交付されます。</p>" +
+              "<p>この紙は、確定申告、国民健康保険料の試算、家族の被扶養者になる手続き——" +
+              "そのすべてで使います。届かないまま2か月経ったら、会社に連絡してください。</p>",
+        src: S_7411 + "／" + S_7421
+      },
+      {
+        id: "x-kaesu", title: "返すものと、受け取るもの",
+        body: "<p><strong>返すもの</strong></p>" +
+              '<ul class="tight">' +
+              "<li>健康保険の資格確認書（または健康保険証）。扶養している家族の分も</li>" +
+              "<li>社員証、鍵、名刺、貸与されたパソコンや携帯</li>" +
+              "</ul>" +
+              "<p><strong>受け取るもの</strong></p>" +
+              '<ul class="tight">' +
+              "<li>雇用保険被保険者離職票（−1、−2）</li>" +
+              "<li>雇用保険被保険者証</li>" +
+              "<li>給与所得の源泉徴収票（退職金があれば退職所得の源泉徴収票も）</li>" +
+              "<li>年金手帳または基礎年金番号通知書（会社が預かっている場合）</li>" +
+              "<li>退職証明書</li>" +
+              "</ul>" +
+              "<p><strong>退職証明書は、家族の健康保険の被扶養者になるときの添付書類として使えます</strong>" +
+              "（「退職したことにより収入要件を満たす場合」の書類として、退職証明書または離職票の写しが挙げられています）。" +
+              "離職票より早く出してもらえることが多いので、頼んでおくと空白が短くなります。</p>",
+        src: S_FUYO
+      },
+      {
+        id: "x-kiku", title: "会社にしか聞けないことを、聞いておく",
+        body: "<p>このページで断定できないのは、ここが会社ごとに違うからです。" +
+              "在職中なら、聞けば答えが返ってきます。</p>" +
+              '<ul class="tight">' +
+              "<li><strong>退職金</strong>　あるのかないのか、いつ、どう支払われるか</li>" +
+              "<li><strong>企業年金</strong>　企業型確定拠出年金（企業型DC）、確定給付企業年金（DB）に入っていたか</li>" +
+              "<li><strong>健康保険</strong>　協会けんぽか、健康保険組合か。組合なら任意継続の条件や付加給付が違います</li>" +
+              "<li><strong>住民税</strong>　最後の給与・退職金から、まとめて差し引かれるのかどうか</li>" +
+              "<li><strong>最後の給与</strong>　いつ、いくら振り込まれるか</li>" +
+              "</ul>",
+        ask: "この5つは、人事にまとめて1通メールを送れば済みます。口頭で聞くと、あとで言った言わないになります。"
+      },
+      {
+        id: "x-okane", title: "使えるお金を、月数で数えておく",
+        body: "<p><strong>失業給付は、手続きをしてすぐには振り込まれません。</strong>" +
+              "求職の申込みのあとに待期7日があり、自己都合で辞めた場合はさらに給付制限があります。" +
+              "最初の入金まで、ふつうに1か月以上かかります。</p>" +
+              "<p>数えておくこと：手もとの現金と預金／毎月必ず出ていく額（家賃・ローン・保険料・通信費）／" +
+              "引き落としの日／これから増える支出（国民健康保険料、国民年金保険料、住民税）。</p>" +
+              "<p><strong>「何か月もつか」を数字にしておくと、焦って決めなくて済みます。</strong>" +
+              "とくに住民税は、収入が止まったあとに前の年の所得で請求が来ます。" +
+              "これを勘定に入れていない人が、いちばん多いところです。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "s1", phase: "p1", chip: "退職日", chipSub: "もらう・返す",
+    from: 0, to: 4,
+    tag: "手もとの確認",
+    title: "紙がそろっているか、だけ確かめる",
+    lead: "この数日でやることは多くありません。" +
+          "<strong>そろっていない紙がないか</strong>を見るだけです。" +
+          "足りないものは、早いうちに頼んだほうが早く届きます。",
+    tasks: [
+      {
+        id: "x-check", title: "手もとにあるか確かめる",
+        body: '<ul class="tight">' +
+              "<li>雇用保険被保険者離職票（−1、−2）　※あとから郵送されることが多い</li>" +
+              "<li>雇用保険被保険者証</li>" +
+              "<li>給与所得の源泉徴収票</li>" +
+              "<li>退職証明書</li>" +
+              "<li>年金手帳または基礎年金番号通知書</li>" +
+              "<li>マイナンバーカード（または通知カード＋本人確認書類）</li>" +
+              "<li>本人名義の預金通帳またはキャッシュカード</li>" +
+              "<li>写真（正面上三分身、縦3.0cm×横2.4cm）2枚</li>" +
+              "</ul>" +
+              "<p>最後の2つは、ハローワークの手続きで使うものです。" +
+              "写真は駅前の証明写真機で撮れます。</p>",
+        src: S_TETSUZU
+      },
+      {
+        id: "x-taishokukin", title: "退職金を受け取る前に、申告書を1枚出す", due: "退職金の支払いの前", hard: true,
+        body: "<p><strong>「退職所得の受給に関する申告書」</strong>を、退職金を支払う会社に出します。" +
+              "会社から渡されることがほとんどですが、渡されなければこちらから聞いてください。</p>" +
+              "<p><strong>出した場合</strong>　勤続年数に応じた退職所得控除が引かれたうえで税額が計算され、" +
+              "支払いのときに精算されます。原則として確定申告は必要ありません。</p>" +
+              "<p><strong>出さなかった場合</strong>　退職金等の支払金額の" +
+              "<strong>20.42パーセント</strong>の所得税額および復興特別所得税額が源泉徴収されます。" +
+              "戻すには確定申告が要ります。</p>" +
+              "<p>退職所得控除額は、勤続20年以下なら<strong>40万円 × 勤続年数</strong>" +
+              "（80万円に満たない場合には80万円）、" +
+              "勤続20年超なら<strong>800万円 ＋ 70万円 × （勤続年数 − 20年）</strong>。" +
+              "収入金額から控除額を引いた額の<strong>2分の1</strong>が退職所得の金額になります" +
+              "（勤続年数5年以下の短期退職手当等は、300万円を超える部分について2分の1計算の適用がありません）。</p>",
+        src: S_1420
+      },
+      {
+        id: "x-hokensho", title: "健康保険の資格確認書（保険証）を返す",
+        body: "<p>会社の健康保険は、<strong>退職日の翌日からは使えません。</strong>" +
+              "資格を喪失したときは、すみやかに資格確認書を返納することになっています。" +
+              "扶養していた家族の分も、同じ日に使えなくなります。</p>" +
+              "<p><strong>資格喪失後にうっかり使って受診すると、医療費を全額返すことになります。</strong>" +
+              "財布から抜いて、会社に返す封筒に先に入れてしまうのが確実です。</p>" +
+              "<p>次の保険が決まるまでのあいだに病院にかかる必要ができたら、" +
+              "いったん窓口で全額を払い、あとから加入先に請求する形になることがあります。" +
+              "手続き中である旨を、病院の窓口に伝えてください。</p>",
+        src: S_KYOKAI
+      }
+    ]
+  },
+
+  {
+    id: "s2", phase: "p1", chip: "健康保険", chipSub: "14日／20日",
+    from: 4, to: 20,
+    tag: "一番の分岐点",
+    title: "健康保険を、3つから選ぶ",
+    lead: "退職後の健康保険には<strong>「健康保険任意継続」「国民健康保険」「ご家族の健康保険（被扶養者）」の3つの選択</strong>があります。" +
+          "<strong>毎月納める保険料などを比較の上、選択された健康保険にお手続ください</strong>とされています。" +
+          "期限が別々で、いちばん短いのが任意継続の20日です。",
+    tasks: [
+      {
+        id: "x-3tsu", title: "3つの期限と窓口",
+        body: '<table class="cmp">' +
+              "<tr><th>選択肢</th><th>期限</th><th>窓口</th></tr>" +
+              "<tr><td>任意継続</td><td>退職日の翌日から20日以内</td><td>協会けんぽ支部／健保組合</td></tr>" +
+              "<tr><td>国民健康保険</td><td>14日以内</td><td>市区町村</td></tr>" +
+              "<tr><td>家族の被扶養者</td><td>事実発生から5日以内</td><td>家族の勤め先を通して</td></tr>" +
+              "</table>" +
+              "<p><strong>20日を1日でも過ぎると、任意継続は選べなくなります。</strong>" +
+              "決めかねているうちに過ぎてしまうのが、いちばんよくある失敗です。" +
+              "迷っているなら、先に保険料だけ両方聞いてください（次の項目）。</p>",
+        src: S_KYOKAI + "／" + S_KOKUHO + "／" + S_FUYO
+      },
+      {
+        id: "x-hikaku", title: "比べ方は、電話2本",
+        body: "<p>どちらが安いかは、前の年の所得・家族の人数・住んでいる市区町村で逆転します。" +
+              "このページでは出せません。<strong>ただし、どちらも聞けば教えてもらえます。</strong></p>" +
+              '<ul class="tight">' +
+              "<li><strong>任意継続の保険料</strong>　協会けんぽの都道府県支部、" +
+              "または健康保険組合に「退職後に任意継続した場合、私の保険料はいくらになりますか」と聞く</li>" +
+              "<li><strong>国民健康保険料</strong>　市区町村の国民健康保険の窓口で試算してもらう。" +
+              "前の年の所得がわかるもの（源泉徴収票）を持っていくか、手もとに置いて電話する</li>" +
+              "<li><strong>家族の被扶養者</strong>　入れるなら、保険料の負担はありません</li>" +
+              "</ul>" +
+              "<p>この2本の電話に、たぶん30分もかかりません。" +
+              "1年で何万円も変わるところなので、<strong>決める前に必ず両方の数字を見てください。</strong></p>"
+      },
+      {
+        id: "x-ninkei", title: "① 任意継続", due: "20日以内", hard: true,
+        body: "<p>会社の健康保険を、辞めたあとも個人で続ける形です。</p>" +
+              "<p><strong>条件</strong>　退職日までに被保険者期間が継続して2か月以上あること。</p>" +
+              "<p><strong>期限</strong>　<strong>退職日の翌日から20日以内</strong>に手続きすること" +
+              "（20日目が土日、祝日の場合は翌営業日）。" +
+              "郵送で申請する場合は、20日以内に必着するよう送ります。</p>" +
+              "<p><strong>期間</strong>　2年間。ただし、就職して他の健康保険の被保険者になったとき、" +
+              "<strong>保険料を納付期限までに納付しなかったとき</strong>、" +
+              "後期高齢者医療制度の被保険者になったとき、" +
+              "任意継続被保険者でなくなることを希望する旨を申し出たときは、途中で資格を失います。</p>" +
+              "<p><strong>保険料</strong>　退職後は事業主負担分も負担することになるので、" +
+              "<strong>退職時の健康保険料の2倍</strong>になります。" +
+              "<strong>ただし、上限があります。</strong>" +
+              "40歳から64歳までの方は、介護保険料が加わります。" +
+              "原則として2年間変わりません。" +
+              "<strong>被扶養者の保険料負担はありません。</strong></p>" +
+              "<p>扶養している家族が多い人ほど、任意継続のほうが有利になりやすい形です。" +
+              "ただし実際の額は人によるので、前の項目のとおり両方聞いてから決めてください。</p>",
+        where: "<b>出す先</b>　お住まいの都道府県の協会けんぽ支部に「健康保険任意継続被保険者資格取得申出書」を提出<br>" +
+               "<b>健康保険組合の場合</b>　窓口も条件もその組合です。保険証や資格確認書に書かれている名前が問い合わせ先になります",
+        src: S_KYOKAI,
+        ask: "健康保険組合だった人は、任意継続の保険料の計算方法も、受けられる付加給付も、組合ごとに違います。組合に直接聞いてください。"
+      },
+      {
+        id: "x-kokuho", title: "② 国民健康保険", due: "14日以内", hard: true,
+        body: "<p>市区町村が運営する健康保険です。ほかの選択をしないなら、こちらに入ります。</p>" +
+              "<p><strong>被保険者となったとき、脱退するときなどは、14日以内に</strong>" +
+              "市町村の窓口に届け出ることになっています。</p>" +
+              "<p><strong>保険料</strong>　加入する世帯の人数や、前年の所得などによって決まります。" +
+              "<strong>お住まいの市区町村により保険料額が異なります。</strong>" +
+              "保険料の減免制度があります。</p>" +
+              "<p>提出が必要な書類や申請方法は、お住まいの市区町村のホームページに載っています。" +
+              "多くの場合、健康保険の資格喪失を証明するもの（会社が出す資格喪失証明書など）が要ります。" +
+              "何が要るかは、行く前に電話で確かめてください。</p>",
+        where: "<b>出す先</b>　お住まいの市区町村（特別区を含む）の国民健康保険の窓口<br>" +
+               "<b>国民健康保険組合の場合</b>　加入されている国民健康保険組合または各都道府県の窓口",
+        src: S_KOKUHO + "／" + S_KYOKAI
+      },
+      {
+        id: "x-fuyo", title: "③ 家族の健康保険の被扶養者になる", due: "事実発生から5日以内", hard: true,
+        body: "<p>配偶者や親が会社の健康保険に入っていて、その被扶養者として認められれば、" +
+              "<strong>保険料の負担はありません。</strong>入れるなら、たいていこれがいちばん軽い選択です。</p>" +
+              "<p><strong>収入の要件</strong>　年間収入<strong>130万円未満</strong>" +
+              "（60歳以上または障害者の場合は、年間収入180万円未満）。" +
+              "そのうえで、同居の場合は収入が被保険者の収入の半分未満、" +
+              "別居の場合は収入が被保険者からの仕送り額未満であること。</p>" +
+              "<p><strong>ここでいう年間収入は、過去の収入ではなく、これからの見込みです。</strong>" +
+              "「被扶養者に該当する時点および認定された日以降の年間の見込み収入額」とされています。" +
+              "給与収入があるなら月額108,333円以下、雇用保険等の受給者なら日額3,611円以下であれば要件を満たします。</p>" +
+              "<p><strong>失業給付も収入に数えます。</strong>" +
+              "被扶養者の収入には、雇用保険の失業等給付、公的年金、健康保険の傷病手当金や出産手当金も含まれます。" +
+              "雇用保険の待期期間中でも、収入要件を満たしていれば被扶養者として認定できますが、" +
+              "<strong>基本手当（3,612円以上）の支給が始まった場合は、扶養削除の届出が必要になります。</strong></p>" +
+              "<p>自己都合で辞めて給付制限がある期間は、まだ基本手当が出ていません。" +
+              "その間だけ被扶養者になり、支給が始まったら抜ける——という動き方もできます。" +
+              "そのつもりなら、最初に家族の勤め先と加入先に伝えておいてください。</p>" +
+              "<p>（扶養認定日が令和7年10月1日以降で、認定を受ける方が19歳以上23歳未満の場合は" +
+              "「年間収入150万円未満」になります。）</p>",
+        where: "<b>出す先</b>　家族の勤め先を通して（事務センターまたは管轄の年金事務所）<br>" +
+               "<b>提出時期</b>　事実発生から5日以内<br>" +
+               "<b>添付書類</b>　退職したことにより収入要件を満たす場合は、退職証明書または雇用保険被保険者離職票の写し。" +
+               "失業給付を受給中・受給終了の場合は、雇用保険受給資格者証または雇用保険受給資格通知の写し",
+        src: S_FUYO
+      },
+      {
+        id: "x-keigen", title: "倒産・解雇で辞めた人は、国保の軽減がある",
+        body: "<p>自分の意思で辞めたのではない人には、国民健康保険料（税）の軽減制度があります。</p>" +
+              "<p>対象は、国民健康保険の被保険者のうち、雇用保険法に規定する" +
+              "<strong>「特定受給資格者」または「特定理由離職者であって受給資格を有するもの」</strong>で、" +
+              "それぞれの受給資格に係る<strong>離職の日の翌日の属する年度の翌年度の末日まで</strong>の間にある人です" +
+              "（この期間を軽減対象期間といいます）。</p>" +
+              "<p>自分がこれに当たるかどうかは、<strong>離職票や雇用保険受給資格者証に書かれた離職理由</strong>で決まります。" +
+              "市区町村の国民健康保険の窓口に、離職票か受給資格者証を持って行き、" +
+              "「非自発的失業者の軽減の対象になりますか」と聞いてください。" +
+              "<strong>黙っていると適用されません。申請が要ります。</strong></p>",
+        src: S_KEIGEN
+      },
+      {
+        id: "x-shobyo", title: "病気やけがで辞めるとき",
+        body: "<p>在職中に健康保険の傷病手当金を受けていた、または受けられる状態だった場合、" +
+              "退職後も続けて受けられることがあります。条件がいくつかあり、" +
+              "<strong>どの健康保険に入っていたかで窓口が変わるので、このページでは断定しません。</strong></p>" +
+              "<p><strong>辞める前に</strong>、加入している健康保険（協会けんぽの都道府県支部、または健康保険組合）に" +
+              "「退職後も傷病手当金を受けられますか。条件は何ですか」と聞いてください。" +
+              "退職日の決め方で結論が変わることがあるので、辞めてからでは遅い場合があります。</p>",
+        ask: "傷病手当金を受けている間は、失業給付の「すぐに就職できる状態」に当たらないことがあります。ハローワークに受給期間の延長を相談してください。"
+      }
+    ]
+  },
+
+  {
+    id: "s3", phase: "p2", chip: "年金", chipSub: "14日以内",
+    from: 20, to: 32,
+    tag: "切り替え",
+    title: "厚生年金から、国民年金へ",
+    lead: "会社を辞めると厚生年金の資格がなくなります。次の会社にすぐ入らないなら、" +
+          "自分で国民年金（第1号）に切り替えます。<strong>期限は14日。</strong>" +
+          "国民健康保険と同じ庁舎のことが多いので、国保にするなら同じ日にまとめて出してください。",
+    tasks: [
+      {
+        id: "x-dai1", title: "国民年金第1号への切替え", due: "14日以内", hard: true,
+        body: "<p>お勤め先で厚生年金に加入していた方（20歳以上60歳未満の方に限ります）が退職して、" +
+              "次の会社に入るまでしばらく期間が空く場合の手続きです。" +
+              "<strong>結婚や就職、退職などで被保険者の種別が変わったときは、14日以内に手続きをすることが必要です。</strong></p>" +
+              "<p>手続きの方法は、マイナポータル経由のオンライン申請、年金事務所・市区役所／町村役場の窓口、郵送。" +
+              "必要な書類は、基礎年金番号またはマイナンバーがわかる書類と、本人確認書類です。</p>" +
+              "<p><strong>加入手続きから約2週間後に、加入した月分からの納付書が送付されます。</strong>" +
+              "納付書が来ないからといって、手続きが済んでいないとは限りません。逆もあります。</p>" +
+              "<p>次の会社にすぐ入る（間が空かない）場合は、新しい会社が厚生年金の手続きをします。" +
+              "自分では何もしなくてかまいません。</p>",
+        where: "<b>出す先</b>　住所地の市（区）役所または町村役場の国民年金担当窓口、お近くの年金事務所<br>" +
+               "<b>持ちもの</b>　基礎年金番号通知書など基礎年金番号がわかるもの、マイナンバーカードなど本人確認書類",
+        src: S_KOKUNEN + "／" + S_MENJO
+      },
+      {
+        id: "x-haigusha", title: "配偶者の分を、置き去りにしない", due: "14日以内", hard: true,
+        body: "<p><strong>ここが、いちばん抜けるところです。</strong></p>" +
+              "<p>あなたに扶養されていた配偶者（国民年金第3号被保険者）は、" +
+              "あなたが厚生年金の資格を失うのと<strong>同時に、第3号被保険者の資格も失います。</strong>" +
+              "配偶者自身についても、国民年金第1号被保険者の手続きをする必要があります。</p>" +
+              "<p>自分の分だけ出して帰ると、配偶者の分が何か月も宙に浮いて、" +
+              "あとから未納の通知が届くことになります。窓口で「配偶者の分も」と言ってください。</p>" +
+              "<p>逆に、<strong>あなたが配偶者の被扶養者になる場合</strong>は、" +
+              "第3号被保険者の届出を、配偶者の勤め先を通して出します。自分で市区町村に行くのではありません。</p>",
+        src: S_KOKUNEN
+      },
+      {
+        id: "x-menjo", title: "保険料が払えないときは、免除・納付猶予を申請する",
+        body: "<p>収入が減ったり、退職したりして国民年金保険料を納めることが経済的に難しいときのための制度です。" +
+              "<strong>退職（失業）による特例免除では、退職した方の前年所得をゼロとして審査が行われます。</strong></p>" +
+              "<p>申請には、<strong>雇用保険被保険者離職票、雇用保険受給資格者証など</strong>" +
+              "退職を確認できる書類を添えます。審査結果は、申請から約2か月後に送られます。</p>" +
+              "<p><strong>免除を受けた期間は、その間に障害や死亡があった場合に、" +
+              "障害年金・遺族年金を受け取れる可能性があります。</strong>" +
+              "また、10年以内であれば追納することで、老齢基礎年金の年金額を増やすことができます。</p>" +
+              "<p><strong>何もせずに未納にしておくのとは、扱いがまったく違います。</strong>" +
+              "払えないなら、払えないと申請してください。恥ずかしいことでも、後ろめたいことでもありません。</p>",
+        where: "<b>出す先</b>　マイナポータル（オンライン）、市区役所・町村役場、年金事務所、郵送",
+        src: S_MENJO
+      }
+    ]
+  },
+
+  {
+    id: "s4", phase: "p2", chip: "失業給付", chipSub: "ハローワーク",
+    from: 32, to: 90,
+    tag: "雇用保険",
+    title: "ハローワークへ行く",
+    lead: "失業給付（基本手当）は、待っていても振り込まれません。" +
+          "<strong>住所地を管轄するハローワークで「求職申込み」をしたのち、「離職票」を提出します。</strong>" +
+          "数え始めるのは、この日からです。",
+    tasks: [
+      {
+        id: "x-jukyu", title: "受けられるのは、どういう状態か",
+        body: "<p>基本手当が支給されるのは、次の2つのどちらにも当てはまるときです。</p>" +
+              "<p><strong>1つめ。</strong>ハローワークに来所し、求職の申込みを行い、" +
+              "就職しようとする積極的な意思があり、いつでも就職できる能力があるにもかかわらず、" +
+              "本人やハローワークの努力によっても、職業に就くことができない<strong>「失業の状態」</strong>にあること。</p>" +
+              "<p>次のような状態のときは、基本手当を受けることができません。</p>" +
+              '<ul class="tight">' +
+              "<li>病気やけがのため、すぐには就職できないとき</li>" +
+              "<li>妊娠・出産・育児のため、すぐには就職できないとき</li>" +
+              "<li>定年などで退職して、しばらく休養しようと思っているとき</li>" +
+              "<li>結婚などにより家事に専念し、すぐに就職することができないとき</li>" +
+              "</ul>" +
+              "<p><strong>2つめ。</strong>離職の日以前2年間に、被保険者期間が通算して12か月以上あること。" +
+              "ただし、特定受給資格者または特定理由離職者については、" +
+              "離職の日以前1年間に、被保険者期間が通算して6か月以上ある場合でも可。</p>" +
+              "<p>いま働けない事情がある人は、受けられないのではなく、" +
+              "<strong>受給期間の延長</strong>という別の手当てがあります（このあとの項目）。</p>",
+        src: S_KIHON
+      },
+      {
+        id: "x-moushikomi", title: "求職の申込みに行く", due: "早いほどよい", soft: true,
+        body: "<p>住所地を管轄するハローワークで求職申込みをしたのち、離職票を提出します。" +
+              "ここで受給資格の決定を受けます。</p>" +
+              "<p><strong>持ちもの</strong></p>" +
+              '<ul class="tight">' +
+              "<li>雇用保険被保険者離職票（−1、−2）</li>" +
+              "<li>個人番号確認書類</li>" +
+              "<li>身元（実在）確認書類</li>" +
+              "<li>写真（最近の写真、正面上三分身、縦3.0cm×横2.4cm）2枚</li>" +
+              "<li>本人名義の預金通帳またはキャッシュカード</li>" +
+              "</ul>" +
+              "<p><strong>離職票がまだ届かないとき</strong>は、届くのを待たずに一度ハローワークに相談してください。" +
+              "会社が手続きをしていない、送り先が間違っている、といったことが、その場でわかります。</p>" +
+              "<p>離職票−2には離職理由が書かれています。<strong>受け取ったら必ず読んでください。</strong>" +
+              "自己都合か会社都合かで、給付制限の有無も、所定給付日数も、国民健康保険料の軽減も変わります。" +
+              "書かれている理由に納得がいかないときは、その旨をハローワークの窓口で伝えてください。</p>",
+        src: S_TETSUZU + "／" + S_GUIDE
+      },
+      {
+        id: "x-taiki", title: "待期7日と、給付制限", due: "待期7日", hard: true,
+        body: "<p><strong>求職の申込み後の、失業の状態にある7日間は、基本手当は支給されません。" +
+              "これを「待期」といいます。</strong>これは誰にでもあります。</p>" +
+              "<p><strong>自己都合で辞めた場合は、待期のあとにさらに給付制限があります。</strong></p>" +
+              '<ul class="tight">' +
+              "<li>退職日が<strong>令和7年4月1日以降</strong>　原則<strong>1か月</strong></li>" +
+              "<li>退職日が<strong>令和7年3月31日以前</strong>　原則2か月</li>" +
+              "<li>退職日からさかのぼって5年間のうちに2回以上、正当な理由なく自己都合退職し受給資格決定を受けた場合　3か月</li>" +
+              "<li>自己の責めに帰すべき重大な理由によって解雇（重責解雇）された場合　3か月</li>" +
+              "</ul>" +
+              "<p><strong>給付制限が解除される場合があります。</strong>" +
+              "令和7年4月以降に、リ・スキリングのために教育訓練等を受けた（受けている）場合、" +
+              "給付制限が解除され、基本手当を受給できるようになりました。" +
+              "受けようとしている訓練や講座がこれに当たるかどうかは、" +
+              "<strong>受ける前に</strong>ハローワークで確かめてください。</p>" +
+              "<p>倒産・解雇など会社側の事情で辞めた場合（特定受給資格者）は、給付制限がありません。" +
+              "待期7日のあとから支給の対象になります。</p>",
+        src: S_TETSUZU + "／" + S_SEIGEN
+      },
+      {
+        id: "x-nintei", title: "説明会に出て、認定日に行く",
+        body: "<p>受給資格の決定のあと、<strong>雇用保険説明会</strong>が指定の日時に開催されます。" +
+              "必ず出席してください。</p>" +
+              "<p>そのあとは、<strong>原則として、4週間に1度、失業の認定</strong>" +
+              "（失業状態にあることの確認）を行います。" +
+              "指定された認定日に、失業認定申告書を雇用保険受給資格者証とともに提出します。" +
+              "この認定を受けて、はじめてその期間分が支払われます。</p>" +
+              "<p>認定日は自分では選べません。都合が悪くなったときは、" +
+              "勝手に休まずに、事前にハローワークに連絡して相談してください。</p>",
+        src: S_TETSUZU
+      },
+      {
+        id: "x-nissu", title: "何日分、いくらもらえるか",
+        body: "<p><strong>所定給付日数</strong>は、離職の理由、年齢、被保険者であった期間によって決まり、" +
+              "<strong>90日～360日の間でそれぞれ決められます。</strong>" +
+              "自分が何日になるかは、受給資格の決定のときにハローワークが教えてくれます。" +
+              "区分の表はハローワークのページに出ています。</p>" +
+              "<p><strong>基本手当日額</strong>は、原則として離職した日の直前の6か月に" +
+              "毎月きまって支払われた賃金（賞与等は除く）の合計を180で割って算出した額（賃金日額）の" +
+              "<strong>およそ50～80％（60歳～65歳未満については45～80％）</strong>で、" +
+              "賃金の低い方ほど高い率となっています。" +
+              "年齢区分ごとに上限額が定められていて、金額はハローワークのページに現在の額が載っています。</p>" +
+              "<p>公共職業訓練等の受講を指示された場合は、訓練期間中に所定給付日数が終了しても、" +
+              "訓練が終了する日まで引き続き基本手当が支給されるほか、" +
+              "受講手当・通所手当などが支給されます。</p>",
+        src: S_NISSU + "／" + S_KIHON
+      },
+      {
+        id: "x-kikan", title: "受給期間は1年。休むつもりなら延長を", due: "離職日の翌日から1年", hard: true,
+        body: "<p><strong>雇用保険の受給期間は、原則として、離職した日の翌日から1年間</strong>" +
+              "（所定給付日数330日の方は1年と30日、360日の方は1年と60日）です。" +
+              "<strong>この枠を過ぎると、日数が残っていても受け取れません。</strong></p>" +
+              "<p>その間に病気、けが、妊娠、出産、育児等の理由により" +
+              "<strong>引き続き30日以上働くことができなくなったとき</strong>は、" +
+              "その働くことのできなくなった日数だけ、受給期間を延長することができます。" +
+              "<strong>延長できる期間は最長で3年間です。</strong></p>" +
+              "<p>申請は、30日以上職業に就くことができなくなった日の翌日以降、" +
+              "早期に行うのが原則ですが、延長後の受給期間の最後の日までの間であれば可能です。" +
+              "住所または居所を管轄するハローワークに申請します（代理人または郵送でも可）。</p>" +
+              "<p><strong>「しばらく休んでから探そう」と思っている人は、ここを読み飛ばさないでください。</strong>" +
+              "休養そのものは延長の理由になりませんが、病気・けが・妊娠・出産・育児なら対象です。" +
+              "当てはまるかどうかを、ハローワークで確かめてください。</p>",
+        where: "<b>出す先</b>　住所または居所を管轄するハローワーク（代理人または郵送でも可）",
+        src: S_KIHON
+      },
+      {
+        id: "x-saishushoku", title: "早く決まった人のための、再就職手当",
+        body: "<p>基本手当の受給資格がある方が安定した職業に就いた場合、" +
+              "<strong>支給残日数が所定給付日数の3分の1以上あり、一定の要件に該当する場合に支給されます。</strong></p>" +
+              '<ul class="tight">' +
+              "<li>支給残日数が所定給付日数の<strong>3分の2以上</strong>　" +
+              "支給残日数 × 70％ × 基本手当日額</li>" +
+              "<li>支給残日数が所定給付日数の<strong>3分の1以上</strong>　" +
+              "支給残日数 × 60％ × 基本手当日額</li>" +
+              "</ul>" +
+              "<p>さらに、再就職手当を受けた方が、引き続きその再就職先に6か月以上雇用され、" +
+              "かつ再就職先で6か月の間に支払われた賃金の1日分の額が、" +
+              "離職前の賃金の1日分の額に比べて低下している場合には、" +
+              "<strong>就業促進定着手当</strong>が支給されます。</p>" +
+              "<p><strong>「もらえる日数を使い切ってから就職したほうが得」ではありません。</strong>" +
+              "制度は、早く決めた人が損をしないようにできています。</p>",
+        src: S_STEPUP
+      }
+    ]
+  },
+
+  {
+    id: "s5", phase: "p3", chip: "住民税", chipSub: "前年分を翌年に",
+    from: 90, to: 160,
+    tag: "あとから来る",
+    title: "住民税は、辞めたあとに来る",
+    lead: "住民税は<strong>前の年の所得</strong>で決まり、<strong>翌年に納めます。</strong>" +
+          "収入が止まったあとに、働いていた年の所得をもとにした請求が届く——" +
+          "これが退職でいちばん多い「聞いていなかった」です。",
+    tasks: [
+      {
+        id: "x-shikumi", title: "前の年の所得で決まる",
+        body: "<p>住民税は、<strong>1月1日時点で日本に住所があり、一定額以上の給料などをもらっている人</strong>が、" +
+              "住んでいる市区町村に支払う税金です。" +
+              "<strong>支払うべき額は、前の年の1月1日から12月31日までにもらった給料などで決まります。</strong></p>" +
+              "<p>支払い方は2つあります。</p>" +
+              '<ul class="tight">' +
+              "<li><strong>給与からの天引き（特別徴収）</strong>　" +
+              "会社があらかじめ給料から住民税を差し引き、市区町村役場に支払います。" +
+              "会社で働く人はこれが原則です</li>" +
+              "<li><strong>自分での支払い（普通徴収）</strong>　" +
+              "市区町村から納付書が届き、それを持って金融機関などで支払います</li>" +
+              "</ul>" +
+              "<p>つまり、<strong>あなたが働いていた年の住民税は、その翌年に来ます。</strong>" +
+              "収入がない年に、働いていた年の分を払うことになります。" +
+              "ここを見落とすと、生活費の見積もりが1年ぶんずれます。</p>",
+        src: S_JUMIN
+      },
+      {
+        id: "x-ikkatsu", title: "1〜5月に辞めるか、6〜12月に辞めるかで変わる",
+        body: "<p><strong>特別徴収によって住民税を支払っている人が、会社を辞めることになった場合は、" +
+              "支払っていない住民税を普通徴収の方法によって支払う必要があります。" +
+              "ただし、会社に、支払っていない住民税の全部を給料や退職金から差し引いてもらい、" +
+              "市区町村に支払ってもらう方法（一括徴収）もあります。</strong></p>" +
+              "<p>そして、<strong>1〜5月に退職する場合は、申出の有無にかかわらず一括徴収を行うこと</strong>に" +
+              "なっています。</p>" +
+              '<table class="cmp">' +
+              "<tr><th>退職の時期</th><th>住民税の扱い</th></tr>" +
+              "<tr><td>1月〜5月</td><td>申出の有無にかかわらず一括徴収。最後の給与・退職金からまとめて引かれる</td></tr>" +
+              "<tr><td>6月〜12月</td><td>原則は普通徴収（納付書で自分で払う）。希望すれば一括徴収もできる</td></tr>" +
+              "</table>" +
+              "<p><strong>1〜5月に辞める人は、最後の給与の手取りが想定よりかなり少なくなることがあります。</strong>" +
+              "いくら引かれるのかは、辞める前に会社に聞いてください。</p>",
+        src: S_JUMIN,
+        ask: "一括徴収にするか普通徴収にするかの扱いは、会社の事務にも左右されます。最後の給与明細が出る前に、人事に「住民税はどうなりますか」と一言聞いておいてください。"
+      },
+      {
+        id: "x-ikura", title: "いくら来るかは、市区町村に聞く",
+        body: "<p>額は前の年の所得と、住んでいる市区町村で決まります。" +
+              "<strong>このページでは出せません。</strong>ですが、窓口では出してもらえます。</p>" +
+              "<p>市区町村の住民税（市民税・町民税）の担当課に、" +
+              "前の年の源泉徴収票か、6月ごろに届いた住民税の通知書を手もとに置いて電話し、" +
+              "「退職したのですが、これからいくら、いつ払うことになりますか」と聞いてください。</p>" +
+              "<p><strong>払うのが難しいときの相談も、同じ窓口です。</strong>" +
+              "分割や徴収の猶予といった扱いがある自治体もあります。" +
+              "黙って滞納すると延滞金がつきます。先に電話するほうが、必ず軽く済みます。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "s6", phase: "p3", chip: "確定申告", chipSub: "翌年",
+    from: 160, to: 280,
+    tag: "税金を戻す",
+    title: "年の途中で辞めたら、確定申告",
+    lead: "会社は12月に年末調整をして、1年分の所得税を精算します。" +
+          "<strong>年の途中で辞めて、その年に再就職しなかった人は、年末調整を受けていません。</strong>" +
+          "多めに源泉徴収されたままのことが多く、申告すると戻ることがあります。",
+    tasks: [
+      {
+        id: "x-kanpu", title: "還付申告は、翌年1月1日から5年間", due: "翌年1月から5年", soft: true,
+        body: "<p>税金が戻る申告（還付申告）は、" +
+              "<strong>その年の翌年1月1日から5年間提出することができます。</strong></p>" +
+              "<p>納める側の確定申告の期間は、原則として<strong>その年の翌年2月16日から3月15日まで</strong>ですが、" +
+              "還付申告はその前、<strong>年が明けてすぐから出せます。</strong>" +
+              "税務署も空いている時期です。</p>" +
+              "<p>提出先は所轄の税務署。国税庁ホームページの" +
+              "「確定申告書等作成コーナー」では、画面の案内に沿って金額を入力することで、" +
+              "自宅等で確定申告書等の作成・提出ができます。</p>" +
+              "<p><strong>「5年間できる」を「急がなくていい」と読むと、たいてい忘れます。</strong>" +
+              "年が明けたら早めに出してしまうほうが、結局は楽です。</p>",
+        src: S_2030 + "／" + S_2020
+      },
+      {
+        id: "x-shakaihoken", title: "自分で払った保険料は、控除できる",
+        body: "<p>退職後に自分で納めた国民年金保険料・国民健康保険料は、" +
+              "<strong>社会保険料控除</strong>の対象です。</p>" +
+              "<p>社会保険料控除の対象となるのは、" +
+              "健康保険、国民年金、厚生年金保険の保険料で被保険者として負担するもの、" +
+              "<strong>国民健康保険の保険料または国民健康保険税</strong>、" +
+              "介護保険法の規定による介護保険料、" +
+              "雇用保険の被保険者として負担する労働保険料など。" +
+              "<strong>控除できる金額は、その年に実際に支払った金額または" +
+              "給与や公的年金等から差し引かれた金額の全額です。</strong></p>" +
+              "<p>また、<strong>自己と生計を一にする配偶者やその他の親族の負担すべき社会保険料を支払った場合</strong>も、" +
+              "その支払った金額について控除を受けることができます。" +
+              "配偶者や子の国民年金保険料を自分が払ったなら、自分の控除に入れられるということです。</p>",
+        src: S_1130
+      },
+      {
+        id: "x-motsu", title: "何を用意するか",
+        body: '<ul class="tight">' +
+              "<li>その年に勤めたすべての会社の、給与所得の源泉徴収票</li>" +
+              "<li>国民年金保険料の控除証明書（日本年金機構から届きます）</li>" +
+              "<li>国民健康保険料を払った額がわかるもの</li>" +
+              "<li>生命保険料控除証明書、地震保険料控除証明書</li>" +
+              "<li>医療費の領収書（医療費控除を受ける場合）</li>" +
+              "<li>マイナンバーカード（または通知カード＋本人確認書類）</li>" +
+              "<li>本人名義の口座がわかるもの</li>" +
+              "</ul>" +
+              "<p>迷ったら、これを全部封筒に入れて税務署に持っていけば済みます。" +
+              "何が要るかは、行く前に電話でも教えてもらえます。</p>"
+      },
+      {
+        id: "x-taishokukin2", title: "退職金は、原則として申告に含めない",
+        body: "<p>「退職所得の受給に関する申告書」を会社に出していれば、" +
+              "支払者が所得税額を計算し、退職手当等の支払時に源泉徴収されるため、" +
+              "<strong>原則として確定申告は必要ありません。</strong></p>" +
+              "<p>出していなかった場合は、退職金等の支払金額の<strong>20.42パーセント</strong>が" +
+              "源泉徴収されているので、<strong>確定申告で精算することになります。</strong>" +
+              "退職所得の源泉徴収票を持って税務署へ行ってください。</p>",
+        src: S_1420
+      },
+      {
+        id: "x-saishushoku2", title: "同じ年に再就職したときは、年末調整でよい",
+        body: "<p>同じ年のうちに次の会社に入ったなら、" +
+              "前の会社の給与所得の源泉徴収票を新しい会社に出せば、" +
+              "まとめて年末調整してもらえます。自分で確定申告をしなくて済みます。</p>" +
+              "<p>そのために、<strong>源泉徴収票をなくさないでください。</strong>" +
+              "再発行は頼めますが、辞めた会社に連絡し直すことになります。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "s7", phase: "p4", chip: "そのあと", chipSub: "6か月・1年",
+    from: 280, to: 999999,
+    tag: "置き忘れ",
+    title: "積み立てたお金を、置き去りにしない",
+    lead: "退職の手続きのなかで、いちばん忘れられるのが企業年金です。" +
+          "<strong>期限は6か月。</strong>過ぎると、運用されないまま手数料だけが引かれていきます。",
+    tasks: [
+      {
+        id: "x-dc", title: "企業型確定拠出年金の資産を移す", due: "6か月以内", hard: true,
+        body: "<p>会社で企業型確定拠出年金（企業型DC）に入っていた人の話です。</p>" +
+              "<p><strong>転職・退職等により加入者の資格を喪失した場合、6か月以内に" +
+              "個人別管理資産をiDeCo、他の企業型DC、DBまたは通算企業年金に移換する</strong>必要があります。</p>" +
+              "<p>期限内に手続きをしないと、資産は国民年金基金連合会に" +
+              "<strong>自動移換</strong>されます。自動移換されると、</p>" +
+              '<ul class="tight">' +
+              "<li><strong>資産の運用がされません。</strong></li>" +
+              "<li><strong>加入者に管理手数料の負担が発生します。</strong></li>" +
+              "<li><strong>自動移換中の期間は老齢給付金の受給要件となる通算加入者等期間に含まれない</strong>ため、" +
+              "場合によっては受給可能年齢が遅くなることがあります。</li>" +
+              "</ul>" +
+              "<p>自分が企業型DCに入っていたかどうかがわからない人は、会社の人事に聞くのが最短です。" +
+              "給与明細や、加入していた記録のハガキが手もとにないか探してみてください。</p>",
+        src: S_PORTA
+      },
+      {
+        id: "x-ideco", title: "iDeCoに入っていた人",
+        body: "<p>会社員（国民年金第2号被保険者）から第1号や第3号に変わると、" +
+              "加入者の区分が変わります。" +
+              "<strong>加入している金融機関（運営管理機関）に、退職したことを届け出てください。</strong></p>" +
+              "<p>掛金の上限額も区分によって変わります。" +
+              "いくらになるかは、加入している金融機関に確認してください。" +
+              "<strong>このページでは額を書きません。</strong></p>",
+        ask: "退職して収入が途切れる期間は、掛金を減らす・止めるという選択もできます。どういう手続きになるかを、金融機関に聞いてください。"
+      },
+      {
+        id: "x-db", title: "確定給付企業年金・厚生年金基金",
+        body: "<p>会社に確定給付企業年金（DB）や厚生年金基金があった場合、" +
+              "<strong>退職後にどうなるか、どんな受け取り方を選べるかは、制度ごとに違います。</strong>" +
+              "全国共通の答えがないので、このページでは書きません。</p>" +
+              "<p>会社の人事か、制度を運営している基金・信託銀行に、" +
+              "「退職したあと、この年金はどうなりますか。選べる受け取り方は何ですか。" +
+              "手続きの期限はいつですか」と聞いてください。</p>" +
+              "<p>放っておくと連絡先がわからなくなります。" +
+              "<strong>会社の連絡先が生きているうちに、一度電話しておいてください。</strong></p>",
+        ask: "受け取り方（一時金か年金か）で税の扱いが変わります。金額が大きいなら、税務署か税理士に一度相談する価値があります。"
+      },
+      {
+        id: "x-1nen", title: "1年経ったら、もう一度見直す",
+        body: "<p>国民健康保険料も住民税も、<strong>前の年の所得</strong>をもとに計算されます。" +
+              "退職して収入が止まった年の翌年度は、計算のもとになる所得が変わります。</p>" +
+              "<p>国民年金の保険料免除・納付猶予は、年度ごとの申請です。" +
+              "<strong>去年申請したから今年も自動で、とはなりません。</strong>" +
+              "（継続の申請ができる場合もあるので、申請のときに確認してください。）</p>" +
+              "<p>年度が変わったら、市区町村の窓口で「いまの状況で計算し直してもらえますか」と" +
+              "一度聞いてみてください。手続きが要るものは、言わないと動きません。</p>",
+        src: S_JUMIN + "／" + S_MENJO
+      },
+      {
+        id: "x-shukatsu", title: "焦って決めないための、最後のひとこと",
+        body: "<p>手続きが片づくと、次は「早く決めなければ」が始まります。</p>" +
+              "<p>失業給付には受給期間1年という枠があり、所定給付日数もあります。" +
+              "その枠のなかで動くぶんには、<strong>急ぐ理由は制度上ありません。</strong>" +
+              "むしろ早く決まれば再就職手当があります。" +
+              "焦って条件の悪いところに入って、また辞めるのがいちばん高くつきます。</p>" +
+              "<p>職業訓練を受けているあいだは、所定給付日数が終わっても" +
+              "訓練が終了する日まで基本手当が支給されます。" +
+              "時間を買う方法が、制度の側に用意されています。" +
+              "使えるかどうかは、ハローワークの職業相談で聞いてください。</p>",
+        src: S_KIHON
+      }
+    ]
+  }
+];
+
+/* 期限の一覧表 */
+var DEADLINES = [
+  { g: "g1", w: "5日", t: "家族の健康保険の被扶養者になる届出", s: "事実発生から。家族の勤め先を通して" },
+  { g: "g1", w: "14日", t: "国民健康保険への加入", s: "市区町村の窓口へ" },
+  { g: "g1", w: "14日", t: "国民年金第1号への種別変更", s: "市区町村の国民年金窓口または年金事務所。配偶者の分も" },
+  { g: "g1", w: "20日", t: "健康保険の任意継続の申出", s: "退職日の翌日から。1日でも過ぎると選べません" },
+  { g: "g2", w: "1か月", t: "源泉徴収票の交付", s: "会社の義務。年の途中の退職は、退職の日以後1か月以内" },
+  { g: "g2", w: "7日", t: "失業給付の待期", s: "求職の申込み後、失業の状態にある7日間は支給されません" },
+  { g: "g2", w: "1か月", t: "自己都合の給付制限", s: "令和7年4月1日以降の離職は原則1か月。3月31日以前は原則2か月" },
+  { g: "g3", w: "4週間", t: "失業の認定", s: "原則として4週間に1度。認定を受けて支払われます" },
+  { g: "g3", w: "6か月", t: "企業型確定拠出年金の資産の移換", s: "過ぎると自動移換。運用されず、手数料がかかります" },
+  { g: "g4", w: "1年", t: "失業給付の受給期間", s: "離職の日の翌日から。30日以上働けないときは延長（最長3年）" },
+  { g: "g4", w: "翌年", t: "確定申告", s: "その年の翌年2月16日から3月15日まで" },
+  { g: "g4", w: "5年", t: "還付申告", s: "その年の翌年1月1日から5年間" }
+];
+
+/* 「つぎに来る期限」に出すもの。day = 退職日からの日数の目安 */
+var MILESTONES = [
+  { day: 5,   t: "家族の被扶養者になる届出", s: "事実発生から5日以内。家族の勤め先を通して出します" },
+  { day: 14,  t: "国民健康保険・国民年金（第1号）", s: "14日以内。市区町村の窓口へ。配偶者の分も忘れずに" },
+  { day: 20,  t: "健康保険の任意継続の申出", s: "退職日の翌日から20日以内。過ぎると選べません" },
+  { day: 30,  t: "源泉徴収票を受け取る", s: "会社は退職の日以後1か月以内に交付します" },
+  { day: 183, t: "企業型確定拠出年金の資産の移換", s: "6か月以内。過ぎると自動移換されます" },
+  { day: 365, t: "失業給付の受給期間の終わり", s: "離職の日の翌日から1年。日数が残っていても終わります" }
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_DATE = "taishoku.date.v1";
+var KEY_CHK  = "taishoku.checks.v1";
+var KEY_TH   = "taishoku.theme.v1";
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+var state = {
+  date: load(KEY_DATE, ""),
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+function fmtJP(d) {
+  return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+}
+function addDays(d, n) {
+  var x = new Date(d.getTime());
+  x.setDate(x.getDate() + n);
+  return x;
+}
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* 経過の言い換え。退職前（マイナス）も出せるようにしてある。
+   年・月は日数の割り算ではなく暦どおりに数える */
+function elapsedLabel(n, from) {
+  if (n < -1)  return "退職まであと" + (-n) + "日";
+  if (n === -1) return "退職はあした";
+  if (n === 0) return "退職日（きょう）";
+  if (n < 31)  return "退職から" + n + "日目";
+
+  var t = today0();
+  var months = (t.getFullYear() - from.getFullYear()) * 12 + (t.getMonth() - from.getMonth());
+  if (t.getDate() < from.getDate()) months--;
+  if (months < 0) months = 0;
+
+  if (months < 12) return "退職から" + months + "か月ごろ（" + n + "日目）";
+  var y = Math.floor(months / 12);
+  var rm = months % 12;
+  return "退職から" + y + "年" + (rm > 0 ? rm + "か月" : "") + "ごろ（" + n + "日目）";
+}
+
+/* ============================================================
+   描画
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         "<b>" + esc(s.chip) + "</b>" + esc(s.chipSub) +
+         '<span class="here">いま</span></button>';
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(t) {
+  var done = !!state.checks[t.id];
+  var due = "";
+  if (t.due) due = '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + t.id + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + t.id + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  if (t.ask) h += '<div class="share"><b>ここは自分で聞く</b>' + esc(t.ask) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+function renderDeadlines() {
+  var h = "";
+  for (var i = 0; i < DEADLINES.length; i++) {
+    var d = DEADLINES[i];
+    h += '<div class="row ' + d.g + '"><div class="w">' + esc(d.w) + "</div>" +
+         '<div class="t">' + esc(d.t) + "<span>" + esc(d.s) + "</span></div></div>";
+  }
+  document.getElementById("deadlineTable").innerHTML = h;
+}
+
+/* ---- 今日の位置 ---- */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var dateIn   = document.getElementById("dateIn");
+var clearBtn = document.getElementById("clearBtn");
+var hint     = document.getElementById("hint");
+var track    = document.getElementById("track");
+var trackPin = document.getElementById("trackPin");
+var nextup   = document.getElementById("nextup");
+var nextList = document.getElementById("nextList");
+
+/* 帯の位置。区切りは 退職日 / 20日 / 3か月 / 6か月 / 1年 の4区間 */
+var BAND = [0, 20, 90, 183, 365];
+function pinPercent(n) {
+  if (n <= 0) return 0;
+  if (n >= BAND[4]) return 100;
+  for (var i = 0; i < 4; i++) {
+    if (n <= BAND[i + 1]) {
+      var within = (n - BAND[i]) / (BAND[i + 1] - BAND[i]);
+      return (i + within) * 25;
+    }
+  }
+  return 100;
+}
+
+function renderToday() {
+  var d = parseDate(state.date);
+  if (!d) {
+    dayBig.textContent = "日付を入れてください";
+    daySub.textContent = "";
+    clearBtn.hidden = true;
+    track.hidden = true;
+    nextup.classList.remove("on");
+    hint.innerHTML = "入れるのは<strong>退職日</strong>（最終出社日ではなく、在籍の最後の日）です。" +
+                     "入れた日付はこの端末のブラウザにだけ保存されます。サーバーには送られません。";
+    var chips0 = rail.querySelectorAll(".chip");
+    for (var k = 0; k < chips0.length; k++) chips0[k].classList.remove("now");
+    return;
+  }
+
+  var n = daysBetween(d, today0());
+  dayBig.textContent = elapsedLabel(n, d);
+  daySub.textContent = fmtJP(d) + (n < 0 ? " に退職予定" : " から");
+  clearBtn.hidden = false;
+  hint.textContent = n < 0
+    ? "退職前です。「辞める前」の欄から順に見てください。日付はこの端末にだけ保存されています。"
+    : "この日付はこの端末のブラウザにだけ保存されています。";
+
+  track.hidden = false;
+  trackPin.style.left = pinPercent(n) + "%";
+
+  /* いまのステージに印 */
+  var chips = rail.querySelectorAll(".chip");
+  var hereIdx = -1;
+  for (var i = 0; i < STAGES.length; i++) {
+    if (n >= STAGES[i].from && n < STAGES[i].to) { hereIdx = i; break; }
+  }
+  if (hereIdx === -1 && n >= STAGES[STAGES.length - 1].from) hereIdx = STAGES.length - 1;
+  for (var j = 0; j < chips.length; j++) chips[j].classList.toggle("now", j === hereIdx);
+
+  /* つぎに来る期限を3つ。過ぎたものは、直近の1件だけ上に出す */
+  var rows = [], overdue = null;
+  for (var m = 0; m < MILESTONES.length; m++) {
+    var ms = MILESTONES[m];
+    var left = ms.day - n;
+    if (left < 0) {
+      if (left >= -60) overdue = { ms: ms, left: left, on: addDays(d, ms.day) };
+      continue;
+    }
+    if (rows.length < 3) rows.push({ ms: ms, left: left, on: addDays(d, ms.day) });
+  }
+  if (overdue) rows.unshift(overdue);
+  if (!rows.length) {
+    nextup.classList.remove("on");
+    return;
+  }
+  var h = "";
+  for (var r = 0; r < rows.length; r++) {
+    var row = rows[r];
+    var cls = row.left < 0 ? "over" : (row.left <= 30 ? "soon" : "far");
+    var when = row.left < 0
+      ? "<b>" + Math.abs(row.left) + "</b>日すぎ"
+      : (row.left === 0 ? "<b>きょう</b>" : "あと<b>" + row.left + "</b>日");
+    h += '<div class="nx ' + cls + '">' +
+         '<div class="nx-when">' + when + "</div>" +
+         '<div class="nx-what">' + esc(row.ms.t) +
+         "<span>" + fmtJP(row.on) + "ごろ　" + esc(row.ms.s) + "</span></div></div>";
+  }
+  nextList.innerHTML = h;
+  nextup.classList.add("on");
+}
+
+/* ---- 進捗 ---- */
+function renderProgress() {
+  var total = 0, done = 0;
+  for (var i = 0; i < STAGES.length; i++) {
+    for (var j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = +b.dataset.i;
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  var id = b.dataset.chk;
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest(".task");
+  if (card) card.classList.toggle("done", !!state.checks[id]);
+  renderProgress();
+});
+
+document.getElementById("setBtn").addEventListener("click", function () {
+  var v = dateIn.value;
+  var d = parseDate(v);
+  if (!d) { hint.textContent = "日付を選んでください。"; return; }
+  state.date = v;
+  save(KEY_DATE, v);
+  renderToday();
+});
+
+clearBtn.addEventListener("click", function () {
+  state.date = "";
+  dateIn.value = "";
+  save(KEY_DATE, "");
+  renderToday();
+});
+
+dateIn.addEventListener("change", function () {
+  if (parseDate(dateIn.value)) document.getElementById("setBtn").click();
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化
+   ============================================================ */
+
+buildRail();
+renderStage();
+renderDeadlines();
+
+/* 進捗バーを期限一覧の下に足す */
+(function () {
+  var sec = document.getElementById("deadlineTable").parentNode;
+  var p = document.createElement("div");
+  p.className = "prog";
+  p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                '<span class="prog-bar"><i id="progFill"></i></span>';
+  sec.appendChild(p);
+})();
+
+if (state.date) dateIn.value = state.date;
+renderToday();
+renderProgress();
+
+/* 日付が入っていれば、いまの時期を開いておく */
+(function () {
+  var d = parseDate(state.date);
+  if (!d) return;
+  var n = daysBetween(d, today0());
+  for (var i = 0; i < STAGES.length; i++) {
+    if (n >= STAGES[i].from && n < STAGES[i].to) {
+      state.stage = i;
+      renderStage();
+      var chip = rail.querySelector('.chip[data-i="' + i + '"]');
+      if (chip) chip.scrollIntoView({ block: "nearest", inline: "center" });
+      break;
+    }
+  }
+})();
+</script>
+</body>
+</html>

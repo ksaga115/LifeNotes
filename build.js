@@ -38,7 +38,14 @@ const NOTES = [
     desc: "親の介護が始まったら。まず地域包括支援センターへ。認定、ケアプラン、費用、仕事との両立まで。",
     ready: true,
   },
-  { slug: "leaving",  title: "退職のノート",     desc: "退職日から。健康保険、年金、失業給付、住民税、確定申告。", ready: false },
+  {
+    src: "taishoku.html",
+    slug: "leaving",
+    title: "退職のノート",
+    dist: "退職のノート.html",
+    desc: "退職日を入れると期限が並びます。健康保険の20日、失業給付、住民税、退職金の税。",
+    ready: true,
+  },
   {
     src: "kakutei.html",
     slug: "tax",

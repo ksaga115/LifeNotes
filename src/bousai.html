@@ -1,0 +1,1203 @@
+<title>防災の備蓄ノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+%%CSS%%
+
+/* ---------- このノート固有 ---------- */
+
+/* 入力のならび */
+.fields{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:12px}
+.fld{display:flex;flex-direction:column;gap:3px}
+.fld label{font-size:11.5px;letter-spacing:.06em;color:var(--muted)}
+input[type="number"],input[type="text"]{
+  font:inherit;font-size:14px;font-family:var(--body);
+  background:var(--surface-2);color:var(--ink);
+  border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-width:0;max-width:100%;
+}
+input[type="number"]{width:74px;font-variant-numeric:tabular-nums}
+
+/* 3日／7日の切り替え */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--surface-2)}
+.seg button{
+  font:inherit;font-size:13px;font-family:var(--body);
+  background:transparent;border:0;padding:7px 15px;cursor:pointer;color:var(--ink-2);
+}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--ground);font-weight:700}
+.sw{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2);padding-bottom:7px}
+
+/* 必要量の表 */
+.calc{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px}
+.calc th,.calc td{padding:7px 2px 7px 0;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
+.calc th{font-weight:500;color:var(--muted);font-size:11.5px;letter-spacing:.06em}
+.calc td:first-child{font-weight:700;white-space:nowrap;padding-right:10px}
+.calc td.q{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;padding-right:0}
+.calc td.q em{font-style:normal;display:block;font-size:11.5px;color:var(--muted);font-weight:400;margin-top:1px}
+.calc td.q.txt{font-weight:500;color:var(--ink-2);white-space:normal;font-size:12.5px}
+.calc tr:last-child td{border-bottom:0}
+.calc .hd td{background:var(--surface-2);font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:500;padding-left:8px;border-radius:6px}
+
+/* ローリングストック */
+.stock{margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
+.slist{margin-top:14px;border-top:1px solid var(--line-2);padding-top:6px}
+.srow{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line-2)}
+.srow:last-child{border-bottom:0}
+.sbadge{
+  flex:none;min-width:72px;text-align:center;border-radius:10px;padding:5px 6px;
+  font-size:11px;line-height:1.35;font-weight:700;font-variant-numeric:tabular-nums;
+}
+.sbadge b{display:block;font-size:16px;font-family:var(--display)}
+.sb-over{background:var(--alert-bg);color:var(--alert)}
+.sb-soon{background:var(--p1-bg);color:var(--p1)}
+.sb-mid{background:var(--p3-bg);color:var(--p3)}
+.sb-far{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line)}
+.sname{flex:1;font-size:13.5px;line-height:1.6;min-width:0;overflow-wrap:anywhere}
+.sname span{display:block;font-size:12px;color:var(--muted);margin-top:1px}
+.del{
+  flex:none;font:inherit;font-size:11.5px;font-family:var(--body);
+  background:transparent;color:var(--muted);border:1px solid var(--line);
+  border-radius:999px;padding:3px 10px;cursor:pointer;margin-top:3px;
+}
+.del:hover{color:var(--alert);border-color:var(--alert)}
+.empty{font-size:12.5px;color:var(--muted);padding:12px 0;line-height:1.8}
+.sum{font-size:12.5px;color:var(--ink-2);margin-top:12px;line-height:1.8}
+.msg{font-size:12px;color:var(--alert);margin-top:8px;line-height:1.7}
+.msg:empty{display:none}
+
+/* リンク集 */
+.help a{color:var(--p1)}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M2.6 6.4L9 3l6.4 3.4v5.2L9 15l-6.4-3.4z"
+              fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round" opacity=".75"/>
+        <path d="M2.6 6.4L9 9.8l6.4-3.4M9 9.8V15"
+              fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" opacity=".55"/>
+      </svg>
+      防災の備蓄ノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="%%HOME%%" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">
+    防災の備蓄は、<strong>何をどれだけ買うかを決める作業</strong>と、
+    <strong>買ったものを腐らせない作業</strong>の2つでできています。
+    このノートは、その2つを手で動かせるようにした道具です。
+    家族の人数を入れると必要量が出て、買ったものを登録すると期限が近い順に並びます。
+    広告も関連記事もありません。入れた数字は、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- ① 必要量の計算 -->
+  <section class="today">
+    <div class="eyebrow">必要量を出す</div>
+    <div class="today-main">
+      <div class="today-day" id="headline">人数を入れてください</div>
+      <div class="today-sub" id="headSub"></div>
+    </div>
+
+    <div class="fields">
+      <span class="fld"><label for="adults">大人</label>
+        <input type="number" id="adults" min="0" max="20" step="1" inputmode="numeric" value="2"></span>
+      <span class="fld"><label for="kids">子ども</label>
+        <input type="number" id="kids" min="0" max="20" step="1" inputmode="numeric" value="0"></span>
+      <span class="fld"><label for="babies">0歳児</label>
+        <input type="number" id="babies" min="0" max="20" step="1" inputmode="numeric" value="0"></span>
+    </div>
+
+    <div class="setup">
+      <span class="seg" id="daySeg" role="group" aria-label="備える日数">
+        <button type="button" data-days="3" aria-pressed="true">3日分</button>
+        <button type="button" data-days="7" aria-pressed="false">7日分</button>
+      </span>
+      <label class="sw"><input type="checkbox" id="petChk"> ペットがいる</label>
+    </div>
+
+    <p class="hint">
+      人数は0でも、空欄でもかまいません。数字は、この端末のブラウザにだけ保存されます。
+    </p>
+
+    <table class="calc" id="calcTable">
+      <tr><th>そろえるもの</th><th style="text-align:right">この人数・この日数だと</th></tr>
+      <tbody id="calcBody"></tbody>
+    </table>
+
+    <span class="src" id="calcSrc"></span>
+  </section>
+
+  <!-- 最初に読む -->
+  <div class="warn">
+    <b>1日分だけでも、まず置く</b>
+    完璧な備蓄をそろえようとすると、たいてい何も買わないまま1年がすぎます。
+    <strong>水2Lを1箱と、非常用トイレを1パック。今日はそれだけで十分です。</strong>
+    国の目安は「最低3日分、できれば1週間分」ですが、
+    これは<strong>一度に用意する数字ではなく、行き着く先の数字</strong>として見てください。
+    1日分でも家にあれば、次の1日が確実に楽になります。
+  </div>
+
+  <!-- ② ローリングストックの期限管理 -->
+  <section class="sec">
+    <h2>買ったものを、腐らせない</h2>
+    <p class="note">
+      備蓄でいちばん多い失敗は、買ったことを忘れて期限が切れることです。
+      買ったときに1行だけ入れておくと、期限の近い順に並びます。
+    </p>
+
+    <div class="stock">
+      <div class="fields">
+        <span class="fld"><label for="itName">品名</label>
+          <input type="text" id="itName" maxlength="40" placeholder="水 2L×6本" style="width:150px"></span>
+        <span class="fld"><label for="itQty">数量</label>
+          <input type="text" id="itQty" maxlength="20" placeholder="4箱" style="width:80px"></span>
+      </div>
+      <div class="setup">
+        <span class="fld"><label for="itDate">期限</label>
+          <input type="date" id="itDate" aria-label="賞味期限・使用期限"></span>
+        <button class="solid" id="addBtn" type="button" style="margin-top:14px">追加する</button>
+      </div>
+      <p class="msg" id="stockMsg"></p>
+
+      <div class="sum" id="stockSum"></div>
+      <div class="slist" id="stockList"></div>
+    </div>
+  </section>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <h2 class="visually-hidden" style="position:absolute;left:-9999px">読みもの</h2>
+    <div class="rail-head">
+      <h2>考え方のところ</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="項目"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 公式の窓口 -->
+  <section class="sec">
+    <h2>本家を見にいくところ</h2>
+    <p class="note">このページは要約です。迷ったら、こちらが本文です。</p>
+    <div class="help">
+      <dl>
+        <dt>ハザードマップポータルサイト（国土交通省）</dt>
+        <dd>家のまわりの浸水想定、土砂災害警戒区域、指定緊急避難場所を地図で重ねて見られます。
+          <a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">disaportal.gsi.go.jp</a></dd>
+        <dt>家庭備蓄ポータル（農林水産省）</dt>
+        <dd>食品の備蓄の考え方、ローリングストック、熱源、収納まで。
+          <a href="https://www.maff.go.jp/j/zyukyu/foodstock/" target="_blank" rel="noopener">災害時に備えた食品ストックガイド</a></dd>
+        <dt>災害が起きる前にできること（首相官邸）</dt>
+        <dd>備蓄と持ち出し袋の全体像。
+          <a href="https://www.kantei.go.jp/jp/headline/bousai/sonae.html" target="_blank" rel="noopener">まとめページ</a>／<a href="https://www.kantei.go.jp/jp/content/000182715.pdf" target="_blank" rel="noopener">災害の「備え」チェックリスト（PDF）</a></dd>
+        <dt>災害用伝言サービス（総務省）</dt>
+        <dd>171と災害用伝言板の仕組み。
+          <a href="https://www.soumu.go.jp/menu_seisaku/ictseisaku/net_anzen/hijyo/dengon.html" target="_blank" rel="noopener">総務省のまとめ</a>／<a href="https://www.ntt-east.co.jp/saigai/voice171/" target="_blank" rel="noopener">NTT東日本の使い方</a></dd>
+        <dt>防災情報のページ（内閣府）</dt>
+        <dd>避難所のトイレのガイドライン、防災週間など。
+          <a href="https://www.bousai.go.jp/" target="_blank" rel="noopener">bousai.go.jp</a></dd>
+        <dt>ペットの災害対策（環境省）</dt>
+        <dd>ペットフードと水は少なくとも5日分。
+          <a href="https://www.env.go.jp/nature/dobutsu/aigo/1_law/disaster.html" target="_blank" rel="noopener">人とペットの災害対策ガイドライン</a></dd>
+        <dt>お住まいの市区町村の防災担当課</dt>
+        <dd>給水拠点の場所、指定避難所、ペット同行避難の可否、備蓄の助成。
+          ここだけは地域ごとに違うので、自治体に直接聞くのが確実です。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        必要量の計算に使っている「1人1日あたり◯」は、すべて<strong>官公庁の資料で確認できた数字だけ</strong>です。
+        確認できなかったものは、あえて数字を出していません（おむつの枚数などがそれにあたります）。
+      </p>
+      <p style="margin:0 0 10px">
+        水・非常用トイレ・カセットボンベは、<strong>0歳児もふくめた全員を1人として</strong>数えています。
+        官公庁の目安が「1人1日あたり」としか示されていないためで、
+        小さい子がいる家では、実際より多めの数字が出ます。多めに出るぶんには困りません。
+      </p>
+      <p style="margin:0">
+        この計算は<strong>買い物の出発点</strong>であって、正解ではありません。
+        住んでいる場所、建物、家族の体調によって必要なものは変わります。
+        ハザードマップと、お住まいの市区町村の案内をあわせて見てください。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>首相官邸「<a href="https://www.kantei.go.jp/jp/headline/bousai/sonae.html" target="_blank" rel="noopener">災害が起きる前にできること</a>」（飲料水3日分・1人1日3リットル、大規模災害時は1週間分、生活用水）／「<a href="https://www.kantei.go.jp/jp/content/000182715.pdf" target="_blank" rel="noopener">災害の「備え」チェックリスト</a>」（監修：内閣府政策統括官（防災担当）、内閣府男女共同参画局）</li>
+      <li>内閣府（防災担当）「<a href="https://www.bousai.go.jp/taisaku/hinanjo/pdf/2412hinanjo_toilet_guideline.pdf" target="_blank" rel="noopener">避難所におけるトイレの確保・管理ガイドライン</a>」（排泄の回数は5回が平均的、携帯トイレはまず3日分）</li>
+      <li>内閣府「<a href="https://www.bousai.go.jp/kohou/kouhoubousai/h28/83/special_03.html" target="_blank" rel="noopener">広報ぼうさい 特集 地震に備える</a>」／「<a href="https://www.bousai.go.jp/kohou/kouhoubousai/r05/108/news_09.html" target="_blank" rel="noopener">防災の動き トイレ備蓄、忘れていませんか。（経済産業省）</a>」（災害用トイレ 1人当たり35回分／週）／「<a href="https://www.bousai.go.jp/kyoiku/week/bousaiweek.html" target="_blank" rel="noopener">「防災の日」及び「防災週間」について</a>」</li>
+      <li>農林水産省「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter01.html" target="_blank" rel="noopener">災害時に備えた食品ストックガイド（1）</a>」（最低3日分〜1週間分×人数分）／<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter02.html" target="_blank" rel="noopener">（2）ローリングストック</a>／<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter05.html" target="_blank" rel="noopener">（5）命をつなぎ止める水</a>／<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter06.html" target="_blank" rel="noopener">（6）いろいろな非常食で、楽しく備蓄</a>／<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter07.html" target="_blank" rel="noopener">（7）熱源を確保しよう</a>（1人／1週間当たりカセットボンベ約6本）／<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter09.html" target="_blank" rel="noopener">（9）備蓄食品の収納テクニック</a>（水は分散して収納）</li>
+      <li>総務省消防庁「<a href="https://www.fdma.go.jp/publication/hakusho/r2/chapter1/section1/para3/56542.html" target="_blank" rel="noopener">令和2年版 消防白書 コラム 地震火災対策について</a>」（停電中・避難時・復旧後にすること）</li>
+      <li>経済産業省 METI Journal ONLINE「<a href="https://journal.meti.go.jp/60sec/47437/" target="_blank" rel="noopener">9月1日は防災の日。トイレットペーパーの備え、できていますか？</a>」（一週間で1人1ロール、備蓄は約1か月分）</li>
+      <li>内閣府政策統括官（防災担当）・内閣府男女共同参画局・厚生労働省子ども家庭局母子保健課「<a href="https://www.bousai.go.jp/oyakudachi/pdf/siryo_46.pdf" target="_blank" rel="noopener">災害時における授乳の支援並びに母子に必要となる物資の備蓄及び活用について</a>」（令和元年10月25日事務連絡。別添に0歳児1人1日あたり液体ミルク1リットルの例）</li>
+      <li>環境省「<a href="https://www.env.go.jp/nature/dobutsu/aigo/2_data/pamph/h3009a/a-1b.pdf" target="_blank" rel="noopener">災害、あなたとペットは大丈夫？ 人とペットの災害対策ガイドライン〈一般飼い主編〉</a>」（ペットフード・水は少なくとも5日分、できれば7日分以上）</li>
+      <li>総務省「<a href="https://www.soumu.go.jp/menu_seisaku/ictseisaku/net_anzen/hijyo/dengon.html" target="_blank" rel="noopener">災害用伝言サービス</a>」／NTT東日本「<a href="https://www.ntt-east.co.jp/saigai/voice171s/intro.html" target="_blank" rel="noopener">災害用伝言ダイヤル（171）概要とご提供のしくみ</a>」「<a href="https://www.ntt-east.co.jp/saigai/voice171s/rec.html" target="_blank" rel="noopener">伝言の録音方法</a>」「<a href="https://www.ntt-east.co.jp/saigai/voice171s/howto.html" target="_blank" rel="noopener">体験利用のご案内</a>」</li>
+      <li>国土交通省「<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">ハザードマップポータルサイト</a>」</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した人数と品物の記録は、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    実際の避難や備えの判断は、お住まいの市区町村と、気象庁・自治体が出す情報を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   ここから ==== PURE ==== の間は、画面に触らない計算だけ。
+   src: 官公庁の一次情報で裏が取れている数字。リンクを必ず添える
+   （src のない記述は「進め方の提案」であって、公的な基準ではない）
+   ============================================================ */
+
+/* ==== PURE ==== */
+
+/* 1人1日あたりの基準。すべて官公庁の資料で確認したもの */
+var BASIS = {
+  waterLPerDay: 3,   /* 飲料水 1人1日3リットル（首相官邸／内閣府） */
+  mealsPerDay: 3,    /* 1日3食で数える（農林水産省・発災当日の備えの例） */
+  toiletPerDay: 5,   /* 排泄の回数は5回が平均的（内閣府ガイドライン） */
+  gasPerWeek: 6,     /* カセットボンベ 1人／1週間あたり約6本（農林水産省） */
+  milkLPerDay: 1,    /* 0歳児1人1日あたり液体ミルク1リットル（内閣府・厚労省事務連絡の別添） */
+  tpRollPerWeek: 1,  /* トイレットペーパー 一週間で1人1ロール（経済産業省） */
+  tpRollPerMonth: 4  /* 同上。4人家族で約16ロールあれば一ヶ月 */
+};
+
+/* 入力の受け取り。空欄・マイナス・文字・とんでもない数でも壊れない */
+function toCount(v) {
+  if (v === null || v === undefined) return 0;
+  var s = String(v).replace(/[^0-9.\-]/g, "");
+  if (s === "" || s === "-" || s === ".") return 0;
+  var n = parseFloat(s);
+  if (!isFinite(n)) return 0;
+  n = Math.floor(n);
+  if (n < 0) return 0;
+  if (n > 20) return 20;
+  return n;
+}
+
+function toDays(v) {
+  var n = parseInt(v, 10);
+  return n === 7 ? 7 : 3;
+}
+
+function ceilDiv(a, b) { return Math.ceil(a / b); }
+
+/* 必要量を出す。返すのは表にそのまま流せる行の配列 */
+function calcStock(input) {
+  var adults = toCount(input && input.adults);
+  var kids   = toCount(input && input.kids);
+  var babies = toCount(input && input.babies);
+  var days   = toDays(input && input.days);
+  var pets   = !!(input && input.pets);
+
+  var people = adults + kids + babies;   /* 水・トイレ・ボンベは全員を1人として数える */
+  var eaters = adults + kids;            /* 主食を食べる人 */
+
+  var out = {
+    adults: adults, kids: kids, babies: babies, days: days, pets: pets,
+    people: people, eaters: eaters, empty: people === 0, rows: []
+  };
+  if (people === 0) return out;
+
+  function row(g, name, qty, memo) {
+    out.rows.push({ group: g, name: name, qty: qty, memo: memo || "", text: false });
+  }
+  function note(g, name, text) {
+    out.rows.push({ group: g, name: name, qty: text, memo: "", text: true });
+  }
+
+  /* 水 */
+  var waterL   = BASIS.waterLPerDay * people * days;
+  var bottles  = ceilDiv(waterL, 2);
+  var boxes    = ceilDiv(bottles, 6);
+  out.waterL = waterL; out.bottles = bottles; out.boxes = boxes;
+  row("飲みもの", "飲料水", waterL + " L",
+      "2Lペットボトル " + bottles + "本＝6本入り " + boxes + "箱");
+
+  /* 主食 */
+  var meals = BASIS.mealsPerDay * eaters * days;
+  out.meals = meals;
+  if (meals > 0) {
+    row("食べもの", "主食", meals + " 食",
+        "米・パックごはん・アルファ米・めん・パンなどの合計。" +
+        "3分の1ずつ分けると、" + Math.ceil(meals / 3) + "食ぶんが3種類");
+  }
+
+  /* 熱源 */
+  var gas = ceilDiv(BASIS.gasPerWeek * people * days, 7);
+  out.gas = gas;
+  row("食べもの", "カセットボンベ", gas + " 本", "1人1週間あたり約6本から");
+
+  /* トイレ */
+  var toilet = BASIS.toiletPerDay * people * days;
+  out.toilet = toilet;
+  row("トイレ", "非常用トイレ", toilet + " 回分", "1人1日5回で計算");
+
+  var tpNow   = ceilDiv(BASIS.tpRollPerWeek * people * days, 7);
+  var tpMonth = BASIS.tpRollPerMonth * people;
+  out.tpNow = tpNow; out.tpMonth = tpMonth;
+  row("トイレ", "トイレットペーパー", tpNow + " ロール",
+      "この日数ぶん。経済産業省は約1か月分（" + tpMonth + "ロール）の備蓄をすすめています");
+
+  /* 0歳児 */
+  if (babies > 0) {
+    var milkL = BASIS.milkLPerDay * babies * days;
+    var packs = Math.ceil(milkL * 1000 / 125);
+    out.milkL = milkL; out.milkPacks = packs;
+    row("0歳児", "乳児用液体ミルク", milkL + " L",
+        "125mLの紙パックなら " + packs + "本ぶん。ふだん飲む量にあわせて加減してください");
+    note("0歳児", "紙おむつ・おしりふき",
+         "ふだんの1日の枚数 × " + days + "日 × " + babies + "人。" +
+         "1日に何枚使うかは家庭ごとに違い、官公庁の目安を確認できなかったので数字は出していません");
+    note("0歳児", "使い捨て哺乳瓶",
+         "液体ミルクを使うときに要ります。粉ミルクの場合は、お湯を沸かす手段もセットで");
+  }
+
+  /* ペット */
+  if (pets) {
+    note("ペット", "フード・水",
+         "少なくとも5日分、できれば7日分以上（環境省）。" +
+         "ほかに療法食・薬、キャリーバッグ、ペットシーツ、排泄物の処理用具");
+  }
+
+  /* そのほか */
+  note("そのほか", "予備電池・携帯充電器",
+       "懐中電灯とラジオは手動充電式だと電池の心配が減ります。" +
+       "モバイルバッテリーは、ふだんから満充電にしておくところまでが備蓄です");
+  note("そのほか", "常備薬・お薬手帳",
+       "持病の薬は、切らすと命にかかわります。お薬手帳はコピーか写真で");
+  note("そのほか", "生活用水",
+       "飲む水とは別に、トイレを流す水が要ります。" +
+       "風呂の水を張っておく、ポリタンクに水道水を入れておく");
+
+  return out;
+}
+
+/* ---- 日付まわり ---- */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
+function fmtJP(d) { return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日"; }
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+                  .replace(/"/g, "&quot;");
+}
+
+/* 期限の分類。期限切れ／30日以内／90日以内／それ以降 */
+function classifyDue(dateStr, base) {
+  var d = parseDate(dateStr);
+  if (!d) return null;
+  var left = daysBetween(base || today0(), d);
+  var kind, label, when;
+  if (left < 0)        { kind = "over"; label = "期限切れ";   when = (-left) + "日すぎ"; }
+  else if (left <= 30) { kind = "soon"; label = "30日以内";   when = left === 0 ? "きょう" : "あと" + left + "日"; }
+  else if (left <= 90) { kind = "mid";  label = "90日以内";   when = "あと" + left + "日"; }
+  else                 { kind = "far";  label = "まだ先";     when = "あと" + left + "日"; }
+  return { kind: kind, label: label, when: when, left: left, date: d };
+}
+
+/* localStorage から読んだものは、何が入っていてもここで落とす */
+function sanitizeStock(raw) {
+  var arr = [];
+  if (!raw || Object.prototype.toString.call(raw) !== "[object Array]") return arr;
+  for (var i = 0; i < raw.length && arr.length < 200; i++) {
+    var it = raw[i];
+    if (!it || typeof it !== "object") continue;
+    var name = typeof it.name === "string" ? it.name.replace(/\s+/g, " ").slice(0, 40).replace(/^ | $/g, "") : "";
+    if (!name) continue;
+    if (!parseDate(it.date)) continue;
+    var qty = typeof it.qty === "string" ? it.qty.slice(0, 20) :
+              (typeof it.qty === "number" && isFinite(it.qty) ? String(it.qty) : "");
+    var id = typeof it.id === "string" && it.id ? it.id.slice(0, 40) : ("s" + i + "_" + Date.now());
+    arr.push({ id: id, name: name, qty: qty, date: String(it.date) });
+  }
+  arr.sort(function (a, b) { return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
+  return arr;
+}
+
+/* ==== /PURE ==== */
+
+/* ============================================================
+   読みもの
+   ============================================================ */
+
+var STAGES = [
+  {
+    id: "b1", phase: "p1", chip: "まず地図", chipSub: "0円でできる",
+    tag: "はじめに",
+    title: "買う前に、家のまわりを見る",
+    lead: "備蓄の中身は、<strong>住んでいる場所によって変わります。</strong>" +
+          "浸水する家と、しない家では、置き場所からして違います。買い物より先に、地図です。",
+    tasks: [
+      {
+        id: "b-hazard", title: "ハザードマップで、家と職場を見る",
+        body: "<p>国土交通省の<strong>ハザードマップポータルサイト</strong>は、" +
+              "「重ねるハザードマップ」と「わがまちハザードマップ」の2つでできています。</p>" +
+              "<ul>" +
+              "<li><strong>重ねるハザードマップ</strong>　洪水・内水氾濫・高潮・津波などの浸水想定区域と浸水深、" +
+              "土砂災害警戒区域、地形分類、自然災害伝承碑、指定緊急避難場所を、" +
+              "全国シームレスに1つの地図の上に重ねて見られます</li>" +
+              "<li><strong>わがまちハザードマップ</strong>　市区町村が法令に基づいて作って公開しているハザードマップへのリンク集です</li>" +
+              "</ul>" +
+              "<p><strong>見るのは家だけにしないでください。</strong>" +
+              "職場、学校、よく行く実家。家族がいる場所をひととおり見ておくと、" +
+              "「どこで落ち合うか」の話が具体的になります。</p>",
+        where: '<b>見るところ</b>　<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">ハザードマップポータルサイト（国土交通省）</a>',
+        src: '国土交通省「<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">ハザードマップポータルサイト</a>」',
+        share: "地図を見た結果を、家族の共有メモに1行で書いておく。「うちは浸水0.5m想定。2階に上げる」など。"
+      },
+      {
+        id: "b-171", title: "災害用伝言ダイヤル171の使い方を、先に覚える",
+        body: "<p>地震などで被災地への通話が集中してつながりにくくなった（ふくそう）とき、" +
+              "NTTが提供を開始する<strong>声の伝言板</strong>です。</p>" +
+              "<p>「171」をダイヤルすると案内が流れます。" +
+              "<strong>録音する人は1、再生する人は2</strong>" +
+              "（暗証番号を使う録音は3、再生は4）。" +
+              "そのあと、<strong>連絡を取りたい被災地の人の電話番号を、固定電話なら市外局番からダイヤル</strong>します。</p>" +
+              "<ul>" +
+              "<li>伝言は<strong>1件あたり30秒以内</strong></li>" +
+              "<li>保存は<strong>171の運用期間が終わるまで</strong></li>" +
+              "<li>蓄積できるのは<strong>電話番号あたり1〜20伝言</strong>（提供開始時に知らせがあります）</li>" +
+              "<li>登録できるのは、加入電話・ISDN・ひかり電話・携帯電話・PHS・IP電話の番号</li>" +
+              "</ul>" +
+              "<p><strong>大事なのは「どの電話番号を鍵にするか」を家族で決めておくこと</strong>です。" +
+              "ばらばらの番号に録音すると、お互い見つけられません。" +
+              "実家の固定電話の番号など、全員が覚えている1つの番号に決めておいてください。</p>",
+        src: 'NTT東日本「<a href="https://www.ntt-east.co.jp/saigai/voice171s/intro.html" target="_blank" rel="noopener">概要とご提供のしくみ</a>」「<a href="https://www.ntt-east.co.jp/saigai/voice171s/rec.html" target="_blank" rel="noopener">伝言の録音方法</a>」／総務省「<a href="https://www.soumu.go.jp/menu_seisaku/ictseisaku/net_anzen/hijyo/dengon.html" target="_blank" rel="noopener">災害用伝言サービス</a>」',
+        share: "「鍵にする電話番号」と「集合場所」の2つだけ決めて、全員の財布に紙で入れておく。"
+      },
+      {
+        id: "b-web171", title: "災害用伝言板（web171）と、携帯各社の伝言板",
+        body: "<p>文字で残す方法もあります。" +
+              "<strong>災害用伝言板（web171）</strong>は、パソコンやスマートフォンから、" +
+              "固定電話または携帯電話の電話番号を使って伝言を登録・確認できるサービスです。" +
+              "携帯電話会社も、それぞれ災害用伝言板を用意しています。</p>" +
+              "<p>171とweb171は連携していて、" +
+              "<strong>171に録音した声をweb171で音声ファイルとして聞く</strong>、" +
+              "<strong>web171に書いた文字を音声に変換して171で聞く</strong>、" +
+              "という行き来ができます。どちらか一方を覚えておけば大丈夫です。</p>",
+        src: 'NTT東日本「<a href="https://www.ntt-east.co.jp/saigai/voice171s/intro.html" target="_blank" rel="noopener">概要とご提供のしくみ</a>」／総務省「<a href="https://www.soumu.go.jp/menu_seisaku/ictseisaku/net_anzen/hijyo/dengon.html" target="_blank" rel="noopener">災害用伝言サービス</a>」'
+      }
+    ]
+  },
+
+  {
+    id: "b2", phase: "p2", chip: "水と食べもの", chipSub: "3日〜1週間",
+    tag: "備える量",
+    title: "水は3リットル、食べものは3日から",
+    lead: "ここがこのノートの中心です。<strong>数字はすべて官公庁の資料で確認したもの</strong>を使っています。" +
+          "上の計算機は、この数字を人数と日数で掛けているだけです。",
+    tasks: [
+      {
+        id: "b-water", title: "飲料水は1人1日3リットル、3日分から",
+        body: "<p>首相官邸の備蓄の例には、<strong>「飲料水　3日分（1人1日3リットルが目安）」</strong>とあります。" +
+              "そして<strong>「大規模災害発生時には、『1週間分』の備蓄が望ましいとされています」</strong>。</p>" +
+              "<p>内閣府の広報誌でも、非常に広い地域に被害が及ぶ可能性のある南海トラフ地震では、" +
+              "1週間以上の備蓄が望ましいという指摘が紹介されています。</p>" +
+              "<p>3リットルは飲むぶんだけではなく、料理に使うぶんを含んだ数字です。" +
+              "<strong>飲料水とは別に、トイレを流したりするための生活用水も必要です。</strong>" +
+              "風呂の水を張っておく、水道水を入れたポリタンクを用意しておく、といった備えが要ります。</p>",
+        src: '首相官邸「<a href="https://www.kantei.go.jp/jp/headline/bousai/sonae.html" target="_blank" rel="noopener">災害が起きる前にできること</a>」／内閣府「<a href="https://www.bousai.go.jp/kohou/kouhoubousai/h28/83/special_03.html" target="_blank" rel="noopener">広報ぼうさい 特集 地震に備える</a>」'
+      },
+      {
+        id: "b-mizuoki", title: "水は1か所に入りません。分散させる",
+        body: "<p>農林水産省の収納のページに、はっきり書いてあります。" +
+              "<strong>「水は大人2人の1週間分だと、2L×6本入りで4箱など、" +
+              "準備しておかなければならない量が多いため、1か所だけでは入りきらないかもしれません」。</strong></p>" +
+              "<p>そして、<strong>「キッチン、押し入れ、リビング、寝室のクローゼットなど、" +
+              "家の中にあるいろいろな隙間スペースを見つけて、分散収納しましょう」</strong>とあります。</p>" +
+              "<p>分散には、置き場所が見つかるという以外にも効きめがあります。" +
+              "<strong>1か所が潰れても全部は失わない。</strong>" +
+              "家具が倒れて押し入れが開かなくなる、その部屋のガラスが割れて入れなくなる。" +
+              "そういうとき、寝室に1箱あることが効きます。</p>" +
+              "<p>置き方のこつも書かれています。" +
+              "<strong>重いものは下の方に、軽いものは上の方に。</strong>" +
+              "落ちてきてけがをしないためです。" +
+              "カセットコンロも、低い位置の棚に、ボンベと同じ場所に。</p>",
+        src: '農林水産省「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter09.html" target="_blank" rel="noopener">災害時に備えた食品ストックガイド（9）備蓄食品の収納テクニック</a>」',
+        share: "置き場所を家族で共有する。1人しか知らない備蓄は、その人が家にいないと無いのと同じです。"
+      },
+      {
+        id: "b-food", title: "食べものは、最低3日分〜1週間分",
+        body: "<p>農林水産省は、<strong>「最低3日分〜1週間分×人数分の食品の家庭備蓄が望ましい」</strong>としています。" +
+              "理由もはっきりしていて、<strong>「過去の経験によれば、災害発生からライフライン復旧まで" +
+              "1週間以上を要するケースが多くみられます」</strong>、" +
+              "<strong>「災害支援物資が3日以上到着しないことや、物流機能の停止によって、" +
+              "1週間はスーパーマーケットやコンビニなどで食品が手に入らないことが想定されます」</strong>。</p>" +
+              "<p>特別な非常食をそろえる必要はありません。" +
+              "<strong>「防災のために特別なものを用意するのではなく、できるだけ、" +
+              "普段の生活の中で利用されている食品等を備えるようにしましょう」</strong>（首相官邸）。</p>" +
+              "<p>上の計算機が出す「◯食」は、主食の食数です。" +
+              "米・パックごはん・アルファ米・めん・パンなどを足して、その数になればいいという意味です。" +
+              "<strong>1種類でそろえないこと。</strong>飽きます。飽きると食べなくなります。</p>",
+        src: '農林水産省「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter01.html" target="_blank" rel="noopener">災害時に備えた食品ストックガイド（1）食品の家庭備蓄のすすめ</a>」／首相官邸「<a href="https://www.kantei.go.jp/jp/headline/bousai/sonae.html" target="_blank" rel="noopener">災害が起きる前にできること</a>」'
+      },
+      {
+        id: "b-rolling", title: "ローリングストックという言い方",
+        body: "<p>農林水産省の定義はこうです。" +
+              "<strong>「普段の食品を少し多めに買い置きしておき、賞味期限を考えて古いものから消費し、" +
+              "消費した分を買い足すことで、常に一定量の食品が家庭で備蓄されている状態を保つための方法」。</strong></p>" +
+              "<p>利点は、<strong>費用と時間の面で普段の買い物の範囲ででき、" +
+              "買い置きスペースを少し増やすだけで済む</strong>ことです。</p>" +
+              "<p>収納のこつも示されています。" +
+              "<strong>毎日のように使う食品はキッチンに。たまにしか使わない食品は押し入れやクローゼットに。</strong>" +
+              "ケースや箱に入れて、何があるか見てすぐ分かるようにする。" +
+              "<strong>側面に賞味期限を書いておく。古いものを奥に補充して、手前のものから使う。</strong></p>" +
+              "<p>このページの上にある<strong>期限の管理</strong>は、この「側面に書いておく」を画面でやるものです。" +
+              "買った日に1行入れておけば、期限が近づいたら色が変わります。</p>",
+        src: '農林水産省「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter02.html" target="_blank" rel="noopener">災害時に備えた食品ストックガイド（2）簡単！ローリングストック</a>」／同「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter09.html" target="_blank" rel="noopener">（9）備蓄食品の収納テクニック</a>」'
+      },
+      {
+        id: "b-gas", title: "カセットボンベは1人1週間で約6本",
+        body: "<p>電気もガスも止まったとき、温かいものを作れるかどうかで、その3日はかなり変わります。</p>" +
+              "<p>農林水産省の数字は明確です。" +
+              "<strong>「1人／1週間当たり、カセットボンベ約6本の備蓄が必要となります」。</strong></p>" +
+              "<p>使用期限もあります。<strong>ボンベは約7年、コンロは約10年。</strong>" +
+              "買ったきり一度も使っていないコンロは、いざというときに使い方がわかりません。" +
+              "<strong>年に一度は鍋でも囲んでください。</strong>それが点検になります。</p>" +
+              "<p>ライフラインの復旧で、<strong>最も時間がかかるのはガス</strong>です。" +
+              "オール電化の家でも、カセットコンロは要ります。</p>",
+        src: '農林水産省「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter07.html" target="_blank" rel="noopener">災害時に備えた食品ストックガイド（7）熱源を確保しよう</a>」／同「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter09.html" target="_blank" rel="noopener">（9）備蓄食品の収納テクニック</a>」'
+      },
+      {
+        id: "b-suidou", title: "水道水をためる、という手もある",
+        body: "<p>農林水産省は、水道水の備蓄についてこう書いています。" +
+              "<strong>「水道水は、塩素による消毒効果により3日程度は、飲料水として使用可能です。" +
+              "フタのできる清潔な容器に口もといっぱいまで水道水を入れて、しっかりとフタを閉め、" +
+              "直射日光を避けて、室温の低い所に保存しましょう」。</strong></p>" +
+              "<p>あわせて、<strong>保存水と呼ばれるミネラルウォーターの賞味期限は5年〜10年</strong>で、" +
+              "通常のミネラルウォーター（約2年程度）より長持ちする、とも書かれています。</p>" +
+              "<p>3日しかもたない水道水は、備蓄の柱にはなりません。" +
+              "ただ、<strong>地震のあと、まだ水が出ているうちにためる</strong>のは有効です。" +
+              "風呂、やかん、ペットボトル。断水は、揺れてすぐ来るとはかぎりません。</p>",
+        src: '農林水産省「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter05.html" target="_blank" rel="noopener">災害時に備えた食品ストックガイド（5）命をつなぎ止める水</a>」'
+      },
+      {
+        id: "b-baby", title: "0歳児がいる家",
+        body: "<p>内閣府（防災担当）・内閣府男女共同参画局・厚生労働省子ども家庭局母子保健課が連名で出した" +
+              "事務連絡（令和元年10月25日）に、こうあります。" +
+              "<strong>「ライフラインが断絶された場合においても水等を使用せずに授乳できる" +
+              "乳児用液体ミルクを母子の状況等に応じて活用いただくとともに、" +
+              "平時から育児用ミルク及び使い捨て哺乳瓶や消毒剤等の授乳用品などの" +
+              "母子に必要となる物資の備蓄も進めていただきますよう、お願いいたします」。</strong></p>" +
+              "<p>量の目安として、この事務連絡の別添には自治体の基準が引かれています。" +
+              "<strong>「0歳児を対象とし、育児用調製粉乳は1人1日あたり140g を、" +
+              "乳児用液体ミルクは1ℓを基本とする」</strong>" +
+              "（三重県備蓄・調達基本方針。「南海トラフ地震における具体的な応急対策活動に関する計画」に基づくもの）。" +
+              "上の計算機は、この1リットルを使っています。</p>" +
+              "<p><strong>粉ミルクは、清潔な水とお湯が要ります。</strong>断水しているとそこで詰まります。" +
+              "液体ミルクなら水がなくても飲ませられますが、" +
+              "<strong>開封後はすぐ使い、飲み残しは与えない</strong>という扱いが要ります。" +
+              "使い捨て哺乳瓶をセットにしておいてください。</p>" +
+              "<p>備蓄した育児用ミルクは、<strong>ローリングストックで回せます。</strong>" +
+              "賞味期限が近づいたら普段の授乳で使って、買い足す。事務連絡もその方法をすすめています。</p>",
+        src: '内閣府政策統括官（防災担当）・内閣府男女共同参画局・厚生労働省子ども家庭局母子保健課「<a href="https://www.bousai.go.jp/oyakudachi/pdf/siryo_46.pdf" target="_blank" rel="noopener">災害時における授乳の支援並びに母子に必要となる物資の備蓄及び活用について</a>」（令和元年10月25日事務連絡）',
+        share: "紙おむつの枚数だけは、公的な目安が見つかりませんでした。ふだんの1日の枚数を数えて、日数分で掛けてください。"
+      }
+    ]
+  },
+
+  {
+    id: "b3", phase: "p3", chip: "トイレ", chipSub: "1日5回",
+    tag: "見落としやすい",
+    title: "水より先に困るのは、たいていトイレ",
+    lead: "水と食べものは思いつきますが、<strong>トイレを備えている家は2割ほど</strong>と言われています。" +
+          "断水した家の水洗トイレは、その日のうちに使えなくなります。",
+    tasks: [
+      {
+        id: "b-toilet", title: "1人1日5回。まず3日分",
+        body: "<p>内閣府（防災担当）の「避難所におけるトイレの確保・管理ガイドライン」は、" +
+              "必要数の計算式を<strong>「最大想定避難者数×5回」</strong>とし、" +
+              "<strong>「排泄の回数は5回が平均的であると言われています」</strong>としています。</p>" +
+              "<p>備蓄の目標についても、" +
+              "<strong>「携帯トイレの備蓄目標数は、何日間分備蓄するかを決めます。まずは、3日分を目標にしましょう。" +
+              "国や県からのプッシュ型による支援等もありますが、流通品と同様に、交通事情により到着が遅れることもあるため、" +
+              "自助や共助による備蓄も併せて行いましょう」</strong>と書かれています。</p>" +
+              "<p>このガイドラインは自治体向けのものですが、" +
+              "<strong>「事前に住民に周知し、各家庭での携帯トイレ等の備蓄を促しましょう」</strong>と、" +
+              "家庭での備蓄にも触れています。</p>" +
+              "<p>経済産業省も、災害用トイレの備蓄目安として<strong>1人当たり35回分／週</strong>を推奨しています。" +
+              "1日5回×7日。同じ数字です。</p>",
+        src: '内閣府（防災担当）「<a href="https://www.bousai.go.jp/taisaku/hinanjo/pdf/2412hinanjo_toilet_guideline.pdf" target="_blank" rel="noopener">避難所におけるトイレの確保・管理ガイドライン</a>」／内閣府「<a href="https://www.bousai.go.jp/kohou/kouhoubousai/r05/108/news_09.html" target="_blank" rel="noopener">防災の動き トイレ備蓄、忘れていませんか。（経済産業省）</a>」'
+      },
+      {
+        id: "b-nagasanai", title: "断水したら、流さない",
+        body: "<p>断水したあとに、風呂の残り湯でトイレを流す——これは、状況によっては悪手です。" +
+              "<strong>下水道や浄化槽の側が壊れていると、流した汚水が逆流したり、あふれたりします。</strong></p>" +
+              "<p>内閣府のガイドラインは、自治体に対して" +
+              "<strong>災害時の水洗トイレの使用ルールをあらかじめ決めておく</strong>よう求めています。" +
+              "その例として挙げられているのが、地震のときは" +
+              "<strong>「避難所の周辺で異常が見られなくても、『汚水処理施設の点検が済むまで使用中止』」</strong>、" +
+              "大雨や高潮で浸水したときは" +
+              "<strong>「周辺が浸水していたら、ブロアーの故障等の障害が考えられるため使用中止」</strong>。</p>" +
+              "<p>家でも同じです。<strong>大きな揺れや浸水のあとは、いったん流さない。</strong>" +
+              "洋式便器に袋をかぶせて使う非常用トイレがあれば、それで足ります。" +
+              "安全が確認できてから、水洗に戻してください。</p>",
+        src: '内閣府（防災担当）「<a href="https://www.bousai.go.jp/taisaku/hinanjo/pdf/2412hinanjo_toilet_guideline.pdf" target="_blank" rel="noopener">避難所におけるトイレの確保・管理ガイドライン</a>」'
+      },
+      {
+        id: "b-tp", title: "トイレットペーパーは1か月分",
+        body: "<p>経済産業省は、各家庭で<strong>約1か月分</strong>のトイレットペーパーを備蓄することをすすめています。" +
+              "目安は<strong>「一週間で1人1ロールを消費しています。4人家族では、約16ロールあれば一ヶ月は安心です」。</strong></p>" +
+              "<p>かさばるのが難点ですが、" +
+              "<strong>芯なし・長巻きの備蓄用なら、約6ロール分のスペースで1か月分を保管できる</strong>とされています。</p>" +
+              "<p>これもローリングストックで回せます。" +
+              "<strong>普段から備蓄分を含めた量をストックし、古いものから順に使う。</strong>" +
+              "長期間しまい込むと、カビやほこりの影響を受けることがあります。</p>",
+        src: '経済産業省 METI Journal ONLINE「<a href="https://journal.meti.go.jp/60sec/47437/" target="_blank" rel="noopener">9月1日は防災の日。トイレットペーパーの備え、できていますか？</a>」'
+      },
+      {
+        id: "b-gomi", title: "使ったあとの置き場所まで考える",
+        body: "<p>非常用トイレは、使ったあとが問題になります。" +
+              "収集が止まっているあいだ、家に置いておくことになるからです。</p>" +
+              "<p>内閣府のガイドラインは避難所について、" +
+              "<strong>「使用済み携帯トイレの保管場所を確保し、清潔な管理を実施すること」</strong>、" +
+              "<strong>「ハエ等の害虫対策、臭い対策等の衛生管理に必要な物資を配布すること」</strong>としています。</p>" +
+              "<p>家でも同じことが要ります。" +
+              "<strong>厚手のごみ袋、ふた付きの容器、消臭剤。</strong>" +
+              "ベランダや玄関の外など、置く場所を先に決めておくと慌てません。</p>",
+        src: '内閣府（防災担当）「<a href="https://www.bousai.go.jp/taisaku/hinanjo/pdf/2412hinanjo_toilet_guideline.pdf" target="_blank" rel="noopener">避難所におけるトイレの確保・管理ガイドライン</a>」'
+      }
+    ]
+  },
+
+  {
+    id: "b4", phase: "p3", chip: "停電・断水", chipSub: "最初の行動",
+    tag: "起きたとき",
+    title: "電気が止まったとき、最初にすること",
+    lead: "備蓄より先に効く行動があります。<strong>地震のあとの火事は、電気から起きます。</strong>" +
+          "消防庁が挙げている手順は短いので、これだけは覚えておいてください。",
+    tasks: [
+      {
+        id: "b-tsuden", title: "停電中にすること／避難するときにすること",
+        body: "<p>消防白書のコラムに、そのまま並んでいます。</p>" +
+              "<p><strong>地震が発生したら</strong></p>" +
+              "<ul>" +
+              "<li><strong>停電中は電化製品のスイッチを切るとともに、電源プラグをコンセントから抜く</strong></li>" +
+              "<li><strong>石油ストーブやファンヒーターからの油漏れの有無を確認する</strong></li>" +
+              "<li><strong>避難するときはブレーカーを落とす</strong></li>" +
+              "</ul>" +
+              "<p><strong>地震からしばらくして（電気やガスの復旧、避難所などからもどったら）</strong></p>" +
+              "<ul>" +
+              "<li><strong>ガス機器、電化製品及び石油器具の使用を再開するときは、" +
+              "機器に破損がないこと、近くに燃えやすいものがないことを確認する</strong></li>" +
+              "<li><strong>再通電後は、しばらく電化製品に異常（煙、におい）がないか注意を払う</strong></li>" +
+              "</ul>",
+        src: '総務省消防庁「<a href="https://www.fdma.go.jp/publication/hakusho/r2/chapter1/section1/para3/56542.html" target="_blank" rel="noopener">令和2年版 消防白書 コラム 地震火災対策について</a>」',
+        share: "ブレーカーの位置を家族全員が知っているか、今日確かめてください。暗い中で探すものではありません。"
+      },
+      {
+        id: "b-tsuden2", title: "なぜブレーカーなのか（通電火災）",
+        body: "<p>消防庁は、停電からの復旧後に出火する<strong>「通電火災」</strong>の心配を挙げています。" +
+              "こういう起こり方です。</p>" +
+              "<ul>" +
+              "<li><strong>転倒した家具の下敷きになり損傷した配線などに再通電し、発熱発火する</strong></li>" +
+              "<li><strong>落下したカーテンや洗濯物といった可燃物がヒーターに接触した状態で再通電し、着火する</strong></li>" +
+              "<li><strong>転倒したヒーターや照明器具（白熱灯など）が可燃物に接触した状態で再通電し、着火する</strong></li>" +
+              "</ul>" +
+              "<p>こわいのは、<strong>「住民が避難所等へ避難しており、出火時の初期消火が行えないといったおそれがある」</strong>点です。" +
+              "誰もいない家で火が出ます。</p>" +
+              "<p>対策として消防庁が挙げているのは、<strong>感震ブレーカーの設置</strong>、" +
+              "<strong>住宅用消火器等を設置し、使用方法について確認する</strong>こと。" +
+              "感震ブレーカーは、揺れを感知して自動で電気を遮断する装置です。</p>",
+        src: '総務省消防庁「<a href="https://www.fdma.go.jp/publication/hakusho/r2/chapter1/section1/para3/56542.html" target="_blank" rel="noopener">令和2年版 消防白書 コラム 地震火災対策について</a>」'
+      },
+      {
+        id: "b-dansui", title: "断水したとき",
+        body: "<p>まず、<strong>まだ出るうちにためる</strong>こと。風呂、やかん、ペットボトル、ポリタンク。</p>" +
+              "<p>次に、<strong>トイレを流さない</strong>（前の項目のとおりです）。</p>" +
+              "<p>そのうえで、<strong>給水拠点を調べます。</strong>" +
+              "どこに給水車が来るか、どの施設に応急給水栓があるかは、" +
+              "<strong>お住まいの市区町村の水道担当が決めていて、地域ごとにまったく違います。</strong>" +
+              "平常時に一度、自治体のサイトで見ておいてください。</p>" +
+              "<p>水をもらいに行くときは、<strong>運ぶ手段</strong>が要ります。" +
+              "水は1リットルで1キロです。10リットルのポリタンクは、満タンだと10キロ以上になります。" +
+              "キャリーカートや台車、リュックに入れられる給水袋があると、往復が現実的になります。</p>",
+        share: "給水拠点までの距離と、誰が運べるかを先に決めておく。高齢の家族だけでは運べません。"
+      }
+    ]
+  },
+
+  {
+    id: "b5", phase: "p4", chip: "置き場所", chipSub: "袋と備蓄は別",
+    tag: "しまい方",
+    title: "持ち出す袋と、家に置く備蓄は別のもの",
+    lead: "この2つを混ぜると、どちらも中途半端になります。" +
+          "<strong>袋は「逃げるときに担ぐもの」、備蓄は「家にとどまるときに使うもの」</strong>です。",
+    tasks: [
+      {
+        id: "b-bag", title: "非常用持ち出し袋（避難の際に持ち出すもの）",
+        body: "<p>首相官邸の「災害の『備え』チェックリスト」" +
+              "（監修：内閣府政策統括官（防災担当）、内閣府男女共同参画局）に挙がっているものです。</p>" +
+              "<ul>" +
+              "<li><strong>水／食品</strong>（ご飯（アルファ米など）、レトルト食品、ビスケット、チョコ、乾パンなど：最低3日分の用意）</li>" +
+              "<li><strong>防災用ヘルメット・防災ずきん／衣類・下着／レインウェア／紐なしのズック靴</strong></li>" +
+              "<li><strong>懐中電灯／携帯ラジオ</strong>（いずれも手動充電式が便利）／<strong>予備電池・携帯充電器</strong></li>" +
+              "<li><strong>マッチ・ろうそく／救急用品</strong>（ばんそうこう、包帯、消毒液、常備薬など）</li>" +
+              "<li><strong>使い捨てカイロ／ブランケット／軍手／洗面用具／歯ブラシ・歯磨き粉／タオル／ペン・ノート</strong></li>" +
+              "<li><strong>マスク／手指消毒用アルコール／石けん・ハンドソープ／ウェットティッシュ／体温計</strong></li>" +
+              "<li><strong>貴重品</strong>（通帳、現金、パスポート、運転免許証、病院の診察券、マイナンバーカードなど）</li>" +
+              "</ul>" +
+              "<p><strong>担げる重さに収めること。</strong>" +
+              "入れるだけ入れた袋は、持って階段を降りられません。一度背負って、家のまわりを一周してみてください。</p>",
+        src: '首相官邸「<a href="https://www.kantei.go.jp/jp/content/000182715.pdf" target="_blank" rel="noopener">災害の「備え」チェックリスト</a>」（監修：内閣府政策統括官（防災担当）、内閣府男女共同参画局）'
+      },
+      {
+        id: "b-kodomo", title: "こども・女性・高齢者のための備え",
+        body: "<p>同じチェックリストには、人によって変わる備えも並んでいます。" +
+              "<strong>ここは家族構成を見て足すところ</strong>です。</p>" +
+              "<ul>" +
+              "<li><strong>こども</strong>　粉ミルク（アレルギー用含む）又は液体ミルク、使い捨て哺乳瓶、離乳食、" +
+              "携帯カトラリー、こども用紙オムツ、お尻ふき、携帯用お尻洗浄機、ネックライト、抱っこひも、こどもの靴</li>" +
+              "<li><strong>女性</strong>　生理用品、おりものシート、サニタリーショーツ、中身の見えないごみ袋、防犯ブザー／ホイッスル</li>" +
+              "<li><strong>高齢者</strong>　大人用紙パンツ、杖、補聴器、介護食、入れ歯・入れ歯用洗浄液、吸水パッド、" +
+              "デリケートゾーンの洗浄剤、持病の薬、お薬手帳のコピー</li>" +
+              "</ul>" +
+              "<p><strong>持病の薬とお薬手帳のコピーは、優先度が高いものです。</strong>" +
+              "支援物資でいちばん代えがきかないのがここです。</p>",
+        src: '首相官邸「<a href="https://www.kantei.go.jp/jp/content/000182715.pdf" target="_blank" rel="noopener">災害の「備え」チェックリスト</a>」（監修：内閣府政策統括官（防災担当）、内閣府男女共同参画局）'
+      },
+      {
+        id: "b-bichiku", title: "備蓄品（お家に備えておくもの）",
+        body: "<p>同じチェックリストの、袋とは別の欄です。</p>" +
+              "<ul>" +
+              "<li><strong>食料や水（最低3日分！できれば1週間分）× 家族分</strong>" +
+              "——「保存期間の長いものを多めに買っておき、消費したら補充するという習慣にしていれば、" +
+              "常に食料の備蓄が可能！」</li>" +
+              "<li><strong>生活用品</strong>——「例えば、ティッシュ、トイレットペーパー、ラップ、ゴミ袋、ポリタンク、携帯用トイレ…など」</li>" +
+              "</ul>" +
+              "<p><strong>ラップは、食器に敷いて洗い物を減らすために効きます。</strong>" +
+              "断水中、水は洗い物に回せません。紙皿とラップは、水の節約道具です。</p>",
+        src: '首相官邸「<a href="https://www.kantei.go.jp/jp/content/000182715.pdf" target="_blank" rel="noopener">災害の「備え」チェックリスト</a>」（監修：内閣府政策統括官（防災担当）、内閣府男女共同参画局）'
+      },
+      {
+        id: "b-pet", title: "ペットがいる家",
+        body: "<p>環境省の「人とペットの災害対策ガイドライン〈一般飼い主編〉」は、" +
+              "備蓄品を優先順位で並べています。</p>" +
+              "<p><strong>優先順位1（動物の健康や命に係わるもの）</strong></p>" +
+              "<ul>" +
+              "<li><strong>療法食、薬</strong></li>" +
+              "<li><strong>ペットフード、水（少なくとも5日分［できれば7日分以上］）</strong></li>" +
+              "<li><strong>キャリーバッグやケージ</strong>（猫や小動物には避難時に欠かせないアイテム）</li>" +
+              "<li>予備の首輪、リード（伸びないもの）、ペットシーツ、排泄物の処理用具、トイレ用品、食器</li>" +
+              "</ul>" +
+              "<p><strong>優先順位2は情報</strong>です。飼い主の連絡先、預け先、ペットの写真（印刷したものと、携帯の中と）、" +
+              "ワクチン接種状況、既往症、投薬中の薬情報、かかりつけの動物病院。</p>" +
+              "<p>ガイドラインには、避難した人の声も載っています。" +
+              "<strong>「避難してしばらく、人の支援物資はあるが、ペットフードの支援はなかった」" +
+              "「救援物資のペットフードを食べなくて困った」。</strong>" +
+              "食べ慣れたものを、自分で持っておくしかありません。</p>" +
+              "<p>あわせて、<strong>ペットを受け入れられる指定避難所がどこか</strong>を、" +
+              "平常時に市区町村で確かめておいてください。ここは自治体ごとに違います。</p>",
+        src: '環境省「<a href="https://www.env.go.jp/nature/dobutsu/aigo/2_data/pamph/h3009a/a-1b.pdf" target="_blank" rel="noopener">災害、あなたとペットは大丈夫？ 人とペットの災害対策ガイドライン〈一般飼い主編〉</a>」'
+      }
+    ]
+  },
+
+  {
+    id: "b6", phase: "p4", chip: "見直し", chipSub: "9月1日",
+    tag: "続ける",
+    title: "年に一度、日を決めて開ける",
+    lead: "備蓄は、置いた日が終わりではありません。" +
+          "<strong>期限が切れ、子どもが育ち、家族が増えたり減ったりします。</strong>" +
+          "見直す日を、カレンダーの側で決めてしまうのが確実です。",
+    tasks: [
+      {
+        id: "b-day", title: "防災の日（9月1日）と防災週間（8月30日〜9月5日）",
+        body: "<p>昭和57年5月11日の閣議了解で、こう決まっています。" +
+              "<strong>「『防災の日』は、毎年9月1日とし、この日を含む1週間を『防災週間』とする」。</strong>" +
+              "そして<strong>防災週間の期間は、昭和58年以降は毎年、8月30日から9月5日まで</strong>とされています。</p>" +
+              "<p>目的は、<strong>「広く国民が、台風、豪雨、豪雪、洪水、高潮、地震、津波等の災害についての認識を深めるとともに、" +
+              "これに対する備えを充実強化することにより、災害の未然防止と被害の軽減に資するため」</strong>。</p>" +
+              "<p>年に一度でいいので、この週に備蓄を全部出してください。" +
+              "<strong>期限を見て、古いものを食べて、買い足す。</strong>それだけで備蓄は生き続けます。</p>",
+        src: '内閣府「<a href="https://www.bousai.go.jp/kyoiku/week/bousaiweek.html" target="_blank" rel="noopener">「防災の日」及び「防災週間」について</a>」（昭和57年5月11日閣議了解）'
+      },
+      {
+        id: "b-taiken", title: "171は、体験利用の日がある",
+        body: "<p>使い方は、使ってみないと覚えられません。" +
+              "災害用伝言ダイヤル（171）と災害用伝言板（web171）には、" +
+              "<strong>体験利用できる日</strong>が決まっています。</p>" +
+              "<ul>" +
+              "<li><strong>毎月1日、15日</strong>（00:00〜24:00）</li>" +
+              "<li><strong>正月三が日</strong>（1月1日00:00〜1月3日24:00）</li>" +
+              "<li><strong>防災週間</strong>（8月30日9:00〜9月5日17:00）</li>" +
+              "<li><strong>防災とボランティア週間</strong>（1月15日9:00〜1月21日17:00）</li>" +
+              "</ul>" +
+              "<p>NTT東日本・NTT西日本の電話サービスから録音・再生する場合の" +
+              "<strong>通話料は、体験利用のときも無料</strong>です。" +
+              "（他の通信事業者の電話、携帯電話やPHSから発信する場合の通話料は、各事業者にご確認ください。）</p>" +
+              "<p><strong>家族そろって、一度やってみてください。</strong>" +
+              "「どの番号を鍵にするか」が本当に共有できているか、そこで分かります。</p>",
+        src: 'NTT東日本「<a href="https://www.ntt-east.co.jp/saigai/voice171s/howto.html" target="_blank" rel="noopener">災害用伝言ダイヤル（171）体験利用のご案内</a>」',
+        share: "月に一度の体験利用日を、家族のカレンダーに入れておく。5分で終わります。"
+      },
+      {
+        id: "b-kaeru", title: "家族が変われば、必要量も変わる",
+        body: "<p>このページの計算は、<strong>人数と日数を変えるだけ</strong>で出し直せます。</p>" +
+              "<p>見直すきっかけになるのは、こういうときです。</p>" +
+              "<ul>" +
+              "<li>子どもが生まれた、離乳食に移った、ミルクが要らなくなった</li>" +
+              "<li>家族が独立した、親と同居を始めた</li>" +
+              "<li>引っ越した（ハザードマップから見直しです）</li>" +
+              "<li>ペットを迎えた</li>" +
+              "<li>誰かに持病ができた、薬が増えた</li>" +
+              "</ul>" +
+              "<p><strong>3日分からでかまいません。</strong>" +
+              "1週間分に届いていなくても、3日分ある家と、何もない家では、起きることがまったく違います。</p>"
+      }
+    ]
+  }
+];
+
+/* ============================================================
+   保存まわり（localStorage が使えなくてもページは動く）
+   ============================================================ */
+
+var KEY_CALC  = "bousai.calc.v1";
+var KEY_STOCK = "bousai.stock.v1";
+var KEY_TH    = "bousai.theme.v1";
+
+function loadRaw(k, fb) {
+  try {
+    var v = localStorage.getItem(k);
+    return v === null || v === undefined ? fb : v;
+  } catch (e) { return fb; }
+}
+function saveRaw(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+function loadJSON(k) {
+  var s = loadRaw(k, null);
+  if (typeof s !== "string" || !s) return null;
+  try { return JSON.parse(s); } catch (e) { return null; }
+}
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var state = {
+  calc: { adults: 2, kids: 0, babies: 0, days: 3, pets: false },
+  stock: [],
+  stage: 0
+};
+
+(function restore() {
+  var c = loadJSON(KEY_CALC);
+  if (c && typeof c === "object") {
+    state.calc.adults = toCount(c.adults);
+    state.calc.kids   = toCount(c.kids);
+    state.calc.babies = toCount(c.babies);
+    state.calc.days   = toDays(c.days);
+    state.calc.pets   = !!c.pets;
+  }
+  state.stock = sanitizeStock(loadJSON(KEY_STOCK));
+})();
+
+/* ============================================================
+   ① 必要量の計算
+   ============================================================ */
+
+var elAdults = document.getElementById("adults");
+var elKids   = document.getElementById("kids");
+var elBabies = document.getElementById("babies");
+var elPet    = document.getElementById("petChk");
+var elDaySeg = document.getElementById("daySeg");
+var elBody   = document.getElementById("calcBody");
+var elHead   = document.getElementById("headline");
+var elSub    = document.getElementById("headSub");
+var elCalcSrc = document.getElementById("calcSrc");
+
+var CALC_SRC =
+  '水は首相官邸「<a href="https://www.kantei.go.jp/jp/headline/bousai/sonae.html" target="_blank" rel="noopener">災害が起きる前にできること</a>」' +
+  '（1人1日3リットル・3日分、大規模災害時は1週間分）。' +
+  '主食の食数は農林水産省「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter06.html" target="_blank" rel="noopener">食品ストックガイド（6）</a>」' +
+  'の「水1リットル＋調理不要な非常食3食」（1日分）から1日3食で計算。' +
+  'カセットボンベは同「<a href="https://www.maff.go.jp/j/zyukyu/foodstock/chapter07.html" target="_blank" rel="noopener">（7）熱源を確保しよう</a>」' +
+  '（1人／1週間当たり約6本）。' +
+  '非常用トイレは内閣府（防災担当）「<a href="https://www.bousai.go.jp/taisaku/hinanjo/pdf/2412hinanjo_toilet_guideline.pdf" target="_blank" rel="noopener">避難所におけるトイレの確保・管理ガイドライン</a>」' +
+  '（排泄の回数は5回が平均的）。' +
+  'トイレットペーパーは経済産業省「<a href="https://journal.meti.go.jp/60sec/47437/" target="_blank" rel="noopener">METI Journal ONLINE</a>」' +
+  '（一週間で1人1ロール、備蓄は約1か月分）。' +
+  '液体ミルクは内閣府・厚生労働省「<a href="https://www.bousai.go.jp/oyakudachi/pdf/siryo_46.pdf" target="_blank" rel="noopener">災害時における授乳の支援並びに母子に必要となる物資の備蓄及び活用について</a>」' +
+  '別添（0歳児1人1日あたり1ℓ）。' +
+  'ペットは環境省「<a href="https://www.env.go.jp/nature/dobutsu/aigo/2_data/pamph/h3009a/a-1b.pdf" target="_blank" rel="noopener">人とペットの災害対策ガイドライン〈一般飼い主編〉</a>」' +
+  '（少なくとも5日分）。';
+
+function renderCalc() {
+  var r = calcStock(state.calc);
+
+  if (r.empty) {
+    elHead.textContent = "人数を入れてください";
+    elSub.textContent = "";
+    elBody.innerHTML = '<tr><td colspan="2" style="color:var(--muted);font-weight:400;font-size:12.5px">' +
+                       "大人・子ども・0歳児のどこかに、1以上の数を入れると表が出ます。</td></tr>";
+    elCalcSrc.innerHTML = "";
+    return;
+  }
+
+  elHead.textContent = r.people + "人 × " + r.days + "日分";
+  var who = [];
+  if (r.adults) who.push("大人" + r.adults);
+  if (r.kids)   who.push("子ども" + r.kids);
+  if (r.babies) who.push("0歳児" + r.babies);
+  elSub.textContent = who.join("・") + (r.pets ? "・ペットあり" : "");
+
+  var h = "";
+  var lastGroup = "";
+  for (var i = 0; i < r.rows.length; i++) {
+    var row = r.rows[i];
+    if (row.group !== lastGroup) {
+      h += '<tr class="hd"><td colspan="2">' + esc(row.group) + "</td></tr>";
+      lastGroup = row.group;
+    }
+    h += "<tr><td>" + esc(row.name) + "</td>";
+    if (row.text) {
+      h += '<td class="q txt">' + esc(row.qty) + "</td></tr>";
+    } else {
+      h += '<td class="q">' + esc(row.qty) +
+           (row.memo ? "<em>" + esc(row.memo) + "</em>" : "") + "</td></tr>";
+    }
+  }
+  elBody.innerHTML = h;
+  elCalcSrc.innerHTML = CALC_SRC;
+}
+
+function readCalcInputs() {
+  state.calc.adults = toCount(elAdults.value);
+  state.calc.kids   = toCount(elKids.value);
+  state.calc.babies = toCount(elBabies.value);
+  state.calc.pets   = !!elPet.checked;
+  saveRaw(KEY_CALC, JSON.stringify(state.calc));
+  renderCalc();
+}
+
+function syncCalcInputs() {
+  elAdults.value = state.calc.adults;
+  elKids.value   = state.calc.kids;
+  elBabies.value = state.calc.babies;
+  elPet.checked  = state.calc.pets;
+  var bs = elDaySeg.querySelectorAll("button");
+  for (var i = 0; i < bs.length; i++) {
+    bs[i].setAttribute("aria-pressed", +bs[i].getAttribute("data-days") === state.calc.days ? "true" : "false");
+  }
+}
+
+elAdults.addEventListener("input", readCalcInputs);
+elKids.addEventListener("input", readCalcInputs);
+elBabies.addEventListener("input", readCalcInputs);
+elAdults.addEventListener("change", function () { syncCalcInputs(); readCalcInputs(); });
+elKids.addEventListener("change", function () { syncCalcInputs(); readCalcInputs(); });
+elBabies.addEventListener("change", function () { syncCalcInputs(); readCalcInputs(); });
+elPet.addEventListener("change", readCalcInputs);
+
+elDaySeg.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest("button") : null;
+  if (!b) return;
+  state.calc.days = toDays(b.getAttribute("data-days"));
+  syncCalcInputs();
+  readCalcInputs();
+});
+
+/* ============================================================
+   ② ローリングストックの期限管理
+   ============================================================ */
+
+var elName = document.getElementById("itName");
+var elQty  = document.getElementById("itQty");
+var elDate = document.getElementById("itDate");
+var elAdd  = document.getElementById("addBtn");
+var elMsg  = document.getElementById("stockMsg");
+var elList = document.getElementById("stockList");
+var elSum  = document.getElementById("stockSum");
+
+function saveStock() {
+  saveRaw(KEY_STOCK, JSON.stringify(state.stock));
+}
+
+function renderStock() {
+  var base = today0();
+
+  if (!state.stock.length) {
+    elList.innerHTML = '<p class="empty">まだ何も入っていません。' +
+      "買った日に、品名と期限を1行だけ入れてください。<br>" +
+      "期限が近い順に並び、切れそうなものの色が変わります。</p>";
+    elSum.textContent = "";
+    return;
+  }
+
+  var counts = { over: 0, soon: 0, mid: 0, far: 0 };
+  var h = "";
+  for (var i = 0; i < state.stock.length; i++) {
+    var it = state.stock[i];
+    var c = classifyDue(it.date, base);
+    if (!c) continue;
+    counts[c.kind]++;
+    h += '<div class="srow">';
+    h += '<div class="sbadge sb-' + c.kind + '"><b>' + esc(c.when) + "</b>" + esc(c.label) + "</div>";
+    h += '<div class="sname">' + esc(it.name) + (it.qty ? "　" + esc(it.qty) : "") +
+         "<span>" + fmtJP(c.date) + " まで</span></div>";
+    h += '<button class="del" type="button" data-del="' + esc(it.id) +
+         '" aria-label="' + esc(it.name) + ' を消す">消す</button>';
+    h += "</div>";
+  }
+  elList.innerHTML = h;
+
+  var parts = [];
+  if (counts.over) parts.push("<strong>期限切れ " + counts.over + "件</strong>");
+  if (counts.soon) parts.push("30日以内 " + counts.soon + "件");
+  if (counts.mid)  parts.push("90日以内 " + counts.mid + "件");
+  elSum.innerHTML = parts.length
+    ? parts.join("　／　") + "　（全" + state.stock.length + "件）"
+    : "全" + state.stock.length + "件。当面、期限の近いものはありません。";
+}
+
+function addItem() {
+  var name = String(elName.value || "").replace(/\s+/g, " ").replace(/^ | $/g, "").slice(0, 40);
+  var qty  = String(elQty.value || "").replace(/^\s+|\s+$/g, "").slice(0, 20);
+  var date = String(elDate.value || "");
+
+  if (!name) { elMsg.textContent = "品名を入れてください。"; elName.focus(); return; }
+  if (!parseDate(date)) { elMsg.textContent = "期限の日付を入れてください。"; elDate.focus(); return; }
+  if (state.stock.length >= 200) { elMsg.textContent = "登録できるのは200件までです。古いものを消してください。"; return; }
+
+  state.stock.push({
+    id: "i" + Date.now() + "_" + Math.floor(Math.random() * 100000),
+    name: name, qty: qty, date: date
+  });
+  state.stock = sanitizeStock(state.stock);
+  saveStock();
+
+  elName.value = "";
+  elQty.value = "";
+  elMsg.textContent = "";
+  renderStock();
+  elName.focus();
+}
+
+elAdd.addEventListener("click", addItem);
+elName.addEventListener("keydown", function (e) { if (e.key === "Enter") addItem(); });
+elQty.addEventListener("keydown", function (e) { if (e.key === "Enter") addItem(); });
+
+elList.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".del") : null;
+  if (!b) return;
+  var id = b.getAttribute("data-del");
+  var next = [];
+  for (var i = 0; i < state.stock.length; i++) {
+    if (state.stock[i].id !== id) next.push(state.stock[i]);
+  }
+  state.stock = next;
+  saveStock();
+  renderStock();
+});
+
+/* ============================================================
+   読みものの描画
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         "<b>" + esc(s.chip) + "</b>" + esc(s.chipSub) + "</button>";
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(t) {
+  var h = '<div class="task" data-task="' + esc(t.id) + '">';
+  h += '<div class="task-head"><div class="task-title">' + esc(t.title) + "</div></div>";
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+  if (t.share) h += '<div class="share"><b>家族で決めておけること</b>' + esc(t.share) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = parseInt(b.getAttribute("data-i"), 10) || 0;
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+/* ============================================================
+   配色
+   ============================================================ */
+
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(loadRaw(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  saveRaw(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化。どこかで転んでも、ページ全体は白くならないようにする
+   ============================================================ */
+
+try { syncCalcInputs(); renderCalc(); } catch (e) {}
+try { renderStock(); } catch (e) {}
+try { buildRail(); renderStage(); } catch (e) {}
+</script>
