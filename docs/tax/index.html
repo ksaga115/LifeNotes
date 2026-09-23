@@ -12,8 +12,17 @@
 <meta property="og:title" content="確定申告ノート">
 <meta property="og:description" content="還付申告、副業の申告、事業所得。何を集めて、いつまでに出すか。期限は自動で数えます。">
 <title>確定申告ノート</title>
+<style>
+html{color-scheme:light dark;background:#F3F3F0}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"]){background:#161917}}
+html[data-theme="dark"]{color-scheme:dark;background:#161917}
+html[data-theme="light"]{color-scheme:light;background:#F3F3F0}
+</style>
+<script>(function(){try{var t=localStorage.getItem('kurashi.theme.v1');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap"></noscript>
 </head>
 <body>
 <style>
@@ -1140,7 +1149,7 @@ var KIT = [
 var KEY_TRACK = "kakutei.track.v1";
 var KEY_YEAR  = "kakutei.year.v1";
 var KEY_CHK   = "kakutei.checks.v1";
-var KEY_TH    = "kakutei.theme.v1";
+var KEY_TH    = "kurashi.theme.v1";
 
 function load(k, fb) {
   try { var v = localStorage.getItem(k); return v === null ? fb : v; }

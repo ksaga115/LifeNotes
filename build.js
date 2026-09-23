@@ -91,6 +91,25 @@ const OG_DESC = "広告も関連記事もない、暮らしの手続きのノー
 
 /* publish ラッパが入れていたリセット相当。とくに [hidden] は el.hidden で
    表示を切り替えているので必須。 */
+/* head に入れる最小限。ページを移ったときの「真っ白な一瞬」を消すためのもの。
+   (1) 本体の CSS は <body> 側にあるので、最初の描画に間に合うよう背景色だけ head で決める
+   (2) 保存された配色を、描画される前に <html> へ当てる（あとから当てると一瞬ちらつく）
+   背景色は _base.css の --ground と同じ値。片方だけ変えるとここがズレる。 */
+const GROUND_LIGHT = "#F3F3F0";
+const GROUND_DARK  = "#161917";
+const HEAD_BOOT = [
+  "<style>",
+  "html{color-scheme:light dark;background:" + GROUND_LIGHT + "}",
+  '@media (prefers-color-scheme:dark){html:not([data-theme="light"]){background:' + GROUND_DARK + "}}",
+  'html[data-theme="dark"]{color-scheme:dark;background:' + GROUND_DARK + "}",
+  'html[data-theme="light"]{color-scheme:light;background:' + GROUND_LIGHT + "}",
+  "</style>",
+  "<script>(function(){try{var t=localStorage.getItem('kurashi.theme.v1');" +
+  "if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();" +
+  "<" + "/script>",
+  "",
+].join("\n");
+
 /* 全ノート共通のスタイル。各ソースの <style> 内の %%CSS%% に差し込む */
 const BASE_CSS = fs.readFileSync(path.join(SRC, "_base.css"), "utf8").trim();
 
@@ -121,7 +140,17 @@ function wrap(rawBody, opt) {
   /* フォントの <link> を head に移す */
   const links = [];
   body = body.replace(/^[ \t]*<link [^>]*>[ \t]*\r?\n/gm, function (m) {
-    links.push(m.trim());
+    const tag = m.trim();
+    const href = (tag.match(/href="([^"]+)"/) || [])[1];
+    /* stylesheet をそのまま head に置くと描画をブロックする。日本語ウェブフォントは重いので、
+       ページを移るたび「真っ白な一瞬」ができる。media="print" で読み込んで onload で有効化する。 */
+    if (/rel="stylesheet"/.test(tag) && href) {
+      links.push('<link rel="preload" as="style" href="' + href + '">');
+      links.push('<link rel="stylesheet" href="' + href + '" media="print" onload="this.media=\'all\'">');
+      links.push('<noscript><link rel="stylesheet" href="' + href + '"></noscript>');
+    } else {
+      links.push(tag);
+    }
     return "";
   });
 
@@ -148,6 +177,7 @@ function wrap(rawBody, opt) {
     '<meta property="og:title" content="' + esc(title) + '">\n' +
     '<meta property="og:description" content="' + esc(desc) + '">\n' +
     "<title>" + esc(title) + "</title>\n" +
+    HEAD_BOOT +
     links.join("\n") + (links.length ? "\n" : "") +
     "</head>\n<body>\n" +
     body.trim() +

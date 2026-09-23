@@ -697,7 +697,7 @@ var MILESTONES = [
 
 var KEY_DATE = "okuyami.date.v1";
 var KEY_CHK  = "okuyami.checks.v1";
-var KEY_TH   = "okuyami.theme.v1";
+var KEY_TH   = "kurashi.theme.v1";
 
 function load(k, fb) {
   try { var v = localStorage.getItem(k); return v === null ? fb : v; }
@@ -990,6 +990,7 @@ var themeBtn = document.getElementById("themeBtn");
 function applyTheme(t) {
   if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
   else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
 }
 applyTheme(load(KEY_TH, ""));
 themeBtn.addEventListener("click", function () {
@@ -997,7 +998,6 @@ themeBtn.addEventListener("click", function () {
   var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
   applyTheme(next);
   save(KEY_TH, next);
-  themeBtn.textContent = next === "" ? "配色" : (next === "light" ? "明るい" : "暗い");
 });
 
 /* ============================================================
