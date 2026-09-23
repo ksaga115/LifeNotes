@@ -104,6 +104,15 @@ const NOTES = [
     group: "sudden",
   },
   {
+    src: "hisai.html",
+    slug: "recovery",
+    title: "被災したあとのノート",
+    dist: "被災したあとのノート.html",
+    desc: "片づける前に写真を撮る。罹災証明書、支援金、保険、住まい、税。防災備蓄ノートの「起きたあと」編。",
+    ready: true,
+    group: "sudden",
+  },
+  {
     src: "rikon.html",
     slug: "divorce",
     title: "離婚のノート",
