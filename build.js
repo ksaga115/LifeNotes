@@ -30,7 +30,14 @@ const NOTES = [
     desc: "身近な人が亡くなったあとの手続きを、期限の順に。死亡届の7日から、相続登記の3年まで。",
     ready: true,
   },
-  { slug: "care",     title: "介護のノート",     desc: "親の介護が始まったら。相談から認定、ケアプラン、費用まで。", ready: false },
+  {
+    src: "kaigo.html",
+    slug: "care",
+    title: "介護のノート",
+    dist: "介護のノート.html",
+    desc: "親の介護が始まったら。まず地域包括支援センターへ。認定、ケアプラン、費用、仕事との両立まで。",
+    ready: true,
+  },
   { slug: "leaving",  title: "退職のノート",     desc: "退職日から。健康保険、年金、失業給付、住民税、確定申告。", ready: false },
   { slug: "tax",      title: "確定申告ノート",   desc: "還付申告、副業の申告、事業所得。何を集めて、いつ出すか。", ready: false },
   { slug: "disaster", title: "防災の備蓄ノート", desc: "家族構成から必要量を出して、期限を追う。", ready: false },
@@ -56,6 +63,9 @@ const OG_DESC = "広告も関連記事もない、暮らしの手続きのノー
 
 /* publish ラッパが入れていたリセット相当。とくに [hidden] は el.hidden で
    表示を切り替えているので必須。 */
+/* 全ノート共通のスタイル。各ソースの <style> 内の %%CSS%% に差し込む */
+const BASE_CSS = fs.readFileSync(path.join(SRC, "_base.css"), "utf8").trim();
+
 const RESET = [
   "html{color-scheme:light dark}",
   ":root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}",
@@ -72,12 +82,23 @@ function wrap(rawBody, opt) {
   /* 索引への戻り先を、この出力先での行き先に差し替える */
   if (opt && opt.homeHref) body = body.split("%%HOME%%").join(opt.homeHref);
 
+  /* ノート間リンク %%NOTE:slug%% を、この出力先での行き先に差し替える
+     （docs は ../<slug>/、dist はファイル名。どちらかに片寄らせると必ず片方が壊れる） */
+  body = body.replace(/%%NOTE:([a-z-]+)%%/g, function (m, slug) {
+    var n = NOTES.filter(function (x) { return x.slug === slug; })[0];
+    if (!n || !n.ready) return opt && opt.docs ? "../" : "くらしのノート.html";
+    return opt && opt.docs ? "../" + n.slug + "/" : encodeURI(n.dist);
+  });
+
   /* フォントの <link> を head に移す */
   const links = [];
   body = body.replace(/^[ \t]*<link [^>]*>[ \t]*\r?\n/gm, function (m) {
     links.push(m.trim());
     return "";
   });
+
+  /* 共通のスタイルシートを流し込む（src/_base.css。ノート間でズレないよう1か所で持つ） */
+  body = body.split("%%CSS%%").join(BASE_CSS);
 
   /* ページ自身の CSS の手前にリセットを差し込む */
   body = body.replace("<style>", "<style>\n" + RESET + "\n");
@@ -149,7 +170,7 @@ write(path.join(DOCS, "index.html"), indexHTML(true));
 for (const n of NOTES) {
   if (!n.ready) continue;
   const raw = fs.readFileSync(path.join(SRC, n.src), "utf8");
-  write(path.join(DOCS, n.slug, "index.html"), wrap(raw, { homeHref: "../", desc: n.desc }));
+  write(path.join(DOCS, n.slug, "index.html"), wrap(raw, { homeHref: "../", desc: n.desc, docs: true }));
 }
 fs.writeFileSync(path.join(DOCS, ".nojekyll"), "");
 
@@ -158,5 +179,5 @@ write(path.join(DIST, "くらしのノート.html"), indexHTML(false));
 for (const n of NOTES) {
   if (!n.ready) continue;
   const raw = fs.readFileSync(path.join(SRC, n.src), "utf8");
-  write(path.join(DIST, n.dist), wrap(raw, { homeHref: "くらしのノート.html", desc: n.desc }));
+  write(path.join(DIST, n.dist), wrap(raw, { homeHref: "くらしのノート.html", desc: n.desc, docs: false }));
 }

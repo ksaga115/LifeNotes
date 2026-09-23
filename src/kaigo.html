@@ -1,0 +1,930 @@
+<title>介護のノート</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<style>
+%%CSS%%
+
+/* ---------- このノート固有 ---------- */
+
+/* 2つ目の日付（認定の有効期間） */
+.sub-date{margin-top:14px;border-top:1px solid var(--line-2);padding-top:12px}
+.sub-date h4{font-size:12px;letter-spacing:.1em;color:var(--muted);font-weight:500;font-family:var(--body);margin:0}
+
+/* 限度額の表 */
+.lim{width:100%;border-collapse:collapse;margin:8px 0 4px;font-size:13px}
+.lim th,.lim td{padding:5px 8px;border-bottom:1px solid var(--line-2);text-align:left}
+.lim th{font-weight:500;color:var(--muted);font-size:11.5px;letter-spacing:.06em}
+.lim td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.lim tr:last-child td{border-bottom:0}
+</style>
+
+<div class="bar">
+  <div class="bar-in">
+    <span class="mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path d="M9 15.2s-5.6-3.3-5.6-7.2a2.9 2.9 0 015.6-1.1A2.9 2.9 0 0114.6 8c0 3.9-5.6 7.2-5.6 7.2z"
+              fill="none" stroke="currentColor" stroke-width="1.35" stroke-linejoin="round" opacity=".75"/>
+      </svg>
+      介護のノート
+    </span>
+    <span class="spacer"></span>
+    <a class="ghost" href="%%HOME%%" style="text-decoration:none">一覧</a>
+    <button class="ghost" id="themeBtn" type="button">配色</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <p class="lede">
+    親や家族の介護が始まったとき、<strong>どこに相談して、何から申請するか</strong>を順番に並べたノートです。
+    申請した日を入れると、認定の通知が来る目安がわかります。
+    広告も関連記事もありません。入れた日付とチェックは、この端末の中にだけ保存されます。
+  </p>
+
+  <!-- 今日 -->
+  <section class="today">
+    <div class="eyebrow">きょうの位置</div>
+    <div class="today-main">
+      <div class="today-day" id="dayBig">日付を入れてください</div>
+      <div class="today-sub" id="daySub"></div>
+    </div>
+    <div class="setup">
+      <input type="date" id="dateIn" aria-label="要介護認定を申請した日">
+      <button class="solid" id="setBtn" type="button">申請した日</button>
+      <button class="ghost" id="clearBtn" type="button" hidden>消す</button>
+    </div>
+    <p class="hint" id="hint">
+      まだ申請していなければ、相談した日でもかまいません。日付はこの端末にだけ保存されます。
+    </p>
+
+    <div class="nextup" id="nextup">
+      <h4>認定の通知</h4>
+      <div id="nextList"></div>
+    </div>
+
+    <div class="sub-date">
+      <h4>認定の有効期間が終わる日（認定結果の通知書に書いてあります）</h4>
+      <div class="setup">
+        <input type="date" id="endIn" aria-label="認定の有効期間が終わる日">
+        <button class="solid" id="endBtn" type="button">入れる</button>
+        <button class="ghost" id="endClear" type="button" hidden>消す</button>
+      </div>
+      <div id="endOut"></div>
+    </div>
+  </section>
+
+  <!-- 最初に読む -->
+  <div class="warn">
+    <b>最初にすること、ひとつだけ</b>
+    <strong>地域包括支援センターに電話する。</strong>これだけです。
+    介護保険のことも、認知症のことも、お金のことも、まずここが引き受けてくれます。
+    <strong>相談は無料です。要介護認定を受けていなくても、家族だけでも相談できます。</strong>
+    「（お住まいの市区町村名） 地域包括支援センター」で調べれば、担当の地区のセンターが出てきます。
+    自分だけで調べて疲れきる前に、かけてください。
+  </div>
+
+  <!-- レール -->
+  <div class="rail-wrap">
+    <div class="rail-head">
+      <h2>順番にすること</h2>
+      <span class="eyebrow">← 横にスクロール</span>
+    </div>
+    <div class="rail" id="rail" role="tablist" aria-label="段階"></div>
+    <div id="stageHost"></div>
+  </div>
+
+  <!-- 相談先 -->
+  <section class="sec">
+    <h2>迷ったときの相談先</h2>
+    <p class="note">どこに聞けばいいかわからない、が一番よくあるつまずきです。</p>
+    <div class="help">
+      <dl>
+        <dt>地域包括支援センター</dt>
+        <dd>市町村が設置主体となり、保健師・社会福祉士・主任介護支援専門員等を配置して、
+          地域の住民の相談をまとめて受ける窓口です。介護保険の申請の代行もしてくれます。
+          迷ったら、ここに電話するのが最短です。</dd>
+        <dt>市区町村の介護保険担当課</dt>
+        <dd>要介護認定の申請、保険料、負担割合証、高額介護サービス費、住宅改修の事前申請。
+          制度そのものの手続きはここです。</dd>
+        <dt>ケアマネジャー（介護支援専門員）</dt>
+        <dd>サービスが始まったあとは、まずケアマネに相談してください。
+          サービスの調整だけでなく、「そろそろ限界かもしれない」という話もしていい相手です。</dd>
+        <dt>認知症の相談</dt>
+        <dd>認知症疾患医療センター、認知症初期集中支援チーム（地域包括支援センター経由）、
+          各地の認知症の人と家族の会。診断前でも相談できます。</dd>
+        <dt>会社の人事・労務</dt>
+        <dd>令和7年4月1日から、介護に直面したと申し出た労働者に対して、
+          会社は制度の個別周知と意向確認をすることが義務になりました。
+          言い出しにくくても、制度上は会社が説明する側です。</dd>
+        <dt>ハローワーク</dt>
+        <dd>介護休業給付金の支給申請。手続きは会社経由が原則ですが、本人が行うこともできます。</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- このページについて -->
+  <section class="sec">
+    <h2>このページについて</h2>
+    <div class="help">
+      <p style="margin:0 0 10px">
+        ここに書いてあるのは<strong>制度の一般的な仕組みと、全国共通の基準</strong>です。
+        実際に受けられるサービス、事業所の空き、窓口の名前、保険料や自己負担の額は、
+        <strong>お住まいの市区町村によってかなり変わります。</strong>
+      </p>
+      <p style="margin:0 0 10px">
+        とくに<strong>費用は「何割負担か」「どのサービスをどれだけ使うか」「地域区分」で変わります。</strong>
+        このページの金額は国が定めた基準額で、実際の請求額ではありません。
+        正確な見込みは、ケアマネジャーか市区町村に出してもらってください。
+      </p>
+      <p style="margin:0">
+        制度・金額・期限は<strong>厚生労働省</strong>で確認して書き、その項目に出典リンクを置いています。
+        出典のない記述は、進め方の提案です。
+      </p>
+    </div>
+  </section>
+
+  <!-- 出典 -->
+  <section class="sources">
+    <h2>このページの出典</h2>
+    <ul>
+      <li>厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/flow.html" target="_blank" rel="noopener">サービス利用までの流れ</a>／<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/fee.html" target="_blank" rel="noopener">サービスにかかる利用料</a>／<a href="https://www.kaigokensaku.mhlw.go.jp/publish/group22.html" target="_blank" rel="noopener">特定福祉用具販売</a></li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/nintei/index.html" target="_blank" rel="noopener">要介護認定</a>」／「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/nintei/gaiyo4.html" target="_blank" rel="noopener">要介護認定に係る法令</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/content/12300000/001671185.pdf" target="_blank" rel="noopener">地域包括支援センターについて</a>」</li>
+      <li>厚生労働省「<a href="https://www.mhlw.go.jp/web/t_doc?dataId=00ta4385&amp;dataType=1&amp;pageNo=1" target="_blank" rel="noopener">居宅介護住宅改修費及び介護予防住宅改修費の支給について（老企第42号）</a>」</li>
+      <li>厚生労働省 介護休業制度特設サイト「<a href="https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/kaigo/leave/" target="_blank" rel="noopener">介護休業</a>」／「<a href="https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/kaigo/shorttime-leave/" target="_blank" rel="noopener">介護休暇</a>」／「<a href="https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/kaigo/law-amendment/" target="_blank" rel="noopener">法改正のポイント</a>」</li>
+      <li>ハローワーク「<a href="https://www.hellowork.mhlw.go.jp/doc/kaigokyuugyou.pdf" target="_blank" rel="noopener">介護休業給付の内容及び支給申請手続について</a>」</li>
+    </ul>
+  </section>
+
+  <footer>
+    このページは個人が作っているものです。広告もアクセス解析も入っていません。<br>
+    入力した日付とチェックは、ブラウザの中（localStorage）にだけ保存され、サーバーには送られません。<br>
+    実際の判断は、地域包括支援センター・市区町村・ケアマネジャーの案内を優先してください。
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   データ
+   src: 一次情報で裏が取れているもの。リンクを必ず添える
+   （src のない記述は「進め方の提案」であって、制度の断定ではない）
+   ============================================================ */
+
+var STAGES = [
+  {
+    id: "k1", phase: "p1", chip: "まず相談", chipSub: "0日目",
+    tag: "はじめに",
+    title: "地域包括支援センターに電話する",
+    lead: "介護は、調べれば調べるほど選択肢が増えて動けなくなります。" +
+          "<strong>最初にすることは1つだけで、それは自力で調べることではありません。</strong>",
+    tasks: [
+      {
+        id: "k-houkatsu", title: "地域包括支援センターに電話する",
+        body: "<p>市町村が設置主体となり、<strong>保健師・社会福祉士・主任介護支援専門員等を配置して</strong>、" +
+              "地域の住民の健康の保持および生活の安定のために必要な援助を行う窓口です。" +
+              "全国に4,328か所あり、担当する地区が決まっています。</p>" +
+              "<p>相談は無料です。要介護認定を受けていなくても、" +
+              "本人がまだ「介護が必要」と認めていなくても、家族だけで相談できます。" +
+              "要介護認定の申請の代行もしてくれます。</p>" +
+              "<p>「（市区町村名） 地域包括支援センター」で調べると、住所ごとの担当センターの一覧が出ます。</p>",
+        where: "<b>探し方</b>　市区町村のサイト、または厚生労働省の介護サービス情報公表システム",
+        src: '厚生労働省「<a href="https://www.mhlw.go.jp/content/12300000/001671185.pdf" target="_blank" rel="noopener">地域包括支援センターについて</a>」',
+        share: "電話する係を1人決めてしまうこと。全員が別々に調べ始めると、話が合わなくなります。"
+      },
+      {
+        id: "k-hanasu", title: "何を話せばいいか",
+        body: "<p>うまく説明できなくて大丈夫です。向こうが聞き出してくれます。" +
+              "わかる範囲でこれだけ用意しておくと早いです。</p>" +
+              "<ul>" +
+              "<li>本人の年齢、住んでいる場所、ひとり暮らしかどうか</li>" +
+              "<li><strong>困っていることを、具体的な場面で</strong>（「認知症かも」より" +
+              "「同じものを何度も買ってくる」「風呂に入らなくなった」「夜中に電話してくる」）</li>" +
+              "<li>かかっている病院と病名</li>" +
+              "<li>家族がどこに住んでいて、どれくらい関われるか</li>" +
+              "</ul>" +
+              "<p><strong>「まだそこまでじゃない」と思っても、早すぎることはありません。</strong>" +
+              "倒れてから動き始めると、選ぶ時間がなくなります。</p>",
+        share: "気づいたことを日付つきでメモしておくと、認定調査のときにそのまま使えます。"
+      },
+      {
+        id: "k-shuji", title: "かかりつけ医を確かめておく",
+        body: "<p>要介護認定には<strong>主治医意見書</strong>が要ります。市区町村が主治医に依頼するので、" +
+              "申請のときに医師の名前と医療機関を書きます。</p>" +
+              "<p>かかりつけ医がいない場合は、まず受診して作っておく必要があります。" +
+              "しばらく病院に行っていない人ほど、ここで止まります。" +
+              "健康診断でもいいので、一度どこかにかかっておいてください。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "k2", phase: "p1", chip: "申請", chipSub: "市区町村へ",
+    tag: "手続き",
+    title: "要介護認定を申請する",
+    lead: "申請しないと、介護保険のサービスは1割負担では使えません。" +
+          "申請そのものは紙1枚で、代行もしてもらえます。",
+    tasks: [
+      {
+        id: "k-shinsei", title: "要介護認定を申請する",
+        body: "<p>お住まいの市区町村の窓口で申請します。" +
+              "地域包括支援センターや居宅介護支援事業者に代行してもらうこともできます。" +
+              "本人が行けなくても、家族が申請できます。</p>" +
+              "<p><strong>費用はかかりません。</strong>結果が「非該当」でも、不利になることはありません。</p>",
+        where: "<b>出す先</b>　お住まいの市区町村の窓口<br>" +
+               "<b>持ちもの</b>　介護保険被保険者証（65歳以上の方に交付されています）。" +
+               "40〜64歳の場合は医療保険証",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/flow.html" target="_blank" rel="noopener">サービス利用までの流れ</a>'
+      },
+      {
+        id: "k-40", title: "40〜64歳の人が申請するとき",
+        body: "<p>介護保険の被保険者は2つに分かれます。</p>" +
+              "<ul>" +
+              "<li><strong>第1号被保険者（65歳以上）</strong>　原因を問わず、介護が必要と認定されれば使えます</li>" +
+              "<li><strong>第2号被保険者（40〜64歳）</strong>　" +
+              "加齢に伴う<strong>特定疾病</strong>が原因の場合に限られます（末期がん、若年性認知症、" +
+              "関節リウマチ、脳血管疾患、パーキンソン病関連疾患など16疾病）</li>" +
+              "</ul>" +
+              "<p>40〜64歳で介護が必要になった場合、まず病名が特定疾病に当たるかを確認してください。" +
+              "当たらない場合は、障害福祉サービスなど別の制度になります。地域包括支援センターに相談を。</p>",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/flow.html" target="_blank" rel="noopener">サービス利用までの流れ</a>'
+      }
+    ]
+  },
+
+  {
+    id: "k3", phase: "p1", chip: "認定調査", chipSub: "原則30日",
+    tag: "調査と判定",
+    title: "認定調査と、主治医意見書",
+    lead: "申請すると、調査員が来ます。<strong>ここが結果を大きく左右します。</strong>" +
+          "立ち会えるなら、必ず立ち会ってください。",
+    tasks: [
+      {
+        id: "k-chousa", title: "認定調査に立ち会う", due: "申請後まもなく", soft: true,
+        body: "<p>市区町村等の調査員が自宅や施設等を訪問して、心身の状態を確認するための認定調査を行います。" +
+              "同時に、市区町村が主治医に主治医意見書を依頼します。</p>" +
+              "<p><strong>立ち会いをおすすめする理由</strong>：本人は、他人の前ではしっかりして見えます。" +
+              "「できますか」と聞かれると「できます」と答えます。" +
+              "実際には週に何回失敗しているか、夜はどうか、目を離すと何が起きるか——" +
+              "これは家族しか知りません。</p>" +
+              "<p>本人の前で言いにくいことは、<strong>あらかじめ紙に書いて調査員に渡す</strong>ことができます。" +
+              "日付つきの具体的な出来事を並べておくと伝わります。" +
+              "調査員に「別室で少し話したい」と伝えてもかまいません。</p>",
+        share: "ふだん介助している人が立ち会うのが一番です。遠方の家族はメモを送る形で参加できます。"
+      },
+      {
+        id: "k-hantei", title: "一次判定・二次判定", due: "原則30日以内", hard: true,
+        body: "<p>調査結果と主治医意見書の一部の項目はコンピューターに入力され、" +
+              "全国一律の判定方法で要介護度の判定が行われます（<strong>一次判定</strong>）。" +
+              "その結果と主治医意見書に基づき、保健・医療・福祉の学識経験者で構成される" +
+              "<strong>介護認定審査会</strong>が審査判定を行います（<strong>二次判定</strong>）。</p>" +
+              "<p><strong>申請から認定の通知までは原則30日以内に行われます。</strong>" +
+              "30日を過ぎそうなときは、市区町村から見込みの通知が来ます。" +
+              "音沙汰がないまま過ぎたら、問い合わせてかまいません。</p>",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/flow.html" target="_blank" rel="noopener">サービス利用までの流れ</a>'
+      },
+      {
+        id: "k-zanteki", title: "結果を待たずにサービスを使いたいとき",
+        body: "<p>退院が決まっている、介護がすでに限界、といった場合、" +
+              "<strong>認定結果を待たずにサービスを使い始める方法</strong>があります" +
+              "（暫定ケアプランによる利用）。</p>" +
+              "<p>ただし、認定結果が想定より軽かった場合や非該当だった場合、" +
+              "限度額を超えた分は全額自己負担になります。使う前に必ず、" +
+              "ケアマネジャーか地域包括支援センターにリスクを確認してください。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "k4", phase: "p1", chip: "認定結果", chipSub: "7段階",
+    tag: "結果",
+    title: "認定結果が届いたら",
+    lead: "結果の通知書には、<strong>要介護度</strong>と<strong>有効期間</strong>が書いてあります。" +
+          "この2つを、家族で共有できる場所に控えておいてください。",
+    tasks: [
+      {
+        id: "k-kubun", title: "要支援1・2／要介護1〜5／非該当",
+        body: "<p>認定は<strong>要支援1・2から要介護1〜5までの7段階および非該当</strong>に分かれています。" +
+              "数字が大きいほど、使えるサービスの上限額が大きくなります。</p>" +
+              "<p><strong>非該当だった場合も、何も使えないわけではありません。</strong>" +
+              "市区町村の総合事業（介護予防・日常生活支援総合事業）や、" +
+              "配食、見守り、通いの場などの一般施策が使えることがあります。" +
+              "地域包括支援センターに「非該当でしたが」と伝えて相談してください。</p>",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/flow.html" target="_blank" rel="noopener">サービス利用までの流れ</a>'
+      },
+      {
+        id: "k-yuukou", title: "有効期間を控えておく",
+        body: "<p>認定には期限があります。</p>" +
+              "<ul>" +
+              "<li><strong>新規の認定</strong>　原則6か月" +
+              "（市町村が必要と認める場合は、3か月から12か月の間で市町村が定める期間）</li>" +
+              "<li><strong>更新の認定</strong>　原則12か月" +
+              "（市町村が必要と認める場合は、3か月から36か月の間で市町村が定める期間）</li>" +
+              "</ul>" +
+              "<p>期限が切れるとサービスが使えなくなるので、更新の手続きが要ります。" +
+              "たいてい市区町村から案内が届き、ケアマネジャーも気にかけてくれますが、" +
+              "<strong>このページの上に終了日を入れておくと、自分でも把握できます。</strong></p>",
+        src: '厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/nintei/gaiyo4.html" target="_blank" rel="noopener">要介護認定に係る法令</a>」'
+      },
+      {
+        id: "k-fufuku", title: "結果に納得できないとき",
+        body: "<p>実態より軽く出ることは、よくあります。打つ手は2つあります。</p>" +
+              "<ul>" +
+              "<li><strong>区分変更申請</strong>　状態が変わった（または調査時に伝わらなかった）として、" +
+              "改めて認定をやり直してもらう申請。実務ではこちらがよく使われます</li>" +
+              "<li><strong>審査請求</strong>　都道府県の介護保険審査会に不服を申し立てる。" +
+              "結果を知った日の翌日から3か月以内。時間がかかります</li>" +
+              "</ul>" +
+              "<p>どちらが向いているかは状況次第です。まずケアマネジャーか地域包括支援センターに、" +
+              "「この結果は実態と合っていないと思う」と具体的に伝えて相談してください。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "k5", phase: "p2", chip: "ケアプラン", chipSub: "サービス開始",
+    tag: "利用開始",
+    title: "ケアプランをつくる",
+    lead: "認定が出ただけでは、サービスは始まりません。" +
+          "<strong>ケアプラン（介護サービス計画書）</strong>をつくるところから利用が始まります。",
+    tasks: [
+      {
+        id: "k-plan", title: "どこにケアプランを頼むか",
+        body: "<p>要介護度によって、相談先が変わります。</p>" +
+              "<ul>" +
+              "<li><strong>要支援1・要支援2</strong>　介護予防サービス計画書は" +
+              "<strong>地域包括支援センター</strong>に相談します</li>" +
+              "<li><strong>要介護1以上</strong>　介護サービス計画書は、介護支援専門員（ケアマネジャー）のいる、" +
+              "市区町村の指定を受けた<strong>居宅介護支援事業者</strong>へ依頼します</li>" +
+              "</ul>" +
+              "<p><strong>ケアプランの作成に自己負担はありません</strong>（全額が介護保険から給付されます）。" +
+              "事業者の一覧は市区町村や地域包括支援センターでもらえます。</p>",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/flow.html" target="_blank" rel="noopener">サービス利用までの流れ</a>'
+      },
+      {
+        id: "k-caremane", title: "ケアマネジャーは、変えられる",
+        body: "<p>これから何年も付き合う相手です。相性は結果に直結します。</p>" +
+              "<p><strong>合わないと感じたら、変更できます。</strong>" +
+              "居宅介護支援事業者を変える、同じ事業所内で担当を替えてもらう、どちらも可能です。" +
+              "言いにくければ、地域包括支援センターに間に入ってもらえます。" +
+              "我慢して続けるほうが、本人にとって損になります。</p>" +
+              "<p>見ておくとよい点：連絡がつきやすいか、こちらの事情（仕事、距離、お金）を聞いたうえで提案するか、" +
+              "特定の事業所のサービスばかり勧めてこないか。</p>",
+        share: "窓口を1人に決めて、その人がケアマネとやりとりする。全員が別々に連絡すると話が食い違います。"
+      },
+      {
+        id: "k-service", title: "どんなサービスがあるか",
+        body: "<p>おおまかに4つの方向があります。組み合わせて使います。</p>" +
+              "<ul>" +
+              "<li><strong>家に来てもらう</strong>　訪問介護（ホームヘルプ）、訪問看護、訪問入浴、訪問リハビリ</li>" +
+              "<li><strong>通う</strong>　通所介護（デイサービス）、通所リハビリ（デイケア）</li>" +
+              "<li><strong>泊まる</strong>　短期入所生活介護（ショートステイ）。" +
+              "介護する側が休むため、冠婚葬祭や出張のためにも使えます</li>" +
+              "<li><strong>道具と住まいを変える</strong>　福祉用具の貸与・購入、住宅改修</li>" +
+              "</ul>" +
+              "<p><strong>ショートステイは、使いたくなってから探すと空きがありません。</strong>" +
+              "「倒れたら困る」と思った時点で、ケアマネに相談して一度使っておくと、" +
+              "本人も施設も慣れて、いざというとき動けます。</p>"
+      }
+    ]
+  },
+
+  {
+    id: "k6", phase: "p3", chip: "お金", chipSub: "負担と上限",
+    tag: "費用",
+    title: "いくらかかるのか",
+    lead: "介護の費用は、<strong>使ったサービスの1〜3割</strong>です。" +
+          "ただし上限がいくつもあり、知らないと払いすぎます。ここは必ず読んでください。",
+    tasks: [
+      {
+        id: "k-wari", title: "自己負担は1割。所得によって2割・3割",
+        body: "<p>「<strong>介護サービスにかかった費用の1割（一定以上所得者の場合は2割又は3割）</strong>」が自己負担です。</p>" +
+              "<p>何割になるかは、毎年<strong>介護保険負担割合証</strong>が届いて決まります" +
+              "（通常8月1日から翌年7月31日まで）。世帯の所得で判定されるので、" +
+              "同居家族の収入が変わると割合が変わることがあります。</p>",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/fee.html" target="_blank" rel="noopener">サービスにかかる利用料</a>'
+      },
+      {
+        id: "k-gendo", title: "1か月に使える上限（区分支給限度基準額）",
+        body: "<p>要介護度ごとに、1か月に保険が使える上限が決まっています。" +
+              "<strong>限度額を超えてサービスを利用した場合は、超えた分が全額自己負担となります。</strong></p>" +
+              '<table class="lim"><tr><th>区分</th><th>1か月の上限</th></tr>' +
+              "<tr><td>要支援1</td><td>50,320円</td></tr>" +
+              "<tr><td>要支援2</td><td>105,310円</td></tr>" +
+              "<tr><td>要介護1</td><td>167,650円</td></tr>" +
+              "<tr><td>要介護2</td><td>197,050円</td></tr>" +
+              "<tr><td>要介護3</td><td>270,480円</td></tr>" +
+              "<tr><td>要介護4</td><td>309,380円</td></tr>" +
+              "<tr><td>要介護5</td><td>362,170円</td></tr></table>" +
+              "<p>この額がそのまま自己負担ではありません。<strong>この枠のなかで使った分の1〜3割</strong>を払います。" +
+              "要介護1で上限いっぱい使い、1割負担なら、月およそ16,765円という見当です。</p>" +
+              "<p>なお、サービスの単価には地域区分があり、地域によって多少変わります。" +
+              "実際の額はケアマネジャーが出してくれます。</p>",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/fee.html" target="_blank" rel="noopener">サービスにかかる利用料</a>'
+      },
+      {
+        id: "k-kougaku", title: "払いすぎた分は戻る（高額介護サービス費）", due: "申請が要る", hard: true,
+        body: "<p>1か月の自己負担が一定額を超えたとき、超えた分が<strong>高額介護サービス費</strong>として戻ります。" +
+              "上限額は所得によって、生活保護受給者等の<strong>15,000円</strong>から、" +
+              "課税所得690万円以上の世帯の<strong>140,100円</strong>まで段階があります。</p>" +
+              "<p><strong>初回は申請が要ります。</strong>市区町村から案内が届くことが多いですが、" +
+              "届かないまま気づかない人がいます。自己負担が大きいと感じたら、" +
+              "市区町村の介護保険担当課に「高額介護サービス費の対象になりませんか」と聞いてください。</p>" +
+              "<p>医療費と介護費の両方が高額になった年は、" +
+              "<strong>高額医療・高額介護合算療養費</strong>という別の制度もあります。あわせて聞いてみてください。</p>",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/fee.html" target="_blank" rel="noopener">サービスにかかる利用料</a>'
+      },
+      {
+        id: "k-kaishu", title: "住宅改修は20万円まで。工事の前に申請", due: "事前申請", hard: true,
+        body: "<p>手すりの取付け、床段差の解消、洋式便器等への便器の取替えといった改修に、" +
+              "<strong>支給限度基準額20万円</strong>が使えます。" +
+              "20万円の住宅改修を行った場合、通常、保険給付の額は18万円となります（1割負担の場合）。</p>" +
+              "<p><strong>いちばん多い失敗は、先に工事をしてしまうことです。</strong>" +
+              "被保険者は、住宅改修を行おうとする<strong>前に</strong>、申請書や書類の一部を市町村に提出することになっています。" +
+              "（退院に間に合わないなど、やむを得ない事情がある場合は事後申請が認められることもあります。）</p>" +
+              "<p>この20万円は原則として1人につき生涯の枠ですが、" +
+              "要介護度が大きく上がったとき（3段階上昇）や転居したときは、改めて20万円使えます。" +
+              "ケアマネジャーに段取りを組んでもらってください。</p>",
+        src: '厚生労働省「<a href="https://www.mhlw.go.jp/web/t_doc?dataId=00ta4385&amp;dataType=1&amp;pageNo=1" target="_blank" rel="noopener">居宅介護住宅改修費及び介護予防住宅改修費の支給について（老企第42号）</a>」'
+      },
+      {
+        id: "k-yougu", title: "福祉用具は、借りるものと買うもの",
+        body: "<p>車いす、特殊寝台、手すり、歩行器などは<strong>貸与（レンタル）</strong>。" +
+              "入浴や排泄に使う、他人が使ったものを再利用しにくい用具は<strong>購入</strong>です。</p>" +
+              "<p>購入の場合、<strong>1年間（4月から翌年3月まで）の購入金額が10万円を限度に支給されます。</strong>" +
+              "いったん全額を払ったあと、費用の9割（一定以上所得者の場合は8割又は7割）が" +
+              "介護保険から払い戻されます（償還払い）。</p>" +
+              "<p><strong>指定を受けた事業者から買わないと対象になりません。</strong>" +
+              "ホームセンターや通販で先に買ってしまうと、保険が使えません。必ずケアマネジャーに相談してから。</p>",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/publish/group22.html" target="_blank" rel="noopener">特定福祉用具販売</a>'
+      },
+      {
+        id: "k-shisetsu", title: "施設に入るときの費用",
+        body: "<p>施設サービス費の1〜3割に加えて、<strong>居住費・食費・日常生活費は自己負担</strong>です。" +
+              "ここは限度額の枠の外なので、在宅とは費用の考え方が変わります。</p>" +
+              "<p>厚生労働省が出している例（要介護5・多床室の場合）：" +
+              "施設サービス費の1割 約26,130円＋居住費 約27,450円＋食費 約43,350円＋日常生活費 約10,000円＝" +
+              "<strong>合計 約106,930円</strong>（1か月）。</p>" +
+              "<p>所得と資産が一定以下の場合、居住費と食費が軽くなる" +
+              "<strong>特定入所者介護サービス費（負担限度額認定）</strong>があります。" +
+              "これも申請しないと受けられません。市区町村に確認してください。</p>",
+        src: '厚生労働省「介護サービス情報公表システム」<a href="https://www.kaigokensaku.mhlw.go.jp/commentary/fee.html" target="_blank" rel="noopener">サービスにかかる利用料</a>'
+      }
+    ]
+  },
+
+  {
+    id: "k7", phase: "p4", chip: "仕事との両立", chipSub: "会社の制度",
+    tag: "働きながら",
+    title: "仕事を辞める前に、使える制度",
+    lead: "<strong>介護離職は、たいてい早すぎます。</strong>" +
+          "収入が途絶えたうえに介護が長期化すると、先に共倒れになります。" +
+          "辞める判断をする前に、この4つを確認してください。",
+    tasks: [
+      {
+        id: "k-kyugyo", title: "介護休業（通算93日・3回まで）",
+        body: "<p><strong>対象家族1人につき3回、通算93日まで</strong>休業できます。</p>" +
+              "<p>対象家族は<strong>配偶者（事実婚を含む）、父母、子、祖父母、兄弟姉妹、孫、配偶者の父母</strong>。</p>" +
+              "<p>ここでいう要介護状態とは、<strong>負傷、疾病または身体上もしくは精神上の障害により、" +
+              "2週間以上の期間にわたり常時介護を必要とする状態</strong>です。" +
+              "<strong>介護保険の要介護認定を受けていることは条件ではありません。</strong>" +
+              "認定を待っている段階でも取れます。</p>" +
+              "<p>申出は<strong>休業開始予定日の2週間前まで</strong>に、書面等で会社へ。</p>" +
+              "<p><strong>93日は「自分で介護する期間」ではなく「体制をつくる期間」と考えてください。</strong>" +
+              "93日で介護は終わりません。この間に、施設やサービスを組んで、仕事に戻れる形にするための休みです。</p>",
+        where: "<b>有期雇用の人</b>　休業開始予定日から起算して93日を経過する日から6か月を経過する日までに" +
+               "契約期間が満了し、更新されないことが明らかでないこと、が要件です",
+        src: '厚生労働省 介護休業制度特設サイト「<a href="https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/kaigo/leave/" target="_blank" rel="noopener">介護休業</a>」'
+      },
+      {
+        id: "k-kyuka", title: "介護休暇（年5日・時間単位でも）",
+        body: "<p>対象家族が<strong>1人の場合は1年間に5日まで、2人以上の場合は1年間に10日まで</strong>。" +
+              "令和3年1月1日からは、<strong>1日または時間単位</strong>で取得できます。</p>" +
+              "<p><strong>介護そのものだけでなく、通院の付添いや介護サービスの手続代行、" +
+              "ケアマネジャーなどとの短時間の打合せにも使えます。</strong>" +
+              "ここを知らずに有給を削っている人がとても多いところです。</p>" +
+              "<p>申出は書面に限定されておらず、口頭でもかまいません。" +
+              "令和7年4月1日から、<strong>継続雇用期間6か月未満の労働者を除外する仕組みは廃止されました。</strong></p>",
+        src: '厚生労働省 介護休業制度特設サイト「<a href="https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/kaigo/shorttime-leave/" target="_blank" rel="noopener">介護休暇</a>」'
+      },
+      {
+        id: "k-kyufu", title: "介護休業給付金（賃金の67％）", due: "2か月以内に申請", hard: true,
+        body: "<p>介護休業をとった雇用保険の被保険者に、<strong>休業開始時賃金日額×支給日数×67％</strong>が支給されます。" +
+              "休業開始時賃金日額は、原則として介護休業開始前6か月間の総支給額（賞与は除く）を180で割った額です。</p>" +
+              "<p><strong>支給の対象になるのは</strong>、休業を開始した日前2年間に、" +
+              "賃金支払基礎日数が11日以上ある月が通算して12か月以上ある方です。</p>" +
+              "<p><strong>申請期限に注意してください。</strong>申請書は、介護休業終了日" +
+              "（介護休業期間が3か月以上にわたるときは介護休業開始日から3か月経過した日）の翌日以降、" +
+              "<strong>その日から2か月経過する日の属する月の末日まで</strong>に提出します。</p>",
+        where: "<b>出す先</b>　事業所の所在地を管轄する公共職業安定所（ハローワーク）",
+        src: 'ハローワーク「<a href="https://www.hellowork.mhlw.go.jp/doc/kaigokyuugyou.pdf" target="_blank" rel="noopener">介護休業給付の内容及び支給申請手続について</a>」'
+      },
+      {
+        id: "k-kaisei", title: "令和7年4月1日から、会社に義務が増えた",
+        body: "<p>言い出しにくい、という話をよく聞きます。" +
+              "ですが制度上は、<strong>会社のほうから説明する義務</strong>があります。</p>" +
+              "<ul>" +
+              "<li><strong>個別の周知・意向確認</strong>　介護に直面した旨の申出をした労働者に対して、" +
+              "「介護休業に関する制度、介護両立支援制度等」「申出先」「介護休業給付金に関すること」を" +
+              "面談・書面交付・FAX・メール等で個別に周知し、利用の意向を確認しなければならない</li>" +
+              "<li><strong>早期の情報提供</strong>　労働者が<strong>40歳に達する日の属する年度と翌年度</strong>にかけて、" +
+              "同じ3項目を情報提供しなければならない</li>" +
+              "<li><strong>雇用環境の整備</strong>　研修の実施、相談体制の整備、取得事例の収集・提供、" +
+              "利用促進方針の周知のいずれかを講じなければならない</li>" +
+              "<li><strong>テレワーク</strong>　介護する労働者がテレワーク等を選択できるよう措置を講ずることが" +
+              "努力義務になった</li>" +
+              "</ul>" +
+              "<p>会社から何の説明もないなら、人事に「介護に直面したので、制度の説明をお願いします」と" +
+              "伝えてください。それは正当な求めです。</p>",
+        src: '厚生労働省 介護休業制度特設サイト「<a href="https://www.mhlw.go.jp/seisakunitsuite/bunya/koyou_roudou/koyoukintou/ryouritsu/kaigo/law-amendment/" target="_blank" rel="noopener">法改正のポイント</a>」'
+      },
+      {
+        id: "k-sonota", title: "残業・深夜業を断る、時間を短くする",
+        body: "<p>休むだけが制度ではありません。要介護状態の家族を介護する労働者は、" +
+              "請求すれば次のことができます（事業の正常な運営を妨げる場合を除く）。</p>" +
+              "<ul>" +
+              "<li><strong>所定外労働の制限</strong>　残業をしない</li>" +
+              "<li><strong>時間外労働の制限</strong>　1か月24時間・1年150時間を超える時間外労働をしない</li>" +
+              "<li><strong>深夜業の制限</strong>　午後10時から午前5時に働かない</li>" +
+              "<li><strong>所定労働時間の短縮等の措置</strong>　短時間勤務、フレックスタイム、" +
+              "始業・終業時刻の繰上げ繰下げ、介護費用の助成のいずれか（会社が選んだもの）</li>" +
+              "</ul>" +
+              "<p>介護休業の93日を使い切ったあとも、これらは継続して使えます。" +
+              "<strong>長く続けるにはこちらのほうが効きます。</strong></p>",
+        share: "兄弟姉妹で「誰が何曜日を持つか」を先に決めて書き出す。あとから不公平感でこじれるのを防げます。"
+      }
+    ]
+  },
+
+  {
+    id: "k8", phase: "p4", chip: "続ける", chipSub: "更新・変更",
+    tag: "維持",
+    title: "状態が変わったとき、期限が来たとき",
+    lead: "介護は、一度組んだら終わりではありません。" +
+          "本人が変わり、家族の事情も変わります。変わったら、組み直せます。",
+    tasks: [
+      {
+        id: "k-koushin", title: "認定の更新を忘れない", due: "有効期間内", hard: true,
+        body: "<p>有効期間が切れると、介護保険のサービスが使えなくなります。" +
+              "更新の申請は有効期間が終わる前に済ませる必要があります。</p>" +
+              "<p>市区町村から案内が届き、ケアマネジャーも動いてくれるのが普通ですが、" +
+              "届かないこともあります。受付が始まる時期は自治体によって違うので、" +
+              "案内が来ないまま終了日が近づいたら、市区町村に確認してください。</p>",
+        src: '厚生労働省「<a href="https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/hukushi_kaigo/kaigo_koureisha/nintei/gaiyo4.html" target="_blank" rel="noopener">要介護認定に係る法令</a>」'
+      },
+      {
+        id: "k-henkou", title: "状態が悪くなったら、区分変更申請",
+        body: "<p>有効期間の途中でも、状態が変われば<strong>区分変更申請</strong>ができます。" +
+              "入院した、転倒して歩けなくなった、認知症が進んだ——" +
+              "そのたびに限度額の枠が足りなくなります。</p>" +
+              "<p>待たずに申請してください。ケアマネジャーに言えば手続きしてくれます。</p>"
+      },
+      {
+        id: "k-taoreru", title: "介護する側が倒れないために",
+        body: "<p>いちばん多い失敗は、<strong>介護している人が先に体を壊すこと</strong>です。" +
+              "これは根性の問題ではなく、設計の問題です。</p>" +
+              "<ul>" +
+              "<li><strong>ショートステイを定期的に組み込む</strong>。" +
+              "「必要になったら」ではなく、最初から月に数日入れておく</li>" +
+              "<li>デイサービスの回数を増やせないか、ケアマネに聞く</li>" +
+              "<li>介護者の会・家族会に一度行く。同じ状況の人と話すだけで判断が戻ります</li>" +
+              "<li>自分の通院と睡眠を削らない</li>" +
+              "</ul>" +
+              "<p>「もう無理かもしれない」とケアマネジャーに言うのは、弱音ではなく情報提供です。" +
+              "言われないと、向こうも組み直せません。</p>",
+        share: "遠方の家族は、お金・手続き・電話連絡を引き受けられます。同居者に全部を残さないこと。"
+      },
+      {
+        id: "k-owari", title: "そのあとのこと",
+        body: "<p>介護が終わったあとには、また別の手続きが続きます。" +
+              "死亡届の7日、年金と健康保険の14日、相続放棄の3か月、相続税の10か月——" +
+              "疲れきった状態で、これを調べることになります。</p>" +
+              "<p>同じ作りの<strong><a href=\"%%NOTE:inheritance%%\">おくやみノート</a></strong>を用意してあります。" +
+              "そのときが来たら開いてください。いまは読まなくて大丈夫です。</p>"
+      }
+    ]
+  }
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+
+var KEY_DATE = "kaigo.date.v1";
+var KEY_END  = "kaigo.end.v1";
+var KEY_CHK  = "kaigo.checks.v1";
+var KEY_TH   = "kaigo.theme.v1";
+
+function load(k, fb) {
+  try { var v = localStorage.getItem(k); return v === null ? fb : v; }
+  catch (e) { return fb; }
+}
+function save(k, v) {
+  try { localStorage.setItem(k, v); } catch (e) {}
+}
+
+var state = {
+  date: load(KEY_DATE, ""),
+  end: load(KEY_END, ""),
+  checks: {},
+  stage: 0
+};
+try { state.checks = JSON.parse(load(KEY_CHK, "{}")) || {}; } catch (e) { state.checks = {}; }
+
+/* ============================================================
+   ユーティリティ
+   ============================================================ */
+
+function parseDate(s) {
+  if (!s) return null;
+  var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  if (!m) return null;
+  var d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[3]) return null;
+  return d;
+}
+function today0() {
+  var n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+function daysBetween(a, b) { return Math.round((b - a) / 86400000); }
+function fmtJP(d) { return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日"; }
+function addDays(d, n) { var x = new Date(d.getTime()); x.setDate(x.getDate() + n); return x; }
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+/* 経過の言い換え。年・月は日数の割り算ではなく暦どおりに数える */
+function elapsedLabel(n, from) {
+  if (n < 0)   return "まだ先の日付です";
+  if (n === 0) return "きょう申請";
+  if (n < 31)  return n + "日目";
+
+  var t = today0();
+  var months = (t.getFullYear() - from.getFullYear()) * 12 + (t.getMonth() - from.getMonth());
+  if (t.getDate() < from.getDate()) months--;
+  if (months < 0) months = 0;
+
+  if (months < 12) return months + "か月ごろ（" + n + "日目）";
+  var y = Math.floor(months / 12);
+  var rm = months % 12;
+  return y + "年" + (rm > 0 ? rm + "か月" : "") + "ごろ（" + n + "日目）";
+}
+
+/* ============================================================
+   描画
+   ============================================================ */
+
+var rail = document.getElementById("rail");
+var stageHost = document.getElementById("stageHost");
+
+function buildRail() {
+  var h = "";
+  for (var i = 0; i < STAGES.length; i++) {
+    var s = STAGES[i];
+    h += '<button class="chip ' + s.phase + '" type="button" role="tab" data-i="' + i + '"' +
+         ' aria-current="' + (i === state.stage ? "true" : "false") + '">' +
+         "<b>" + esc(s.chip) + "</b>" + esc(s.chipSub) + "</button>";
+  }
+  rail.innerHTML = h;
+}
+
+function taskHTML(t) {
+  var done = !!state.checks[t.id];
+  var due = t.due ? '<span class="due' + (t.soft ? " soft" : "") + '">' + esc(t.due) + "</span>" : "";
+
+  var h = '<div class="task' + (done ? " done" : "") + '" data-task="' + t.id + '">';
+  h += '<div class="task-head">';
+  h += '<button class="chk" type="button" aria-pressed="' + done + '" data-chk="' + t.id + '"' +
+       ' aria-label="' + esc(t.title) + ' を終わったことにする">' +
+       '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 7.5l3.2 3.2L12 4"/></svg></button>';
+  h += '<div class="task-title">' + esc(t.title) + " " + due + "</div>";
+  h += "</div>";
+
+  h += '<details class="more"><summary></summary><div class="task-body">' + t.body;
+  if (t.where) h += '<span class="where">' + t.where + "</span>";
+  if (t.src) h += '<span class="src">' + t.src + "</span>";
+  h += "</div></details>";
+
+  if (t.share) h += '<div class="share"><b>家族で分けられること</b>' + esc(t.share) + "</div>";
+  h += "</div>";
+  return h;
+}
+
+function renderStage() {
+  var s = STAGES[state.stage];
+  var h = '<section class="stage ' + s.phase + '">';
+  h += '<span class="stage-tag">' + esc(s.tag) + "</span>";
+  h += "<h3>" + esc(s.title) + "</h3>";
+  h += '<p class="lead">' + s.lead + "</p>";
+  for (var i = 0; i < s.tasks.length; i++) h += taskHTML(s.tasks[i]);
+  h += "</section>";
+  stageHost.innerHTML = h;
+
+  var chips = rail.querySelectorAll(".chip");
+  for (var j = 0; j < chips.length; j++) {
+    chips[j].setAttribute("aria-current", j === state.stage ? "true" : "false");
+  }
+}
+
+/* ---- 今日の位置 ---- */
+
+var dayBig   = document.getElementById("dayBig");
+var daySub   = document.getElementById("daySub");
+var dateIn   = document.getElementById("dateIn");
+var clearBtn = document.getElementById("clearBtn");
+var hint     = document.getElementById("hint");
+var nextup   = document.getElementById("nextup");
+var nextList = document.getElementById("nextList");
+
+function renderToday() {
+  var d = parseDate(state.date);
+  if (!d) {
+    dayBig.textContent = "日付を入れてください";
+    daySub.textContent = "";
+    clearBtn.hidden = true;
+    nextup.classList.remove("on");
+    hint.textContent = "まだ申請していなければ、相談した日でもかまいません。日付はこの端末にだけ保存されます。";
+    return;
+  }
+
+  var n = daysBetween(d, today0());
+  dayBig.textContent = elapsedLabel(n, d);
+  daySub.textContent = fmtJP(d) + " から";
+  clearBtn.hidden = false;
+  hint.textContent = "この日付はこの端末のブラウザにだけ保存されています。";
+
+  /* 認定通知の目安（原則30日以内） */
+  var left = 30 - n;
+  var cls, when, note;
+  if (left >= 0) {
+    cls = left <= 7 ? "soon" : "far";
+    when = left === 0 ? "<b>きょう</b>" : "あと<b>" + left + "</b>日";
+    note = fmtJP(addDays(d, 30)) + "ごろまで　申請から認定の通知までは原則30日以内";
+  } else {
+    cls = "over";
+    when = "<b>" + (-left) + "</b>日すぎ";
+    note = "原則30日以内の目安を過ぎています。市区町村に問い合わせてかまいません";
+  }
+  nextList.innerHTML =
+    '<div class="nx ' + cls + '">' +
+    '<div class="nx-when">' + when + "</div>" +
+    '<div class="nx-what">認定結果の通知<span>' + note + "</span></div></div>";
+  nextup.classList.add("on");
+}
+
+/* ---- 認定の有効期間 ---- */
+
+var endIn = document.getElementById("endIn");
+var endBtn = document.getElementById("endBtn");
+var endClear = document.getElementById("endClear");
+var endOut = document.getElementById("endOut");
+
+function renderEnd() {
+  var d = parseDate(state.end);
+  if (!d) {
+    endOut.innerHTML = "";
+    endClear.hidden = true;
+    return;
+  }
+  endClear.hidden = false;
+  var left = daysBetween(today0(), d);
+  var cls, when, note;
+  if (left < 0) {
+    cls = "over";
+    when = "<b>" + (-left) + "</b>日すぎ";
+    note = "有効期間が終わっています。市区町村かケアマネジャーにすぐ連絡してください";
+  } else if (left <= 60) {
+    cls = "soon";
+    when = left === 0 ? "<b>きょう</b>" : "あと<b>" + left + "</b>日";
+    note = fmtJP(d) + " まで　更新の手続きを進める時期です";
+  } else {
+    cls = "far";
+    when = "あと<b>" + left + "</b>日";
+    note = fmtJP(d) + " まで";
+  }
+  endOut.innerHTML =
+    '<div class="nx ' + cls + '" style="margin-top:10px">' +
+    '<div class="nx-when">' + when + "</div>" +
+    '<div class="nx-what">認定の有効期間<span>' + note + "</span></div></div>";
+}
+
+/* ---- 進捗 ---- */
+function renderProgress() {
+  var total = 0, done = 0;
+  for (var i = 0; i < STAGES.length; i++) {
+    for (var j = 0; j < STAGES[i].tasks.length; j++) {
+      total++;
+      if (state.checks[STAGES[i].tasks[j].id]) done++;
+    }
+  }
+  var el = document.getElementById("progFill");
+  if (el) {
+    el.style.width = total ? (done / total * 100) + "%" : "0%";
+    document.getElementById("progText").textContent = done + " / " + total + " 済み";
+  }
+}
+
+/* ============================================================
+   イベント
+   ============================================================ */
+
+rail.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chip") : null;
+  if (!b) return;
+  state.stage = +b.dataset.i;
+  renderStage();
+  b.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  stageHost.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+
+stageHost.addEventListener("click", function (e) {
+  var b = e.target.closest ? e.target.closest(".chk") : null;
+  if (!b) return;
+  var id = b.dataset.chk;
+  if (state.checks[id]) delete state.checks[id];
+  else state.checks[id] = 1;
+  save(KEY_CHK, JSON.stringify(state.checks));
+  b.setAttribute("aria-pressed", !!state.checks[id]);
+  var card = b.closest(".task");
+  if (card) card.classList.toggle("done", !!state.checks[id]);
+  renderProgress();
+});
+
+document.getElementById("setBtn").addEventListener("click", function () {
+  var v = dateIn.value;
+  var d = parseDate(v);
+  if (!d) { hint.textContent = "日付を選んでください。"; return; }
+  if (daysBetween(d, today0()) < 0) { hint.textContent = "未来の日付は入れられません。"; return; }
+  state.date = v;
+  save(KEY_DATE, v);
+  renderToday();
+});
+
+clearBtn.addEventListener("click", function () {
+  state.date = "";
+  dateIn.value = "";
+  save(KEY_DATE, "");
+  renderToday();
+});
+
+dateIn.addEventListener("change", function () {
+  if (parseDate(dateIn.value)) document.getElementById("setBtn").click();
+});
+
+endBtn.addEventListener("click", function () {
+  var v = endIn.value;
+  if (!parseDate(v)) return;
+  state.end = v;
+  save(KEY_END, v);
+  renderEnd();
+});
+endClear.addEventListener("click", function () {
+  state.end = "";
+  endIn.value = "";
+  save(KEY_END, "");
+  renderEnd();
+});
+endIn.addEventListener("change", function () {
+  if (parseDate(endIn.value)) endBtn.click();
+});
+
+/* 配色 */
+var themeBtn = document.getElementById("themeBtn");
+function applyTheme(t) {
+  if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+  else document.documentElement.removeAttribute("data-theme");
+  themeBtn.textContent = t === "" ? "配色" : (t === "light" ? "明るい" : "暗い");
+}
+applyTheme(load(KEY_TH, ""));
+themeBtn.addEventListener("click", function () {
+  var cur = document.documentElement.getAttribute("data-theme") || "";
+  var next = cur === "" ? "light" : (cur === "light" ? "dark" : "");
+  applyTheme(next);
+  save(KEY_TH, next);
+});
+
+/* ============================================================
+   初期化
+   ============================================================ */
+
+buildRail();
+renderStage();
+
+/* 進捗バーを相談先セクションの手前に足す */
+(function () {
+  var host = document.getElementById("stageHost");
+  var p = document.createElement("div");
+  p.className = "prog";
+  p.innerHTML = '<span id="progText">0 / 0 済み</span>' +
+                '<span class="prog-bar"><i id="progFill"></i></span>';
+  host.parentNode.appendChild(p);
+})();
+
+if (state.date) dateIn.value = state.date;
+if (state.end) endIn.value = state.end;
+renderToday();
+renderEnd();
+renderProgress();
+</script>
