@@ -3,46 +3,46 @@
 人生で何度かしか通らないのに、そのたびに期限と手続きに追われることがあります。
 広告も関連記事もない、スマホで読める手続きのノートを置いています。
 
-### 📁 [索引](https://ksaga115.github.io/LifeNotes/)
+### 📁 [索引](https://ksaga115.github.io/)
 
 **急に起きたこと**
 
 | ノート | 内容 |
 |---|---|
-| [おくやみノート](https://ksaga115.github.io/LifeNotes/inheritance/) | 身近な人が亡くなったあと。死亡届の7日から、相続登記の3年まで |
-| [病気・けがのノート](https://ksaga115.github.io/LifeNotes/illness/) | 働けなくなったとき。高額療養費、傷病手当金の1年6か月、障害年金 |
-| [交通事故のノート](https://ksaga115.github.io/LifeNotes/accident/) | その場ですること、人身事故にすること、健康保険を使う手続き、自賠責の3年 |
-| [消費者トラブルのノート](https://ksaga115.github.io/LifeNotes/consumer/) | まず188。クーリング・オフの期限を取引の種類から計算します |
-| [被災したあとのノート](https://ksaga115.github.io/LifeNotes/recovery/) | 片づける前に写真を撮る。罹災証明書、支援金、保険、住まい、税 |
+| [おくやみノート](https://ksaga115.github.io/inheritance/) | 身近な人が亡くなったあと。死亡届の7日から、相続登記の3年まで |
+| [病気・けがのノート](https://ksaga115.github.io/illness/) | 働けなくなったとき。高額療養費、傷病手当金の1年6か月、障害年金 |
+| [交通事故のノート](https://ksaga115.github.io/accident/) | その場ですること、人身事故にすること、健康保険を使う手続き、自賠責の3年 |
+| [消費者トラブルのノート](https://ksaga115.github.io/consumer/) | まず188。クーリング・オフの期限を取引の種類から計算します |
+| [被災したあとのノート](https://ksaga115.github.io/recovery/) | 片づける前に写真を撮る。罹災証明書、支援金、保険、住まい、税 |
 
 **暮らしが変わるとき**
 
 | ノート | 内容 |
 |---|---|
-| [退職のノート](https://ksaga115.github.io/LifeNotes/leaving/) | 健康保険の3択（任意継続は20日以内）、失業給付、住民税、退職金の税 |
-| [引っ越しノート](https://ksaga115.github.io/LifeNotes/moving/) | 引っ越す日を入れると、前後の期限が並びます |
-| [離婚のノート](https://ksaga115.github.io/LifeNotes/divorce/) | 年金分割と財産分与の2年、婚氏続称の3か月。決める順番と、子どものこと |
+| [退職のノート](https://ksaga115.github.io/leaving/) | 健康保険の3択（任意継続は20日以内）、失業給付、住民税、退職金の税 |
+| [引っ越しノート](https://ksaga115.github.io/moving/) | 引っ越す日を入れると、前後の期限が並びます |
+| [離婚のノート](https://ksaga115.github.io/divorce/) | 年金分割と財産分与の2年、婚氏続称の3か月。決める順番と、子どものこと |
 
 **年をとること**
 
 | ノート | 内容 |
 |---|---|
-| [介護のノート](https://ksaga115.github.io/LifeNotes/care/) | まず地域包括支援センターへ。認定、ケアプラン、費用、仕事との両立 |
-| [年金を受け取るノート](https://ksaga115.github.io/LifeNotes/pension/) | 生年月日を入れると受け取れる年齢が出ます。請求の段取り、繰上げ・繰下げ |
+| [介護のノート](https://ksaga115.github.io/care/) | まず地域包括支援センターへ。認定、ケアプラン、費用、仕事との両立 |
+| [年金を受け取るノート](https://ksaga115.github.io/pension/) | 生年月日を入れると受け取れる年齢が出ます。請求の段取り、繰上げ・繰下げ |
 
 **毎年くるもの、ふだんから備えるもの**
 
 | ノート | 内容 |
 |---|---|
-| [確定申告ノート](https://ksaga115.github.io/LifeNotes/tax/) | 還付申告／副業・雑所得／フリーランス。期限は今日から自動で数えます |
-| [防災の備蓄ノート](https://ksaga115.github.io/LifeNotes/disaster/) | 家族構成から必要量を計算。買ったものの期限を追って入れ替えを知らせます |
+| [確定申告ノート](https://ksaga115.github.io/tax/) | 還付申告／副業・雑所得／フリーランス。期限は今日から自動で数えます |
+| [防災の備蓄ノート](https://ksaga115.github.io/disaster/) | 家族構成から必要量を計算。買ったものの期限を追って入れ替えを知らせます |
 
 **子どもが生まれるとき**
 
 | ノート | 内容 |
 |---|---|
-| [妊娠40週ノート](https://ksaga115.github.io/LifeNotes/pregnancy/) | 妊娠0週から40週まで。赤ちゃんの育ち、からだ、この週にすること |
-| [産後365日ノート](https://ksaga115.github.io/LifeNotes/postpartum/) | 出産当日から1歳まで。予防接種、健診、離乳食、授乳の記録 |
+| [妊娠40週ノート](https://ksaga115.github.io/pregnancy/) | 妊娠0週から40週まで。赤ちゃんの育ち、からだ、この週にすること |
+| [産後365日ノート](https://ksaga115.github.io/postpartum/) | 出産当日から1歳まで。予防接種、健診、離乳食、授乳の記録 |
 
 iPhone なら Safari で開いて **共有 → ホーム画面に追加**、Android なら **メニュー → ホーム画面に追加**。
 アプリのように全画面で開けます。アカウント登録もインストールも要りません。

@@ -312,6 +312,63 @@ function indexHTML(forDocs) {
   return wrap(raw.replace("%%CARDS%%", cards), { desc: OG_DESC });
 }
 
+
+/* ---------- 旧 URL の転送 ----------
+ * このサイトは ksaga115.github.io（ユーザーサイト）として配信する。
+ * 以前の URL を踏んだ人がどこにも行けなくならないよう、同じリポジトリの中に
+ * 転送ページを置く。プロジェクトサイトだったころのパスは、リポジトリを消すと
+ * ここにフォールバックしてくる。
+ *
+ *   /PregnancyNotes/            → /pregnancy/     （別リポジトリだったころ）
+ *   /PregnancyNotes/postpartum/ → /postpartum/
+ *   /LifeNotes/                 → /               （LifeNotes という名前だったころ）
+ *   /LifeNotes/<slug>/          → /<slug>/
+ */
+
+function redirectHTML(to, title) {
+  return (
+    "<!doctype html>\n" +
+    '<html lang="ja">\n<head>\n<meta charset="utf-8">\n' +
+    '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+    '<meta name="color-scheme" content="light dark">\n' +
+    '<meta name="robots" content="noindex">\n' +
+    '<link rel="canonical" href="' + to + '">\n' +
+    '<meta http-equiv="refresh" content="0; url=' + to + '">\n' +
+    "<title>" + esc(title) + " — 移動しました</title>\n" +
+    "<style>\n" +
+    "html{color-scheme:light dark;background:" + GROUND_LIGHT + "}\n" +
+    "@media (prefers-color-scheme:dark){html{background:" + GROUND_DARK + "}}\n" +
+    "body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;" +
+    "color:#242826;font-family:'Hiragino Sans','Yu Gothic UI','Meiryo',system-ui,sans-serif;" +
+    "font-size:15px;line-height:1.85;text-align:center}\n" +
+    "@media (prefers-color-scheme:dark){body{color:#E8EAE6}}\n" +
+    "a{color:inherit}\n" +
+    ".go{display:inline-block;margin-top:10px;padding:10px 20px;border-radius:999px;" +
+    "background:#242826;color:" + GROUND_LIGHT + ";text-decoration:none;font-size:14px}\n" +
+    "@media (prefers-color-scheme:dark){.go{background:#E8EAE6;color:#161917}}\n" +
+    "</style>\n</head>\n<body>\n<div>\n" +
+    "<p>" + esc(title) + "は移動しました。<br>自動で移動します。</p>\n" +
+    '<a class="go" href="' + to + '">ひらく</a>\n' +
+    "</div>\n</body>\n</html>\n"
+  );
+}
+
+function writeRedirects() {
+  console.log("docs/ 旧 URL の転送");
+  var pairs = [
+    ["PregnancyNotes", "/pregnancy/", "妊娠40週ノート"],
+    ["PregnancyNotes/postpartum", "/postpartum/", "産後365日ノート"],
+    ["LifeNotes", "/", "くらしのノート"],
+  ];
+  for (const n of NOTES) {
+    if (!n.ready) continue;
+    pairs.push(["LifeNotes/" + n.slug, "/" + n.slug + "/", n.title]);
+  }
+  for (const [from, to, title] of pairs) {
+    write(path.join(DOCS, from.replace(/\//g, path.sep), "index.html"), redirectHTML(to, title));
+  }
+}
+
 /* ---------- 実行 ---------- */
 
 console.log("docs/ (GitHub Pages)");
@@ -322,6 +379,7 @@ for (const n of NOTES) {
   write(path.join(DOCS, n.slug, "index.html"), wrap(raw, { homeHref: "../index.html", desc: n.desc, docs: true }));
 }
 fs.writeFileSync(path.join(DOCS, ".nojekyll"), "");
+writeRedirects();
 
 console.log("dist/ (ファイルで渡す用)");
 write(path.join(DIST, "くらしのノート.html"), indexHTML(false));
