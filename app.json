@@ -1,0 +1,7 @@
+{
+  "name": "LifeNotes",
+  "version": "0.1.0",
+  "launch": "docs\index.html",
+  "kind": "web",
+  "description": "くらしのノート（公開サイト）。暮らしの手続きを期限順に並べた静的ページ群。おくやみノートを公開中"
+}

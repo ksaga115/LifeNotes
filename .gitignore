@@ -1,0 +1,10 @@
+# ビルド成果物
+dist/
+
+# エディタ・OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+
+node_modules/
