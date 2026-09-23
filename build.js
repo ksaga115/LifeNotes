@@ -133,8 +133,8 @@ function wrap(rawBody, opt) {
      （docs は ../<slug>/、dist はファイル名。どちらかに片寄らせると必ず片方が壊れる） */
   body = body.replace(/%%NOTE:([a-z-]+)%%/g, function (m, slug) {
     var n = NOTES.filter(function (x) { return x.slug === slug; })[0];
-    if (!n || !n.ready) return opt && opt.docs ? "../" : "くらしのノート.html";
-    return opt && opt.docs ? "../" + n.slug + "/" : encodeURI(n.dist);
+    if (!n || !n.ready) return opt && opt.docs ? "../index.html" : "くらしのノート.html";
+    return opt && opt.docs ? "../" + n.slug + "/index.html" : encodeURI(n.dist);
   });
 
   /* フォントの <link> を head に移す */
@@ -196,6 +196,11 @@ function write(dest, html) {
   console.log("  " + path.relative(__dirname, dest).replace(/\\/g, "/") + " — " + kb + " KB");
 }
 
+/* ページ間のリンクは index.html まで書く。
+   サーバー（GitHub Pages）は "inheritance/" で index.html を返すが、
+   ローカルでファイルとして開くとブラウザがフォルダの一覧ページを出してしまうため。
+   "inheritance/" 形式の URL は引き続き有効なので、共有するリンクは短いままでよい。 */
+
 /* ---------- 索引 ---------- */
 
 function indexHTML(forDocs) {
@@ -212,7 +217,7 @@ function indexHTML(forDocs) {
 
   let cards = "";
   for (const n of NOTES) {
-    cards += card(n.ready ? (forDocs ? n.slug + "/" : n.dist) : "", n, n.ready ? "" : "soon");
+    cards += card(n.ready ? (forDocs ? n.slug + "/index.html" : n.dist) : "", n, n.ready ? "" : "soon");
   }
   let out = "";
   for (const n of OUTSIDE) out += card(n.href, n, "");
@@ -228,7 +233,7 @@ write(path.join(DOCS, "index.html"), indexHTML(true));
 for (const n of NOTES) {
   if (!n.ready) continue;
   const raw = fs.readFileSync(path.join(SRC, n.src), "utf8");
-  write(path.join(DOCS, n.slug, "index.html"), wrap(raw, { homeHref: "../", desc: n.desc, docs: true }));
+  write(path.join(DOCS, n.slug, "index.html"), wrap(raw, { homeHref: "../index.html", desc: n.desc, docs: true }));
 }
 fs.writeFileSync(path.join(DOCS, ".nojekyll"), "");
 
