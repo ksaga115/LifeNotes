@@ -1,7 +1,7 @@
 {
   "name": "LifeNotes",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "launch": "docs\index.html",
   "kind": "web",
-  "description": "くらしのノート（公開サイト）。暮らしの手続きを期限順に並べた静的ページ群。おくやみノートを公開中"
+  "description": "くらしのノート（公開サイト）。おくやみ・介護・退職・確定申告・防災備蓄・引っ越し・妊娠・産後の8本"
 }
