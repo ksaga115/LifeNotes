@@ -54,7 +54,14 @@ const NOTES = [
     desc: "還付申告、副業の申告、事業所得。何を集めて、いつまでに出すか。期限は自動で数えます。",
     ready: true,
   },
-  { slug: "disaster", title: "防災の備蓄ノート", desc: "家族構成から必要量を出して、期限を追う。", ready: false },
+  {
+    src: "bousai.html",
+    slug: "disaster",
+    title: "防災の備蓄ノート",
+    dist: "防災の備蓄ノート.html",
+    desc: "家族構成を入れると必要量が出ます。買ったものの期限を追って、入れ替え時期を知らせます。",
+    ready: true,
+  },
   {
     src: "hikkoshi.html",
     slug: "moving",
